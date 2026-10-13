@@ -1,0 +1,13 @@
+# Changelog
+
+What changed in this repository, newest first. Kept by hand: every change that alters what the repository
+does adds a line under Unreleased in the same commit (see AGENTS.md).
+
+## Unreleased
+
+- The plugin is installed from its public repository: `claude plugin marketplace add https://gitlab.com/aglium/aglium_os/agentric-os-plugin.git`, then `claude plugin install agentric-os@aglium` and `/plugin configure agentric-os@aglium`. A newer version is taken with `claude plugin marketplace update aglium`.
+- Every push is checked: the server compiles, its checks pass (where the address and the token are taken from, the environment before the file; a file other people can read is refused; what is missing is said in plain words), and Claude Code accepts the plugin. A tag makes a GitLab release named as the tag, and is refused when it is not the version the plugin says.
+- The plugin starts in Claude Code before the address and the access token are set: both are optional, and a tool called without them says what is missing and where to enter it (`/plugin configure agentric-os@aglium`) instead of the plugin failing to load.
+- The address and the access token are asked for by Claude Code and kept by it (the token in the computer's protected store), so they outlive a restart and are never typed into a command. Any other MCP client reads them from `~/.config/agentric-os/config.json`, refused when other people can read the file.
+- Refusals are passed on in the installation's own words (which right is missing, revoked or expired token); a change's answer leads with whether it can be applied; required arguments are asked for before calling.
+- Agentric OS plugin for Claude Code: MCP server over the installation's HTTP API with an access token, skill and commands.

@@ -1,0 +1,16 @@
+{
+  "name": "aglium",
+  "owner": {
+    "name": "Aglium"
+  },
+  "plugins": [
+    {
+      "name": "agentric-os",
+      "source": "./",
+      "description": "Look after an installed Agentric OS from Claude Code with an access token."
+    }
+  ],
+  "metadata": {
+    "description": "Aglium plugins for looking after Agentric OS installations"
+  }
+}

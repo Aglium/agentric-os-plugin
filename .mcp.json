@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "agentric-os": {
+      "command": "python3",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/agentric_os_mcp.py"],
+      "env": {
+        "AGENTRIC_OS_URL": "${user_config.url}",
+        "AGENTRIC_OS_TOKEN": "${user_config.token}"
+      }
+    }
+  }
+}

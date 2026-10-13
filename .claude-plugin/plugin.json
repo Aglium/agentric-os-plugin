@@ -1,0 +1,22 @@
+{
+  "name": "agentric-os",
+  "version": "0.1.0",
+  "description": "Look after an installed Agentric OS from Claude Code: see what it does and what it is worth, and propose changes to workflows, rules, texts, agents, connections and knowledge as drafts that go live only when applied.",
+  "author": { "name": "Aglium" },
+  "keywords": ["agentric-os", "aglium", "workflows", "automation"],
+  "userConfig": {
+    "url": {
+      "type": "string",
+      "title": "Installation address",
+      "description": "Where your Agentric OS is, e.g. https://ops.example.com",
+      "required": false
+    },
+    "token": {
+      "type": "string",
+      "title": "Access token",
+      "description": "Created in the Control Center under AI agent access (starts with aos_)",
+      "sensitive": true,
+      "required": false
+    }
+  }
+}
