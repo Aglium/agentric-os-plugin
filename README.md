@@ -104,3 +104,8 @@ claude plugin validate .
 ```
 
 `CHANGELOG.md` says what changed in each version.
+
+## License
+
+For clients of Aglium only: the plugin may be used under your agreement with Aglium, to work with your own
+Agentric OS installation. See [LICENSE](LICENSE). It contains no third-party code.

@@ -21,6 +21,7 @@ installation decides what a token may do; the plugin only passes things on.
 | `skills/agentric-os/SKILL.md` | How an agent should work with an installation |
 | `commands/` | `/agentric-status`, `/agentric-change` |
 | `.claude-plugin/`, `.mcp.json` | Plugin and marketplace descriptions |
+| `LICENSE` | The terms of use: clients of Aglium only, under their agreement |
 | `.gitlab-ci.yml` | The checks on every push, and the release made for a tag |
 
 Try it against an installation with its address and a token (created in the Control Center under AI agent

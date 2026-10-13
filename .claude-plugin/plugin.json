@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Look after an installed Agentric OS from Claude Code: see what it does and what it is worth, and propose changes to workflows, rules, texts, agents, connections and knowledge as drafts that go live only when applied.",
   "author": { "name": "Aglium" },
+  "license": "SEE LICENSE IN LICENSE",
   "keywords": ["agentric-os", "aglium", "workflows", "automation"],
   "userConfig": {
     "url": {

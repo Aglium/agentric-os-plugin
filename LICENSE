@@ -1,0 +1,41 @@
+Agentric OS plugin for Claude Code
+Copyright © 2026 Aglium. All rights reserved.
+
+This software and its associated components, skills, commands and
+documentation (collectively, the “Plugin”) are proprietary to Aglium and are
+licensed, not sold.
+
+The Plugin may be used only by clients of Aglium, under and for the duration
+of their agreement with Aglium, and only to work with their own Agentric OS
+installation. If no such agreement exists, you have no rights to use this
+software. That the source code can be read or downloaded grants no licence or
+other right, by this file or by implication.
+
+Unauthorized copying, distribution, modification, reverse engineering,
+or use of this software, in whole or in part, is strictly prohibited
+without prior written consent from Aglium.
+
+You may not:
+- Use this software without a valid agreement with Aglium.
+- Distribute, sublicense, or provide access to third parties.
+- Remove or obscure any proprietary notices or branding.
+
+The Plugin contains no third-party code: its server is written in Python
+against the standard library only, and nothing else is bundled with it.
+Python itself is not distributed with the Plugin.
+
+“Claude” and “Claude Code” are trademarks of Anthropic, PBC. The Plugin is
+not affiliated with, endorsed by, or sponsored by Anthropic.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL AGLIUM
+BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+For licensing inquiries, please contact:
+
+Aglium
+morel333@gmail.com
+https://aglium.com
