@@ -93,6 +93,12 @@ On Windows the command is usually `python` or `py`.
 
 ## What it can and cannot do
 
+The agent looks at workflows, rules, texts, agents, connections, knowledge, cases and results; proposes changes as
+drafts; and, before a change to an agent or a workflow is applied, tries it on that one's examples (finished cases
+with a known right answer) and says whether it got better or worse and what the trying cost. Trying sends nothing
+anywhere and stops at the installation's limit for one exam. An access that may propose changes may also keep
+examples and run exams.
+
 What the agent may do is decided by the installation, from the rights of the access. Sign-in details of connections
 are never available to it. A revoked or expired token stops working at once.
 

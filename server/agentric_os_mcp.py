@@ -400,6 +400,102 @@ def revert_change(a):
     return change(call("POST", "/api/changes/%s/revert" % quote(a["id"]), {"note": a["note"]} if a.get("note") else {}))
 
 
+# examples and exams: a change tried on cases with a known right answer before it is applied
+
+def exam(answer):
+    """An exam with what matters first: how far it is, better or worse, what it cost; the long lists after."""
+    if not isinstance(answer, dict) or "status" not in answer:
+        return answer
+    status = answer.get("status")
+    said = {"running": "still running: ask again with get_exam in a minute",
+            "done": "finished", "stopped": "stopped before the end; what it found so far is below",
+            "limit": "stopped at its spending limit; what it found so far is below",
+            "failed": "could not be run: " + str(answer.get("error") or "")}.get(status, status)
+    lead = {"exam": said, "name": answer.get("name"), "examplesDone": "%s of %s" % (answer.get("done"), answer.get("examples")),
+            "spent": answer.get("spent"), "limit": answer.get("limit")}
+    before, after = answer.get("before"), answer.get("after") or {}
+    if before:
+        lead["result"] = "%s: right in %s of %s, it was %s" % (answer.get("verdict") or "not known yet", after.get("right"), after.get("of"),
+                                                               before.get("right"))
+    else:
+        lead["result"] = "right in %s of %s, on what is live now" % (after.get("right"), after.get("of"))
+    if answer.get("outdated"):
+        lead["outOfDate"] = "the draft, what is live or the examples changed since; run it again to see how it does now"
+    lead.update({k: v for k, v in answer.items() if k not in lead})
+    return lead
+
+
+@tool("list_examples",
+      "The examples of an agent or a workflow: finished cases with a known right answer, which every change to it is "
+      "tried on before it is applied. Also how its last exam went, how often the judge agrees with people, how many "
+      "cases are worth adding, and what an exam would cost.",
+      {"of": {"type": "string", "enum": ["agent", "workflow"]}, "key": dict(S, description="the agent's or workflow's key")},
+      ["of", "key"])
+def list_examples(a):
+    return call("GET", "/api/examples", query={"of": a["of"], "key": a["key"]})
+
+
+@tool("case_examples",
+      "What a finished case can be an example of (each agent that decided in it, and its workflow), with what came in "
+      "and the right answer taken from what a person approved, changed or declined; or why it cannot be one.",
+      {"caseId": S}, ["caseId"])
+def case_examples(a):
+    return call("GET", "/api/cases/%s/examples" % quote(a["caseId"]))
+
+
+@tool("add_example",
+      "Keep a finished case as an example of an agent or a workflow. Its right answer is what a person made of it; "
+      "say why it is right in `why` when it helps the judge. Needs an access that may propose changes.",
+      {"caseId": S, "of": {"type": "string", "enum": ["agent", "workflow"]}, "key": S,
+       "why": dict(S, description="optional: why the right answer is right, read by the judge")},
+      ["caseId", "of", "key"], read_only=False)
+def add_example(a):
+    return call("POST", "/api/examples", {k: a.get(k) for k in ("caseId", "of", "key", "why")})
+
+
+@tool("remove_example",
+      "Take an example away: changes are no longer tried on it. The case itself stays. Only on the user's word.",
+      {"id": dict(S, description="the example's id, from list_examples")}, ["id"], read_only=False, destructive=True)
+def remove_example(a):
+    return call("DELETE", "/api/examples/%s" % quote(a["id"]))
+
+
+@tool("run_exam",
+      "Try a change on the examples before it is applied: with `changeId`, a draft of an agent or a workflow next to "
+      "what is live; with `of` and `key`, what is live alone. Nothing is sent anywhere; it costs money on AI, about "
+      "what get_exam's estimate says, and stops at the installation's limit for one exam. A draft with 5 or more "
+      "examples is tried by itself when it is saved. Needs an access that may propose changes.",
+      {"changeId": S, "of": {"type": "string", "enum": ["agent", "workflow"]}, "key": S}, read_only=False)
+def run_exam(a):
+    if a.get("changeId"):
+        return exam(call("POST", "/api/changes/%s/exam" % quote(a["changeId"])))
+    if not a.get("of") or not a.get("key"):
+        raise Refused("Say which draft to try (changeId), or which agent or workflow to try as it is live (of and key).")
+    return exam(call("POST", "/api/exams", {"of": a["of"], "key": a["key"]}))
+
+
+@tool("get_exam",
+      "How an exam went: with `changeId`, the latest exam of that draft, what one would cost and why it cannot run "
+      "yet if it cannot; with `id`, one exam. Better or worse than what is live, right in how many examples, what got "
+      "worse and better with the right answer beside it, and what it cost. Tell the user before they apply a draft.",
+      {"changeId": S, "id": S})
+def get_exam(a):
+    if a.get("changeId"):
+        answer = call("GET", "/api/changes/%s/exam" % quote(a["changeId"]))
+        if isinstance(answer, dict) and isinstance(answer.get("exam"), dict):
+            answer["exam"] = exam(answer["exam"])
+        return answer
+    if a.get("id"):
+        return exam(call("GET", "/api/exams/%s" % quote(a["id"])))
+    raise Refused("Say which draft (changeId) or which exam (id).")
+
+
+@tool("stop_exam", "Stop a running exam after the example it is on; what it found so far stays.",
+      {"id": S}, ["id"], read_only=False)
+def stop_exam(a):
+    return exam(call("POST", "/api/exams/%s/stop" % quote(a["id"])))
+
+
 @tool("read_api",
       "Read anything else the installation's HTTP API offers (GET only), e.g. /api/knowledge/{place}/entries or "
       "/api/results?days=7. Use the specific tools first.",

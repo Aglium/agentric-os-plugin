@@ -110,6 +110,28 @@ class Settings(unittest.TestCase):
         self.assertNotIn("Traceback", text)
 
 
+class Exams(unittest.TestCase):
+    """An exam is read with what matters first, and a tool asked without what it needs says so in words."""
+
+    def test_an_exam_of_a_draft_leads_with_better_or_worse_and_what_it_cost(self):
+        said = server.exam({"status": "done", "name": "Refund writer", "done": 7, "examples": 7, "spent": 0.21, "limit": 2.0,
+                            "verdict": "worse", "before": {"right": 3, "of": 7}, "after": {"right": 2, "of": 7}, "worse": []})
+        self.assertEqual(list(said)[:6], ["exam", "name", "examplesDone", "spent", "limit", "result"])
+        self.assertEqual(said["result"], "worse: right in 2 of 7, it was 3")
+        self.assertEqual(said["exam"], "finished")
+
+    def test_an_exam_still_running_says_when_to_ask_again(self):
+        said = server.exam({"status": "running", "done": 2, "examples": 7, "after": {"right": 0, "of": 0}})
+        self.assertIn("ask again", said["exam"])
+        self.assertEqual(said["examplesDone"], "2 of 7")
+
+    def test_get_exam_without_a_draft_or_an_exam_says_what_it_needs(self):
+        answer = server.handle({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "get_exam", "arguments": {}}})
+        text = json.dumps(answer)
+        self.assertIn("Say which draft", text)
+        self.assertNotIn("Traceback", text)
+
+
 class Versions(unittest.TestCase):
     def test_the_server_and_the_plugin_say_the_same_version(self):
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

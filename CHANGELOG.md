@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- A change to an agent or a workflow can be tried on its examples before it is applied: `list_examples` (the examples, the last exam, how often the judge agrees with people, the cases worth adding, what an exam costs), `case_examples` and `add_example` (keep a finished case with its right answer), `remove_example`, `run_exam` (a draft next to what is live, or what is live alone), `get_exam` (better, worse or the same, right in how many, what got worse, what it cost) and `stop_exam`. The skill asks to try a draft and say how it went before asking to apply it. Needs an installation with examples and exams, and an access that may propose changes (`agentric-os`).
+
 - The plugin says under what terms it may be used: by clients of Aglium only, under their agreement with Aglium, to work with their own installation (`LICENSE`, named in the README and in the plugin's description for Claude Code). It contains no third-party code.
 - The plugin is installed from its public repository: `claude plugin marketplace add https://gitlab.com/aglium/aglium_os/agentric-os-plugin.git`, then `claude plugin install agentric-os@aglium` and `/plugin configure agentric-os@aglium`. A newer version is taken with `claude plugin marketplace update aglium`.
 - Every push is checked: the server compiles, its checks pass (where the address and the token are taken from, the environment before the file; a file other people can read is refused; what is missing is said in plain words), and Claude Code accepts the plugin. A tag makes a GitLab release named as the tag, and is refused when it is not the version the plugin says.
