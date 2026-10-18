@@ -407,14 +407,17 @@ def exam(answer):
     if not isinstance(answer, dict) or "status" not in answer:
         return answer
     status = answer.get("status")
-    said = {"running": "still running: ask again with get_exam in a minute",
+    said = {"running": "stopping after the example it is on; ask again with get_exam in a minute" if answer.get("stopping")
+            else "still running: ask again with get_exam in a minute",
             "done": "finished", "stopped": "stopped before the end; what it found so far is below",
             "limit": "stopped at its spending limit; what it found so far is below",
             "failed": "could not be run: " + str(answer.get("error") or "")}.get(status, status)
     lead = {"exam": said, "name": answer.get("name"), "examplesDone": "%s of %s" % (answer.get("done"), answer.get("examples")),
             "spent": answer.get("spent"), "limit": answer.get("limit")}
     before, after = answer.get("before"), answer.get("after") or {}
-    if before:
+    if not after.get("of"):
+        lead["result"] = "not known yet: no example is finished"
+    elif before:
         lead["result"] = "%s: right in %s of %s, it was %s" % (answer.get("verdict") or "not known yet", after.get("right"), after.get("of"),
                                                                before.get("right"))
     else:

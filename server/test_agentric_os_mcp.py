@@ -124,6 +124,11 @@ class Exams(unittest.TestCase):
         said = server.exam({"status": "running", "done": 2, "examples": 7, "after": {"right": 0, "of": 0}})
         self.assertIn("ask again", said["exam"])
         self.assertEqual(said["examplesDone"], "2 of 7")
+        self.assertEqual(said["result"], "not known yet: no example is finished")
+
+    def test_an_exam_asked_to_stop_says_it_is_stopping(self):
+        said = server.exam({"status": "running", "stopping": True, "done": 1, "examples": 7, "after": {"right": 1, "of": 1}})
+        self.assertTrue(said["exam"].startswith("stopping after the example it is on"))
 
     def test_get_exam_without_a_draft_or_an_exam_says_what_it_needs(self):
         answer = server.handle({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "get_exam", "arguments": {}}})
