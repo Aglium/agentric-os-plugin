@@ -319,6 +319,62 @@ def decide_approval(a):
     return call("POST", "/api/approvals/%s" % quote(a["commandId"]), {"approved": bool(a["approved"])})
 
 
+# problems: what is wrong with the installation or works badly in it, what it costs, and what was drafted about it
+
+@tool("list_problems",
+      "What is wrong with the installation or works badly in it now, the latest found first. Each problem says what "
+      "is wrong (`what`), why (`cause`), what it costs (`worth`: work standing still, `perDay`, `perMonth`: work "
+      "people do again or that is not saved, `overUsual`: AI spent above a usual day; `unpriced` when nobody said "
+      "what the work is worth), where (`where`: workflow, step, agent, connection), what a person can open "
+      "(`actions`) and the drafts already made about it (`changes`). Kinds include steps that keep failing, "
+      "connections gone silent, AI spending far above usual, unusual situations that keep coming back, agents "
+      "people often correct and workflows that hand many cases to people. Before drafting a change about one, look "
+      "at its `changes`: somebody may be on it already.",
+      {"gone": dict(B, description="also the problems that went away, after those there are now"), "limit": I})
+def list_problems(a):
+    return call("GET", "/api/problems", query={"gone": str(a["gone"]).lower() if "gone" in a else None,
+                                               "limit": a.get("limit", 50)})
+
+
+@tool("get_problem", "One problem as list_problems gives it, as it is now; `present: false` when it went away.",
+      {"id": I}, ["id"])
+def get_problem(a):
+    return call("GET", "/api/problems/%s" % quote(a["id"]))
+
+
+@tool("list_repeating_situations",
+      "Unusual situations agents keep meeting since they last changed, the most frequent first: what blocked the "
+      "agent (`blockers`), how many cases and how often, what it cost in AI and in people's time (`monthly`: by the "
+      "month), the ways it can be closed for good (`ways`), and a draft already waiting (`draft`).")
+def list_repeating_situations(a):
+    return call("GET", "/api/situations/repeating")
+
+
+@tool("close_situation",
+      "Close a repeating situation for good in one of its `ways`: allow (the agent may do what it needed), permit (a "
+      "person allows it once each time), wait (wait and ask again), instruct (tell the agent what to do; `text` "
+      "required), knowledge (the question goes to the knowledge, `text` optional). Except for knowledge it writes a "
+      "draft of the agent under Changes, made about the problem the situation is; nothing takes effect before the "
+      "draft is applied.",
+      {"key": dict(S, description="the situation's key from list_repeating_situations"),
+       "way": {"type": "string", "enum": ["allow", "permit", "wait", "instruct", "knowledge"]},
+       "text": S},
+      ["key", "way"], read_only=False)
+def close_situation(a):
+    return call("POST", "/api/situations/close", {k: a[k] for k in ("key", "way", "text") if k in a})
+
+
+@tool("test_run",
+      "How a workflow in Test run is doing: how many of its cases a person compared with what they would have done "
+      "and found the same, different or not needed, and whether switching it to Live would be asked about first. "
+      "Without `workflow`: the test run cases waiting for a person to compare them.",
+      {"workflow": dict(S, description="workflow key"), "limit": I})
+def test_run(a):
+    if a.get("workflow"):
+        return call("GET", "/api/case-types/%s/test-run" % quote(a["workflow"]))
+    return call("GET", "/api/test-runs/waiting", query={"limit": a.get("limit", 20)})
+
+
 # drafts
 
 def change(answer):
@@ -358,10 +414,12 @@ def list_change_kinds(a):
        "tenantId": S,
        "payload": {"type": "object"},
        "remove": B,
-       "note": dict(S, description="why, in words the person who applies it will read")},
+       "note": dict(S, description="why, in words the person who applies it will read"),
+       "problem": dict(I, description="the problem the draft is about (id from list_problems): the draft then says "
+                                      "why it was made, and the problem lists it")},
       ["kind", "note"], read_only=False)
 def propose_change(a):
-    body = {k: a[k] for k in ("kind", "target", "tenantId", "payload", "remove", "note") if k in a}
+    body = {k: a[k] for k in ("kind", "target", "tenantId", "payload", "remove", "note", "problem") if k in a}
     return change(call("POST", "/api/changes", body))
 
 
@@ -372,10 +430,12 @@ def update_change(a):
     return change(call("PUT", "/api/changes/%s" % quote(a["id"]), body))
 
 
-@tool("list_changes", "Drafts waiting to be applied, and the history of applied changes (by people and by agents).",
-      {"status": {"type": "string", "enum": ["DRAFT", "APPLIED", "DISCARDED"]}, "kind": S, "target": S, "limit": I})
+@tool("list_changes", "Drafts waiting to be applied, and the history of applied changes (by people and by agents). "
+      "Each says the problem it was made about (`because`), when one was named.",
+      {"status": {"type": "string", "enum": ["DRAFT", "APPLIED", "DISCARDED"]}, "kind": S, "target": S,
+       "problem": dict(I, description="only the changes made about this problem"), "limit": I})
 def list_changes(a):
-    return call("GET", "/api/changes", query={k: a.get(k) for k in ("status", "kind", "target", "limit")})
+    return call("GET", "/api/changes", query={k: a.get(k) for k in ("status", "kind", "target", "problem", "limit")})
 
 
 @tool("get_change", "One change: what was live (before), what it makes (after), its problems and warnings, who made "

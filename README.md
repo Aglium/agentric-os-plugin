@@ -99,6 +99,12 @@ with a known right answer) and says whether it got better or worse and what the 
 anywhere and stops at the installation's limit for one exam. An access that may propose changes may also keep
 examples and run exams.
 
+It also sees what is wrong with the installation or works badly in it, and what each problem costs: steps that keep
+failing, connections gone silent, agents people often correct, workflows that hand many cases to people, unusual
+situations that keep coming back, and how a workflow in Test run compares with people. A draft it makes about a
+problem names that problem, so the person who applies it sees why it was made and, afterwards, whether the problem
+went away.
+
 What the agent may do is decided by the installation, from the rights of the access. Sign-in details of connections
 are never available to it. A revoked or expired token stops working at once.
 

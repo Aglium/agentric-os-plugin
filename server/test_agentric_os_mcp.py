@@ -137,6 +137,41 @@ class Exams(unittest.TestCase):
         self.assertNotIn("Traceback", text)
 
 
+class Problems(unittest.TestCase):
+    """A draft names the problem it is about, and the problems, situations and Test run can be read."""
+
+    def setUp(self):
+        self.calls = []
+        self.real = server.call
+        server.call = lambda method, path, body=None, query=None: self.calls.append((method, path, body, query)) or {}
+
+    def tearDown(self):
+        server.call = self.real
+
+    def run_tool(self, name, arguments):
+        tool = next(t for t in server.TOOLS if t["name"] == name)
+        return tool["run"](arguments)
+
+    def test_a_draft_about_a_problem_says_which(self):
+        self.run_tool("propose_change", {"kind": "agent", "target": "helper", "payload": {}, "note": "why", "problem": 7})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/changes", {"kind": "agent", "target": "helper", "payload": {}, "note": "why", "problem": 7}))
+
+    def test_problems_situations_and_test_runs_are_read_where_the_installation_keeps_them(self):
+        self.run_tool("list_problems", {"gone": True})
+        self.assertEqual(self.calls[-1][1], "/api/problems")
+        self.assertEqual(self.calls[-1][3]["gone"], "true")
+        self.run_tool("get_problem", {"id": 3})
+        self.assertEqual(self.calls[-1][1], "/api/problems/3")
+        self.run_tool("list_repeating_situations", {})
+        self.assertEqual(self.calls[-1][1], "/api/situations/repeating")
+        self.run_tool("close_situation", {"key": "k", "way": "instruct", "text": "do so"})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/situations/close", {"key": "k", "way": "instruct", "text": "do so"}))
+        self.run_tool("test_run", {"workflow": "answers"})
+        self.assertEqual(self.calls[-1][1], "/api/case-types/answers/test-run")
+        self.run_tool("test_run", {})
+        self.assertEqual(self.calls[-1][1], "/api/test-runs/waiting")
+
+
 class Versions(unittest.TestCase):
     def test_the_server_and_the_plugin_say_the_same_version(self):
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

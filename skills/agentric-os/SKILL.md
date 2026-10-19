@@ -19,6 +19,8 @@ is made of the same few general parts, and you change them through the `agentric
 | Prices and rates | Model prices and what an hour of each role costs | `get_prices` |
 | Cases | Runs of workflows | `list_cases`, `get_case`, `list_approvals` |
 | Examples and exams | Cases with a known right answer, and changes tried on them before they are applied | `list_examples`, `case_examples`, `add_example`, `remove_example`, `run_exam`, `get_exam`, `stop_exam` |
+| Problems | What is wrong with the installation or works badly in it, what it costs, and what was drafted about it | `list_problems`, `get_problem` |
+| Unusual situations and Test run | Situations agents keep meeting, and how a workflow in Test run compares with people | `list_repeating_situations`, `close_situation`, `test_run` |
 
 ## How to work
 
@@ -47,7 +49,15 @@ is made of the same few general parts, and you change them through the `agentric
    (`knowledge.lookups`) and which entries it says it relied on (`entries` with `applied: true`, and `why`). Entries
    that are found again and again but never applied, or that are applied with a wrong reading, are the ones to put
    right (`search_knowledge`, `list_knowledge`, then a `knowledge` change). What the lookups cost is in `knowledge.spent`.
-8. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
+8. **Improve what works badly.** `list_problems` says what costs money now: steps that keep failing, but also agents
+   people often correct and workflows that hand many cases to people, priced by the month. For one of them: read its
+   `changes` first (somebody may be on it), open its cases (the `actions` say where; `list_cases`, `get_case`) and find
+   what they have in common, then draft the smallest change that would settle such cases, with `problem` set to the
+   problem's id so the draft says why it was made. Add the corrected cases as examples (`case_examples`,
+   `add_example`) and try the draft on them before asking anybody to apply it. Tell the user what the problem costs a
+   month, what the draft changes, how its exam went, and what it should save. Once the change has run, `get_problem`
+   says whether the problem is gone.
+9. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
    customer's data in a process: put values in settings, wording in texts, decisions in rules.
 
 ## Things the tools refuse on purpose

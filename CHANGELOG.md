@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- An agent can work on what works badly in the installation: `list_problems` and `get_problem` (what is wrong or works badly, what it costs, including by the month, where, and what was drafted about it), `list_repeating_situations` and `close_situation` (unusual situations agents keep meeting, closed for good by a draft), `test_run` (how a workflow in Test run compares with people). `propose_change` takes `problem`, the problem the draft is about, and `list_changes` gives the changes made about one. The skill says how to go from a problem to a draft tried on its examples, with what it costs and should save. **Needs:** a core with `GET /api/problems` and `problem` on drafts (`agentric-os`).
+
 - `get_case` says that each agent run carries `knowledge`: what the agent looked up, the entries it was given and which of them it says its decision rests on, with why and what the lookups cost; the skill says to look there when asked why an agent decided as it did, and that entries found often and never applied are the ones to put right. Needs an installation whose core gives `knowledge` with a case's agent runs (`agentric-os`).
 
 - `AGENTS.md` says that a commit to `master` is made only when every check of the repository, the same ones CI runs, passes on exactly what is committed, and which checks of other repositories a change here also needs.
