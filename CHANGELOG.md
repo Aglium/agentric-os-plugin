@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `AGENTS.md` says that a commit to `master` is made only when every check of the repository, the same ones CI runs, passes on exactly what is committed, and which checks of other repositories a change here also needs.
+
 - A change to an agent or a workflow can be tried on its examples before it is applied: `list_examples` (the examples, the last exam, how often the judge agrees with people, the cases worth adding, what an exam costs), `case_examples` and `add_example` (keep a finished case with its right answer), `remove_example`, `run_exam` (a draft next to what is live, or what is live alone), `get_exam` (better, worse or the same, right in how many, what got worse, what it cost) and `stop_exam`; an exam not finished says so, and one asked to stop says it is stopping. The skill asks to try a draft and say how it went before asking to apply it. Needs an installation with examples and exams, and an access that may propose changes (`agentric-os`).
 
 - The plugin says under what terms it may be used: by clients of Aglium only, under their agreement with Aglium, to work with their own installation (`LICENSE`, named in the README and in the plugin's description for Claude Code). It contains no third-party code.
