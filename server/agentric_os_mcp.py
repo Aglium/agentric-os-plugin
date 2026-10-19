@@ -289,7 +289,12 @@ def list_cases(a):
                                             "limit": a.get("limit", 20)})
 
 
-@tool("get_case", "One case: its log, the actions it asked for and why, agent runs, and what started it.",
+@tool("get_case", "One case: its log, the actions it asked for and why, agent runs, and what started it. Each agent run has "
+                  "`knowledge`: what the agent looked up (each search with its query, the entries it was given with how close "
+                  "each was and a few lines of it, and what the search cost; on the step's own run, what the whole decision "
+                  "looked up) and which of those entries it says its decision rests on (`applied`, with `why` in its words). "
+                  "`appliedRecorded: false` means the decision was made before agents said this: what it was given is known, "
+                  "what it relied on is not. `removed`: the entry was removed since; what is shown is what the agent was given.",
       {"id": S}, ["id"])
 def get_case(a):
     return call("GET", "/api/cases/%s" % quote(a["id"]))

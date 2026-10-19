@@ -43,7 +43,11 @@ is made of the same few general parts, and you change them through the `agentric
    what is earned. When you add or change steps, set how long a person would take (`byHandMinutes`) and whose work it is
    (`byHandRole`, from `get_prices`) so savings are counted, and tell the user what the change should cost and save.
    After a change has run, compare with `overview`.
-7. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
+7. **Why an agent decided as it did.** `get_case` shows, for each agent run, what it looked up in the knowledge
+   (`knowledge.lookups`) and which entries it says it relied on (`entries` with `applied: true`, and `why`). Entries
+   that are found again and again but never applied, or that are applied with a wrong reading, are the ones to put
+   right (`search_knowledge`, `list_knowledge`, then a `knowledge` change). What the lookups cost is in `knowledge.spent`.
+8. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
    customer's data in a process: put values in settings, wording in texts, decisions in rules.
 
 ## Things the tools refuse on purpose
