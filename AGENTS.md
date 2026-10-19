@@ -63,6 +63,27 @@ claude plugin validate .
 The version is in `.claude-plugin/plugin.json` and, the same, in `VERSION` of `server/agentric_os_mcp.py`. A
 release is a tag named exactly as that version (`0.1.0`); the pipeline refuses a tag that says otherwise.
 
+## Before a commit to master
+
+A commit to `master` (or `main`) is made only when everything this repository checks is green on exactly what
+is being committed. Not after the commit, not "CI will tell":
+
+1. Run every check below, the same ones `.gitlab-ci.yml` runs. In a shared checkout other agents' uncommitted
+   changes are in the tree, so run them on a copy holding `HEAD` plus your own changes only; a result that includes someone else's half-done work says nothing about your commit.
+2. Commit only when all of it passes. A failing test or check is fixed, or the commit waits and the owner is
+   told what fails and why. Never skip, disable or loosen a test to get a commit through, and never wave a
+   failure away as "not mine": if it is red on `master`, say so and fix it or stop.
+3. A change other repositories depend on is also checked where it is used (below): a contract changed here
+   and left unchecked there turns their checks red without anyone touching them.
+4. The `CHANGELOG.md` line goes into the same commit (see "Changelog").
+
+```bash
+python3 -m py_compile server/agentric_os_mcp.py server/test_agentric_os_mcp.py ci/release.py
+python3 -m unittest discover -s server -v
+python3 ci/release.py check
+claude plugin validate .
+```
+
 ## Changelog
 
 `CHANGELOG.md` is kept by hand and is part of every change: a commit that changes what the repository does
