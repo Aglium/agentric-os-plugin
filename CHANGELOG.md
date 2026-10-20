@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `list_problems` and `get_problem` say what the installation's own agent found in the cases behind a problem (`findings`: what they have in common, the cases, what is missing, what to change or the outline of a new workflow, what it should save, what to watch) and which draft waits about it; the skill says to start from the newest finding and how to build a new workflow from its outline as a draft in Test run. **Needs:** a core that keeps findings with problems (`agentric-os`).
+
 - `discard_change` takes `note`, why the draft is declined; it is kept with the draft, and a change says it as `declinedBecause`. **Needs:** a core that keeps why a draft was declined (`agentric-os`).
 
 - An agent can work on what works badly in the installation: `list_problems` and `get_problem` (what is wrong or works badly, what it costs, including by the month, where, and what was drafted about it), `list_repeating_situations` and `close_situation` (unusual situations agents keep meeting, closed for good by a draft), `test_run` (how a workflow in Test run compares with people). `propose_change` takes `problem`, the problem the draft is about, and `list_changes` gives the changes made about one. The skill says how to go from a problem to a draft tried on its examples, with what it costs and should save. **Needs:** a core with `GET /api/problems` and `problem` on drafts (`agentric-os`).

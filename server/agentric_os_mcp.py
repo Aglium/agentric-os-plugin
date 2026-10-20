@@ -326,7 +326,11 @@ def decide_approval(a):
       "is wrong (`what`), why (`cause`), what it costs (`worth`: work standing still, `perDay`, `perMonth`: work "
       "people do again or that is not saved, `overUsual`: AI spent above a usual day; `unpriced` when nobody said "
       "what the work is worth), where (`where`: workflow, step, agent, connection), what a person can open "
-      "(`actions`) and the drafts already made about it (`changes`). Kinds include steps that keep failing, "
+      "(`actions`), the drafts already made about it (`changes`, `draftWaiting`, each declined one with "
+      "`declinedBecause`) and what the installation's own agent found in the cases behind it (`findings`, newest "
+      "first: `common`, the `cases` it rests on, `missing`, `next` (change, new workflow or nothing), `change`, "
+      "`newWorkflow` (name, startsOn, steps, the agents, rules, texts and connections it needs, handsToPerson), "
+      "`saves` and `risks`). A finding is the starting point for changing a workflow or building a new one. Kinds include steps that keep failing, "
       "connections gone silent, AI spending far above usual, unusual situations that keep coming back, agents "
       "people often correct and workflows that hand many cases to people. Before drafting a change about one, look "
       "at its `changes`: somebody may be on it already.",

@@ -57,6 +57,12 @@ is made of the same few general parts, and you change them through the `agentric
    `add_example`) and try the draft on them before asking anybody to apply it. Tell the user what the problem costs a
    month, what the draft changes, how its exam went, and what it should save. Once the change has run, `get_problem`
    says whether the problem is gone.
+   The installation's own agent may have been there first: a problem's `findings` say what the cases have in common,
+   which cases show it, what is missing and what to do next. Start from the newest finding instead of reading the
+   cases again. With `next: new workflow`, its `newWorkflow` outline is what to build: take the events it starts on
+   and the operations from `list_connections`, build the steps from `list_blocks`, `check_workflow` it, and propose it
+   as a `workflow` draft in Test run (`shadow: true`) with `problem` set. A draft declined before says why
+   (`declinedBecause`): do not propose the same again.
 9. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
    customer's data in a process: put values in settings, wording in texts, decisions in rules.
 
