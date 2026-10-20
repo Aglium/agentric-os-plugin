@@ -454,9 +454,11 @@ def apply_change(a):
     return change(call("POST", "/api/changes/%s/apply" % quote(a["id"])))
 
 
-@tool("discard_change", "Drop a draft that is not applied.", {"id": S}, ["id"], read_only=False)
+@tool("discard_change", "Drop a draft that is not applied. `note` says why; it is kept with the draft, and whoever drafts "
+      "the same thing next (a person or the installation's own agent) reads it.",
+      {"id": S, "note": S}, ["id"], read_only=False)
 def discard_change(a):
-    return change(call("POST", "/api/changes/%s/discard" % quote(a["id"])))
+    return change(call("POST", "/api/changes/%s/discard" % quote(a["id"]), {"note": a["note"]} if a.get("note") else {}))
 
 
 @tool("revert_change", "Propose putting back what was live before an applied change. Makes a draft; it still has to "
