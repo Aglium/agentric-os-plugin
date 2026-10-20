@@ -92,6 +92,9 @@ claude plugin validate .
   list, the skill and `CHANGELOG.md` in the same commit.
 - **The installation's HTTP API is described in the core's `docs/openapi.yaml`.** The server calls only what is
   described there; when a tool needs something the API does not offer, the API and its description change first.
+- **In English, and no working notes.** Every document is in English. Reports of a check, screenshots of one,
+  plans and notes made while working do not go into `docs/`: what was checked is said where the work is discussed,
+  and what changed is said in the changelog.
 
 ## Changelog
 

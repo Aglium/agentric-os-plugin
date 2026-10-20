@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `AGENTS.md`: every document is in English, and reports, screenshots and notes made while working stay out of `docs/`.
+
 - `AGENTS.md` says the README, the skill and the changelog change in the same commit as a tool, and that the server calls only what the installation's API description has.
 
 - `list_problems` and `get_problem` say what the installation's own agent found in the cases behind a problem (`findings`: what they have in common, the cases, what is missing, what to change or the outline of a new workflow, what it should save, what to watch) and which draft waits about it; the skill says to start from the newest finding and how to build a new workflow from its outline as a draft in Test run. **Needs:** a core that keeps findings with problems (`agentric-os`).
