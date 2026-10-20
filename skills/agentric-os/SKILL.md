@@ -56,7 +56,9 @@ is made of the same few general parts, and you change them through the `agentric
    problem's id so the draft says why it was made. Add the corrected cases as examples (`case_examples`,
    `add_example`) and try the draft on them before asking anybody to apply it. Tell the user what the problem costs a
    month, what the draft changes, how its exam went, and what it should save. Once the change has run, `get_problem`
-   says whether the problem is gone.
+   says whether the problem is gone, and `get_change` says how the change works since it was applied (`watch`: the
+   share before and since, better, the same or worse, and what it saves or loses a month). One that made things worse
+   becomes a problem of its own, with a draft that puts it back.
    The installation's own agent may have been there first: a problem's `findings` say what the cases have in common,
    which cases show it, what is missing and what to do next. Start from the newest finding instead of reading the
    cases again. With `next: new workflow`, its `newWorkflow` outline is what to build: take the events it starts on

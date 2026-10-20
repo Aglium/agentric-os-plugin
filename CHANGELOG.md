@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- The skill says that `get_change` tells how a change made about a problem works since it was applied (`watch`), and that one that made things worse comes back as a problem with a draft putting it back. **Needs:** a core that watches applied changes (`agentric-os`).
+
 - `apply_change` takes `askAgain`: for a change of an agent, the cases it handed to people that still wait are put to it again once applied, and each shows what it would do for a person to do with one press. **Needs:** a core that asks again after a change (`agentric-os`).
 
 - `AGENTS.md`: every document is in English, and reports, screenshots and notes made while working stay out of `docs/`.
