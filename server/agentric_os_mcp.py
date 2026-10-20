@@ -452,10 +452,13 @@ def get_change(a):
 @tool("apply_change",
       "Make a draft live. Only with the user's explicit word for this draft, and only after showing them what it "
       "changes. Needs an access with the right to apply; without it, a person applies it in the Control Center. "
-      "Refused while the draft has problems or when what is live changed since the draft was made.",
-      {"id": S}, ["id"], read_only=False, destructive=True)
+      "Refused while the draft has problems or when what is live changed since the draft was made. For a change of an "
+      "agent, `askAgain` puts the cases it handed to people, still waiting, to it again once applied (it only decides; "
+      "a person does what it says on each case); read how many and what it costs first with `GET "
+      "/api/changes/{id}/ask-again` (read_api).",
+      {"id": S, "askAgain": B}, ["id"], read_only=False, destructive=True)
 def apply_change(a):
-    return change(call("POST", "/api/changes/%s/apply" % quote(a["id"])))
+    return change(call("POST", "/api/changes/%s/apply" % quote(a["id"]), {"askAgain": bool(a.get("askAgain"))}))
 
 
 @tool("discard_change", "Drop a draft that is not applied. `note` says why; it is kept with the draft, and whoever drafts "

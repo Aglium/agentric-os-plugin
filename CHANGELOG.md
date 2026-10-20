@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `apply_change` takes `askAgain`: for a change of an agent, the cases it handed to people that still wait are put to it again once applied, and each shows what it would do for a person to do with one press. **Needs:** a core that asks again after a change (`agentric-os`).
+
 - `AGENTS.md`: every document is in English, and reports, screenshots and notes made while working stay out of `docs/`.
 
 - `AGENTS.md` says the README, the skill and the changelog change in the same commit as a tool, and that the server calls only what the installation's API description has.
