@@ -84,6 +84,15 @@ python3 ci/release.py check
 claude plugin validate .
 ```
 
+## Documentation is part of the change
+
+- **`README.md` is what a user of the plugin reads**: what it is, how to connect it, what it can and cannot do.
+  Anything longer goes into `docs/` with a link from the README.
+- **Documents change in the same commit as the code.** A tool added, removed or changed changes the README's
+  list, the skill and `CHANGELOG.md` in the same commit.
+- **The installation's HTTP API is described in the core's `docs/openapi.yaml`.** The server calls only what is
+  described there; when a tool needs something the API does not offer, the API and its description change first.
+
 ## Changelog
 
 `CHANGELOG.md` is kept by hand and is part of every change: a commit that changes what the repository does
