@@ -18,6 +18,7 @@ is made of the same few general parts, and you change them through the `agentric
 | Knowledge | Places where the business keeps what it knows | `list_knowledge`, `search_knowledge` |
 | Prices and rates | Model prices and what an hour of each role costs | `get_prices` |
 | Cases | Runs of workflows | `list_cases`, `get_case`, `list_approvals`, `list_questions`, `answer_question` |
+| New workflows | Made from a description | `draft_workflow_from_description`, `get_workflow_launch`, `try_workflow_draft` |
 | Examples and exams | Cases with a known right answer, and changes tried on them before they are applied | `list_examples`, `case_examples`, `add_example`, `remove_example`, `run_exam`, `get_exam`, `stop_exam` |
 | Problems | What is wrong with the installation or works badly in it, what it costs, and what was drafted about it | `list_problems`, `get_problem` |
 | Unusual situations and Test run | Situations agents keep meeting, and how a workflow in Test run compares with people | `list_repeating_situations`, `close_situation`, `test_run` |
@@ -70,7 +71,13 @@ is made of the same few general parts, and you change them through the `agentric
    employee waits in `list_questions`; answer one (`answer_question`) only with the user's own answer. To build such a
    workflow, use the step “Agent handles the case” from `list_blocks` with an agent, a goal, a checker that reads what
    shows the goal, and limits, and propose it in Test run.
-10. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
+10. **A new workflow from a description.** When the user describes work in plain words, `draft_workflow_from_description`
+   makes the whole thing as one draft (the workflow in test run with an agent that handles each case, its agents, its
+   approval rules) from what the connections already offer; read it with `get_workflow_launch`. Say what it holds and,
+   when something is `missing`, that a person will be asked to do it until a connection offers it. Try it with
+   `try_workflow_draft`, then the user applies it under Changes. `get_workflow_launch` with `workflow` says how long it
+   took to launch.
+11. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
    customer's data in a process: put values in settings, wording in texts, decisions in rules.
 
 ## Things the tools refuse on purpose

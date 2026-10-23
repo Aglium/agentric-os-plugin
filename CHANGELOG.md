@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `draft_workflow_from_description` makes a new workflow from a description in plain words as one draft under Changes; `get_workflow_launch` reads where it got to (or how long a workflow took to launch); `try_workflow_draft` tries it on recent events, nothing sent. **Needs:** a core that makes workflows from descriptions (`agentric-os`).
+
 - `get_case` says how an agent that handles a case towards a goal is handling it (`leads`: the goal, what it waits for, its limits, each move with its reason, result and cost). `list_questions` lists the questions such agents asked employees; `answer_question` answers one on the user's word. **Needs:** a core with the step “Agent handles the case” (`agentric-os`).
 
 - The skill says that `get_change` tells how a change made about a problem works since it was applied (`watch`), and that one that made things worse comes back as a problem with a draft putting it back. **Needs:** a core that watches applied changes (`agentric-os`).

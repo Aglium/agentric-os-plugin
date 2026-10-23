@@ -319,6 +319,42 @@ def answer_question(a):
     return call("POST", "/api/cases/%s/questions/%s" % (quote(a["caseId"]), quote(a["questionId"])), {"answer": a["answer"]})
 
 
+@tool("draft_workflow_from_description",
+      "Make a new workflow from a description in plain words: the installation's own assistant plans it from what the "
+      "connections already offer, the installation checks the plan and keeps everything new (the workflow in test run, its "
+      "agents, its approval rules) as one draft under Changes. Nothing is live until a person applies it. Answers at once "
+      "with `status: making`; read it with get_workflow_launch until it is ready (`made`: what it holds in words), needs one "
+      "thing (`missing`: an action no connection offers, which a person is asked to do meanwhile) or could not be made "
+      "(`error`). Needs the right to propose changes.",
+      {"description": S, "byHandMinutes": dict(I, description="how long the work takes a person today"),
+       "byHandRole": dict(S, description="whose work it is, a role of the price list (get_prices); leave out for the usual one")},
+      ["description"], read_only=False)
+def draft_workflow_from_description(a):
+    return call("POST", "/api/workflow-launches", {k: a[k] for k in ("description", "byHandMinutes", "byHandRole") if k in a})
+
+
+@tool("get_workflow_launch",
+      "Where a workflow made from a description got to: the draft and what it holds, what is missing, how trying it on "
+      "examples went (`trial`, `tried`, `asExpected`), and when it was described, drafted, tried and put in test run. With "
+      "workflow instead of id: how long that workflow took to launch and the changes made to it since.",
+      {"id": S, "workflow": S})
+def get_workflow_launch(a):
+    if a.get("workflow"):
+        return call("GET", "/api/case-types/%s/launch" % quote(a["workflow"]))
+    if not a.get("id"):
+        raise Refused("Say which: the id draft_workflow_from_description answered with, or the workflow's key")
+    return call("GET", "/api/workflow-launches/%s" % quote(a["id"]))
+
+
+@tool("try_workflow_draft",
+      "Try a workflow made from a description on examples before it is applied: the latest events that would start it, "
+      "each run with every action recorded and nothing sent, nothing kept. Read the outcome with get_workflow_launch. "
+      "Needs the right to propose changes.",
+      {"id": S}, ["id"], read_only=False)
+def try_workflow_draft(a):
+    return call("POST", "/api/workflow-launches/%s/try" % quote(a["id"]))
+
+
 @tool("list_approvals", "Actions in connected systems waiting for a person's decision, each with the reason given.")
 def list_approvals(a):
     return call("GET", "/api/approvals")

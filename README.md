@@ -105,6 +105,9 @@ situations that keep coming back, and how a workflow in Test run compares with p
 problem names that problem, so the person who applies it sees why it was made and, afterwards, whether the problem
 went away.
 
+It can make a new workflow from a description in plain words, as one draft built only from what your connections already
+offer, try it on recent events without sending anything, and say how long it took to launch.
+
 For a case an agent handles towards a goal, it reads how the agent is handling it (each move, why, what came of it
 and what it cost), sees the questions such agents ask employees, and answers one on your word.
 

@@ -177,6 +177,16 @@ class Problems(unittest.TestCase):
         self.run_tool("answer_question", {"caseId": "c1", "questionId": "q1", "answer": "It was unplugged"})
         self.assertEqual(self.calls[-1][:3], ("POST", "/api/cases/c1/questions/q1", {"answer": "It was unplugged"}))
 
+    def test_a_workflow_is_drafted_from_a_description_and_its_launch_read(self):
+        self.run_tool("draft_workflow_from_description", {"description": "Record supplier invoices", "byHandMinutes": 12})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/workflow-launches", {"description": "Record supplier invoices", "byHandMinutes": 12}))
+        self.run_tool("get_workflow_launch", {"id": "l1"})
+        self.assertEqual(self.calls[-1][1], "/api/workflow-launches/l1")
+        self.run_tool("get_workflow_launch", {"workflow": "invoices"})
+        self.assertEqual(self.calls[-1][1], "/api/case-types/invoices/launch")
+        self.run_tool("try_workflow_draft", {"id": "l1"})
+        self.assertEqual(self.calls[-1][:2], ("POST", "/api/workflow-launches/l1/try"))
+
 
 class Versions(unittest.TestCase):
     def test_the_server_and_the_plugin_say_the_same_version(self):
