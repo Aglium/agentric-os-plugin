@@ -105,6 +105,9 @@ situations that keep coming back, and how a workflow in Test run compares with p
 problem names that problem, so the person who applies it sees why it was made and, afterwards, whether the problem
 went away.
 
+For a case an agent handles towards a goal, it reads how the agent is handling it (each move, why, what came of it
+and what it cost), sees the questions such agents ask employees, and answers one on your word.
+
 What the agent may do is decided by the installation, from the rights of the access. Sign-in details of connections
 are never available to it. A revoked or expired token stops working at once.
 

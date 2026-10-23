@@ -17,7 +17,7 @@ is made of the same few general parts, and you change them through the `agentric
 | Connections | Connected systems with their events and operations | `list_connections` |
 | Knowledge | Places where the business keeps what it knows | `list_knowledge`, `search_knowledge` |
 | Prices and rates | Model prices and what an hour of each role costs | `get_prices` |
-| Cases | Runs of workflows | `list_cases`, `get_case`, `list_approvals` |
+| Cases | Runs of workflows | `list_cases`, `get_case`, `list_approvals`, `list_questions`, `answer_question` |
 | Examples and exams | Cases with a known right answer, and changes tried on them before they are applied | `list_examples`, `case_examples`, `add_example`, `remove_example`, `run_exam`, `get_exam`, `stop_exam` |
 | Problems | What is wrong with the installation or works badly in it, what it costs, and what was drafted about it | `list_problems`, `get_problem` |
 | Unusual situations and Test run | Situations agents keep meeting, and how a workflow in Test run compares with people | `list_repeating_situations`, `close_situation`, `test_run` |
@@ -65,14 +65,19 @@ is made of the same few general parts, and you change them through the `agentric
    and the operations from `list_connections`, build the steps from `list_blocks`, `check_workflow` it, and propose it
    as a `workflow` draft in Test run (`shadow: true`) with `problem` set. A draft declined before says why
    (`declinedBecause`): do not propose the same again.
-9. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
+9. **A case an agent handles towards a goal.** `get_case` gives such a step under `leads`: the goal, what it waits
+   for, its limits, and the journal of its moves with the agent's reasons, results and costs. A question it asked an
+   employee waits in `list_questions`; answer one (`answer_question`) only with the user's own answer. To build such a
+   workflow, use the step “Agent handles the case” from `list_blocks` with an agent, a goal, a checker that reads what
+   shows the goal, and limits, and propose it in Test run.
+10. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
    customer's data in a process: put values in settings, wording in texts, decisions in rules.
 
 ## Things the tools refuse on purpose
 
 - Sign-in details of connections (passwords, keys) are never readable or changeable with an access token. A person
   sets them in the Control Center.
-- Approving an action that touches a real system (`decide_approval`) and retrying a case act for real. Do them only when
+- Approving an action that touches a real system (`decide_approval`), answering an agent's question (`answer_question`) and retrying a case act for real. Do them only when
   the user asks for that specific one.
 - A refusal says what is missing (a right on the access, a problem in the draft, something changed meanwhile). Tell
   the user plainly; do not try a way around it.

@@ -171,6 +171,12 @@ class Problems(unittest.TestCase):
         self.run_tool("test_run", {})
         self.assertEqual(self.calls[-1][1], "/api/test-runs/waiting")
 
+    def test_questions_of_agents_are_read_and_answered_where_the_installation_keeps_them(self):
+        self.run_tool("list_questions", {})
+        self.assertEqual(self.calls[-1][1], "/api/questions")
+        self.run_tool("answer_question", {"caseId": "c1", "questionId": "q1", "answer": "It was unplugged"})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/cases/c1/questions/q1", {"answer": "It was unplugged"}))
+
 
 class Versions(unittest.TestCase):
     def test_the_server_and_the_plugin_say_the_same_version(self):

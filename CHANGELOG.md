@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `get_case` says how an agent that handles a case towards a goal is handling it (`leads`: the goal, what it waits for, its limits, each move with its reason, result and cost). `list_questions` lists the questions such agents asked employees; `answer_question` answers one on the user's word. **Needs:** a core with the step “Agent handles the case” (`agentric-os`).
+
 - The skill says that `get_change` tells how a change made about a problem works since it was applied (`watch`), and that one that made things worse comes back as a problem with a draft putting it back. **Needs:** a core that watches applied changes (`agentric-os`).
 
 - `apply_change` takes `askAgain`: for a change of an agent, the cases it handed to people that still wait are put to it again once applied, and each shows what it would do for a person to do with one press. **Needs:** a core that asks again after a change (`agentric-os`).

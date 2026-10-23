@@ -294,10 +294,29 @@ def list_cases(a):
                   "each was and a few lines of it, and what the search cost; on the step's own run, what the whole decision "
                   "looked up) and which of those entries it says its decision rests on (`applied`, with `why` in its words). "
                   "`appliedRecorded: false` means the decision was made before agents said this: what it was given is known, "
-                  "what it relied on is not. `removed`: the entry was removed since; what is shown is what the agent was given.",
+                  "what it relied on is not. `removed`: the entry was removed since; what is shown is what the agent was given. "
+                  "A step where an agent handles the case towards a goal is under `leads`: the goal, the agent and its checker, "
+                  "where it stands (`state`, `waitingFor` in words), its limits and what was used of them (`moves` of `maxMoves`, "
+                  "`spent` of `spendLimit`, `deadline`), why it went to a person (`handedWhy`, `handedLimit`), and its `journal`: "
+                  "each move with its number, kind, the agent's reason (`why`), what came of it (`result`, `bad`) and its cost, "
+                  "with the news that came, people's answers and what the checker said.",
       {"id": S}, ["id"])
 def get_case(a):
     return call("GET", "/api/cases/%s" % quote(a["id"]))
+
+
+@tool("list_questions", "Questions agents that handle cases asked employees and that wait for an answer, oldest first: the "
+      "case, the agent and its goal, the question and why it asks, whom it is for, and whether this access may answer it.")
+def list_questions(a):
+    return call("GET", "/api/questions")
+
+
+@tool("answer_question",
+      "Answer a question an agent that handles a case asked: the agent goes on with the answer. Only with the user's own "
+      "answer, on their explicit word. Needs the right to work with cases.",
+      {"caseId": S, "questionId": S, "answer": S}, ["caseId", "questionId", "answer"], read_only=False)
+def answer_question(a):
+    return call("POST", "/api/cases/%s/questions/%s" % (quote(a["caseId"]), quote(a["questionId"])), {"answer": a["answer"]})
 
 
 @tool("list_approvals", "Actions in connected systems waiting for a person's decision, each with the reason given.")
