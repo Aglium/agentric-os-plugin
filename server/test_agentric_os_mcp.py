@@ -186,6 +186,10 @@ class Problems(unittest.TestCase):
         self.assertEqual(self.calls[-1][1], "/api/case-types/invoices/launch")
         self.run_tool("try_workflow_draft", {"id": "l1"})
         self.assertEqual(self.calls[-1][:2], ("POST", "/api/workflow-launches/l1/try"))
+        self.run_tool("set_workflow_draft_senders", {"id": "l1", "senderDomains": ["@acme.test"]})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/workflow-launches/l1/routing", {"senderDomains": ["@acme.test"], "senders": []}))
+        self.run_tool("set_workflow_draft_senders", {"id": "l1", "remove": True})
+        self.assertEqual(self.calls[-1][:2], ("POST", "/api/workflow-launches/l1/routing/remove"))
 
 
 class Versions(unittest.TestCase):

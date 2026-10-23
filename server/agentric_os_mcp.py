@@ -355,6 +355,22 @@ def try_workflow_draft(a):
     return call("POST", "/api/workflow-launches/%s/try" % quote(a["id"]))
 
 
+@tool("set_workflow_draft_senders",
+      "Say which messages a workflow made from a description takes, where other workflows take messages of its "
+      "connection too (`routing` of get_workflow_launch): the senders' domains or addresses. The draft brings rows of "
+      "Who takes new messages that send these messages to it, applied with the rest of the draft on top of the rows "
+      "there are. With `remove`, the rows are taken out of the draft instead. Use the user's own words for the senders; "
+      "never make one up. Needs the right to propose changes.",
+      {"id": S, "senderDomains": {"type": "array", "items": S, "description": "domains, \"@example.com\" or \"example.com\""},
+       "senders": {"type": "array", "items": S, "description": "addresses"},
+       "remove": dict(B, description="take the rows out of the draft")}, ["id"], read_only=False)
+def set_workflow_draft_senders(a):
+    if a.get("remove"):
+        return call("POST", "/api/workflow-launches/%s/routing/remove" % quote(a["id"]))
+    return call("POST", "/api/workflow-launches/%s/routing" % quote(a["id"]),
+                {"senderDomains": a.get("senderDomains") or [], "senders": a.get("senders") or []})
+
+
 @tool("list_approvals", "Actions in connected systems waiting for a person's decision, each with the reason given.")
 def list_approvals(a):
     return call("GET", "/api/approvals")

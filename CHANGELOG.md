@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `set_workflow_draft_senders` says which messages a workflow made from a description takes, where other workflows take messages of its connection too, or takes those rows of Who takes new messages out of the draft. **Needs:** a core with `POST /api/workflow-launches/{id}/routing` (`agentric-os`).
+
 - `draft_workflow_from_description` makes a new workflow from a description in plain words as one draft under Changes; `get_workflow_launch` reads where it got to (or how long a workflow took to launch); `try_workflow_draft` tries it on recent events, nothing sent. **Needs:** a core that makes workflows from descriptions (`agentric-os`).
 
 - `get_case` says how an agent that handles a case towards a goal is handling it (`leads`: the goal, what it waits for, its limits, each move with its reason, result and cost). `list_questions` lists the questions such agents asked employees; `answer_question` answers one on the user's word. **Needs:** a core with the step “Agent handles the case” (`agentric-os`).

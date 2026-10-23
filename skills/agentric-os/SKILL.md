@@ -18,7 +18,7 @@ is made of the same few general parts, and you change them through the `agentric
 | Knowledge | Places where the business keeps what it knows | `list_knowledge`, `search_knowledge` |
 | Prices and rates | Model prices and what an hour of each role costs | `get_prices` |
 | Cases | Runs of workflows | `list_cases`, `get_case`, `list_approvals`, `list_questions`, `answer_question` |
-| New workflows | Made from a description | `draft_workflow_from_description`, `get_workflow_launch`, `try_workflow_draft` |
+| New workflows | Made from a description | `draft_workflow_from_description`, `get_workflow_launch`, `try_workflow_draft`, `set_workflow_draft_senders` |
 | Examples and exams | Cases with a known right answer, and changes tried on them before they are applied | `list_examples`, `case_examples`, `add_example`, `remove_example`, `run_exam`, `get_exam`, `stop_exam` |
 | Problems | What is wrong with the installation or works badly in it, what it costs, and what was drafted about it | `list_problems`, `get_problem` |
 | Unusual situations and Test run | Situations agents keep meeting, and how a workflow in Test run compares with people | `list_repeating_situations`, `close_situation`, `test_run` |
@@ -75,8 +75,10 @@ is made of the same few general parts, and you change them through the `agentric
    makes the whole thing as one draft (the workflow in test run with an agent that handles each case, its agents, its
    approval rules) from what the connections already offer; read it with `get_workflow_launch`. Say what it holds and,
    when something is `missing`, that a person will be asked to do it until a connection offers it. Try it with
-   `try_workflow_draft`, then the user applies it under Changes. `get_workflow_launch` with `workflow` says how long it
-   took to launch.
+   `try_workflow_draft`, then the user applies it under Changes. Where other workflows take messages of the same
+   connection, `routing` says which of them it takes (rows of Who takes new messages applied with it) or what the
+   assistant asks; set the senders the user names, or take the rows out, with `set_workflow_draft_senders`.
+   `get_workflow_launch` with `workflow` says how long it took to launch.
 11. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
    customer's data in a process: put values in settings, wording in texts, decisions in rules.
 
