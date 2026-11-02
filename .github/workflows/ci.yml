@@ -1,0 +1,25 @@
+# On every push and pull request: the server compiles and its checks pass on the oldest and a current Python,
+# the plugin and its server say the same version, and Claude Code accepts the plugin.
+name: ci
+on: [push, pull_request]
+jobs:
+  server:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "${{ matrix.python }}" }
+      - run: python3 -m py_compile server/agentric_os_mcp.py server/test_agentric_os_mcp.py ci/release.py
+      - run: python3 -m unittest discover -s server -v
+      - run: python3 ci/release.py check
+  plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      # the same check a person runs before proposing a change; it needs no sign-in
+      - run: npx --yes @anthropic-ai/claude-code plugin validate .

@@ -19,17 +19,17 @@ exported in a terminal: it is pasted once where it is asked for, and kept where 
 1. In a terminal:
 
    ```bash
-   claude plugin marketplace add https://gitlab.com/aglium/aglium_os/agentric-os-plugin.git
-   claude plugin install agentric-os@aglium
+   claude plugin marketplace add Aglium/agentric-os-plugin
+   claude plugin install agentric-os@agentric-os
    ```
 
-2. Open Claude Code and type `/plugin configure agentric-os@aglium`.
+2. Open Claude Code and type `/plugin configure agentric-os@agentric-os`.
 3. When it asks, paste the **Installation address** (for example `https://ops.example.com`) and the
    **Access token**.
 
 Claude Code keeps both from then on: the address in its settings, the token in the protected store of the
 computer (the Keychain on a Mac). Nothing has to be entered again after the terminal or the computer restarts.
-The same command changes them later; `claude plugin configure agentric-os@aglium` in a terminal says which of the
+The same command changes them later; `claude plugin configure agentric-os@agentric-os` in a terminal says which of the
 two are set, without showing them.
 
 Neither has to be set for the plugin to start. Until both are, every question about the installation is
@@ -40,11 +40,11 @@ The Control Center shows the same commands ready to copy, next to a new access t
 To get a newer version of the plugin later:
 
 ```bash
-claude plugin marketplace update aglium
+claude plugin marketplace update agentric-os
 ```
 
-To take the plugin away again, with what it kept: `claude plugin uninstall agentric-os@aglium` and
-`claude plugin marketplace remove aglium`.
+To take the plugin away again, with what it kept: `claude plugin uninstall agentric-os@agentric-os` and
+`claude plugin marketplace remove agentric-os`.
 
 Then ask in your own words, or use `/agentric-status` and `/agentric-change <what should change>`.
 

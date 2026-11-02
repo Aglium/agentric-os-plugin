@@ -22,10 +22,10 @@ installation decides what a token may do; the plugin only passes things on.
 | `commands/` | `/agentric-status`, `/agentric-change` |
 | `.claude-plugin/`, `.mcp.json` | Plugin and marketplace descriptions |
 | `LICENSE` | The terms of use: clients of Aglium only, under their agreement |
-| `.gitlab-ci.yml` | The checks on every push, and the release made for a tag |
+| `.github/workflows/` | The checks on every push, and the release made for a tag |
 
 Try it against an installation with its address and a token (created in the Control Center under AI agent
-access) set the way the README says: `/plugin configure agentric-os@aglium` in Claude Code, or the file
+access) set the way the README says: `/plugin configure agentric-os@agentric-os` in Claude Code, or the file
 `~/.config/agentric-os/config.json`. Use an installation meant for trying things, never one that runs a
 business.
 
@@ -68,7 +68,7 @@ release is a tag named exactly as that version (`0.1.0`); the pipeline refuses a
 A commit to `master` (or `main`) is made only when everything this repository checks is green on exactly what
 is being committed. Not after the commit, not "CI will tell":
 
-1. Run every check below, the same ones `.gitlab-ci.yml` runs. In a shared checkout other agents' uncommitted
+1. Run every check below, the same ones `.github/workflows/ci.yml` runs. In a shared checkout other agents' uncommitted
    changes are in the tree, so run them on a copy holding `HEAD` plus your own changes only; a result that includes someone else's half-done work says nothing about your commit.
 2. Commit only when all of it passes. A failing test or check is fixed, or the commit waits and the owner is
    told what fails and why. Never skip, disable or loosen a test to get a commit through, and never wave a

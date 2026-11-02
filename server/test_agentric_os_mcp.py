@@ -81,7 +81,7 @@ class Settings(unittest.TestCase):
     def test_nothing_set_says_what_is_missing_and_where_to_enter_it(self):
         said = self.refusal()
         self.assertIn("It is not known where the installation is", said)
-        self.assertIn("/plugin configure agentric-os@aglium", said)
+        self.assertIn("/plugin configure agentric-os@agentric-os", said)
         self.assertIn("config.json", said)
 
     def test_an_address_without_a_token_asks_for_the_token(self):
@@ -89,7 +89,7 @@ class Settings(unittest.TestCase):
         said = self.refusal()
         self.assertIn("There is no access token", said)
         self.assertIn("AI agent access", said)
-        self.assertIn("/plugin configure agentric-os@aglium", said)
+        self.assertIn("/plugin configure agentric-os@agentric-os", said)
 
     def test_a_file_that_is_not_understood_says_how_it_should_read(self):
         self.keep("not json")

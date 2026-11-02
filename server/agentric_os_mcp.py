@@ -10,7 +10,7 @@ stdio: one JSON-RPC message per line.
 Where the installation is and the access token are taken, each on its own, from the first place that has them:
 
     1. the environment: AGENTRIC_OS_URL (e.g. https://ops.example.com) and AGENTRIC_OS_TOKEN (aos_...). Claude Code
-       fills these in from what it asked for and keeps (`/plugin configure agentric-os@aglium`).
+       fills these in from what it asked for and keeps (`/plugin configure agentric-os@agentric-os`).
     2. the file ~/.config/agentric-os/config.json: {"url": "https://ops.example.com", "token": "aos_..."}. It holds a
        secret, so it is read only when nobody but its owner can read it (chmod 600).
 
@@ -39,7 +39,7 @@ class Refused(Exception):
 # --- the installation's HTTP API -------------------------------------------------------------------------------
 
 CONFIG_FILE = os.path.join("~", ".config", "agentric-os", "config.json")
-HOW_TO_SET = ("In Claude Code type `/plugin configure agentric-os@aglium` and paste them when asked. For any other "
+HOW_TO_SET = ("In Claude Code type `/plugin configure agentric-os@agentric-os` and paste them when asked. For any other "
               "assistant put {\"url\": \"https://...\", \"token\": \"aos_...\"} into %s and run `chmod 600` on it."
               % CONFIG_FILE)
 

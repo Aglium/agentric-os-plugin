@@ -1,7 +1,8 @@
 {
-  "name": "aglium",
+  "name": "agentric-os",
   "owner": {
-    "name": "Aglium"
+    "name": "Aglium",
+    "url": "https://aglium.com"
   },
   "plugins": [
     {
@@ -11,6 +12,6 @@
     }
   ],
   "metadata": {
-    "description": "Aglium plugins for looking after Agentric OS installations"
+    "description": "Agentric OS plugin for Claude Code, from Aglium"
   }
 }

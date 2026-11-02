@@ -2,15 +2,13 @@
 """What the pipeline asks about versions and releases. Standard library only.
 
     ci/release.py check     the plugin and its server say the same version; for a tag, the tag says it too
-    ci/release.py publish   for a tag: a GitLab release named as the tag, with that version's part of the changelog
+    ci/release.py notes     for a tag: that version's part of the changelog, for its GitHub release
 """
 
 import json
 import os
 import re
 import sys
-import urllib.error
-import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,7 +26,7 @@ def versions():
 
 def check():
     plugin, server = versions()
-    tag = os.environ.get("CI_COMMIT_TAG", "")
+    tag = os.environ.get("GITHUB_REF_NAME", "") if os.environ.get("GITHUB_REF_TYPE") == "tag" else ""
     print("Version in .claude-plugin/plugin.json: %s; in server/agentric_os_mcp.py: %s; tag: %s"
           % (plugin or "none", server or "none", tag or "none"))
     if not re.fullmatch(r"\d+\.\d+\.\d+", plugin):
@@ -52,26 +50,12 @@ def notes(version):
     return by_title.get("Unreleased", "")
 
 
-def publish():
-    tag = os.environ.get("CI_COMMIT_TAG", "")
+def release_notes():
+    tag = os.environ.get("GITHUB_REF_NAME", "") if os.environ.get("GITHUB_REF_TYPE") == "tag" else ""
     if not tag:
-        sys.exit("A release is made for a tag only, and this pipeline is not for one.")
-    check()
-    address = "%s/projects/%s/releases" % (os.environ["CI_API_V4_URL"], os.environ["CI_PROJECT_ID"])
-    body = {"tag_name": tag, "name": tag, "description": notes(tag) or "Agentric OS plugin %s" % tag}
-    request = urllib.request.Request(address, data=json.dumps(body).encode("utf-8"), method="POST")
-    request.add_header("Content-Type", "application/json")
-    request.add_header("JOB-TOKEN", os.environ["CI_JOB_TOKEN"])
-    try:
-        with urllib.request.urlopen(request, timeout=60) as response:
-            print("Release %s is published: %s" % (tag, json.load(response).get("_links", {}).get("self", "")))
-    except urllib.error.HTTPError as error:
-        said = error.read().decode("utf-8", "replace")
-        if error.code == 409 or "already exists" in said:
-            print("Release %s is already there; nothing to do." % tag)
-            return
-        sys.exit("GitLab did not make the release %s (answer %d): %s" % (tag, error.code, said))
+        sys.exit("Release notes are made for a tag only, and this run is not for one.")
+    print(notes(tag) or "Agentric OS plugin %s" % tag)
 
 
 if __name__ == "__main__":
-    {"check": check, "publish": publish}.get(sys.argv[1] if len(sys.argv) > 1 else "", lambda: sys.exit(__doc__))()
+    {"check": check, "notes": release_notes}.get(sys.argv[1] if len(sys.argv) > 1 else "", lambda: sys.exit(__doc__))()
