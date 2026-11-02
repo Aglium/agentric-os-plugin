@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+## 0.1.0 — 2026-11-02
+
 - The plugin is published on GitHub and installed with `claude plugin marketplace add Aglium/agentric-os-plugin`, then `claude plugin install agentric-os@agentric-os` and `/plugin configure agentric-os@agentric-os`; a newer version is taken with `claude plugin marketplace update agentric-os`. The marketplace is now called `agentric-os`, so it can be added next to other Aglium plugins: an earlier install is removed with `claude plugin uninstall agentric-os@aglium` and `claude plugin marketplace remove aglium`, then installed again as above. The checks on every push and the release for a tag run on GitHub Actions. **Needs:** a core that names this repository and these commands to a new access token (`agentric-os`).
 
 - `set_workflow_draft_senders` says which messages a workflow made from a description takes, where other workflows take messages of its connection too, or takes those rows of Who takes new messages out of the draft. **Needs:** a core with `POST /api/workflow-launches/{id}/routing` (`agentric-os`).

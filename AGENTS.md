@@ -62,6 +62,8 @@ claude plugin validate .
 
 The version is in `.claude-plugin/plugin.json` and, the same, in `VERSION` of `server/agentric_os_mcp.py`. A
 release is a tag named exactly as that version (`0.1.0`); the pipeline refuses a tag that says otherwise.
+Claude Code gives users a newer plugin only when this version changes, so a change meant for users is released
+as a new version: raise it in both places, move `Unreleased` under it in `CHANGELOG.md`, commit, push the tag.
 
 ## Before a commit to master
 
