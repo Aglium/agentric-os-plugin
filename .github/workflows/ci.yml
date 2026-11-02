@@ -8,10 +8,10 @@ jobs:
     strategy:
       matrix:
         python: ["3.9", "3.13"]
+    # the runners no longer carry Python 3.9, its image does
+    container: python:${{ matrix.python }}-slim
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "${{ matrix.python }}" }
       - run: python3 -m py_compile server/agentric_os_mcp.py server/test_agentric_os_mcp.py ci/release.py
       - run: python3 -m unittest discover -s server -v
       - run: python3 ci/release.py check
