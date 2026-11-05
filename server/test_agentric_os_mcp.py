@@ -171,6 +171,15 @@ class Problems(unittest.TestCase):
         self.run_tool("test_run", {})
         self.assertEqual(self.calls[-1][1], "/api/test-runs/waiting")
 
+    def test_an_approval_with_changed_values_says_why_and_repeated_changes_are_read(self):
+        self.run_tool("decide_approval", {"commandId": "c1", "approved": True})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/approvals/c1", {"approved": True}))
+        self.run_tool("decide_approval", {"commandId": "c1", "approved": True, "arguments": {"amount": 300}, "reason": "A discount"})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/approvals/c1", {"approved": True, "arguments": {"amount": 300}, "reason": "A discount"}))
+        self.run_tool("list_repeated_changes", {"days": 7})
+        self.assertEqual(self.calls[-1][1], "/api/approvals/repeated-changes")
+        self.assertEqual(self.calls[-1][3]["days"], 7)
+
     def test_questions_of_agents_are_read_and_answered_where_the_installation_keeps_them(self):
         self.run_tool("list_questions", {})
         self.assertEqual(self.calls[-1][1], "/api/questions")

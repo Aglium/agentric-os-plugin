@@ -22,6 +22,7 @@ is made of the same few general parts, and you change them through the `agentric
 | Examples and exams | Cases with a known right answer, and changes tried on them before they are applied | `list_examples`, `case_examples`, `add_example`, `remove_example`, `run_exam`, `get_exam`, `stop_exam` |
 | Problems | What is wrong with the installation or works badly in it, what it costs, and what was drafted about it | `list_problems`, `get_problem` |
 | Unusual situations and Test run | Situations agents keep meeting, and how a workflow in Test run compares with people | `list_repeating_situations`, `close_situation`, `test_run` |
+| Corrections that repeat | Values people keep changing before they approve, with why: a rule, an entry of the knowledge or an agent's instructions to put right | `list_repeated_changes` |
 
 ## How to work
 

@@ -384,10 +384,31 @@ def retry_case(a):
 
 @tool("decide_approval",
       "Approve or decline an action waiting for a decision. Approving lets it act in the connected system for real. "
-      "Only on the user's explicit word. Needs the right to work with cases.",
-      {"commandId": S, "approved": B}, ["commandId", "approved"], read_only=False, destructive=True)
+      "To approve with some of its values changed, give them in `arguments` (only values the action has; the "
+      "approval rules judge it again) and say why in `reason`, one line: it is kept with the case and with each value "
+      "changed. Only on the user's explicit word. Needs the right to work with cases.",
+      {"commandId": S, "approved": B,
+       "arguments": {"type": "object", "description": "values of the action changed before approving, by name"},
+       "reason": dict(S, description="why the values were changed, one line of up to 300 characters")},
+      ["commandId", "approved"], read_only=False, destructive=True)
 def decide_approval(a):
-    return call("POST", "/api/approvals/%s" % quote(a["commandId"]), {"approved": bool(a["approved"])})
+    body = {"approved": bool(a["approved"])}
+    if a.get("arguments"):
+        body["arguments"] = a["arguments"]
+    if a.get("reason"):
+        body["reason"] = a["reason"]
+    return call("POST", "/api/approvals/%s" % quote(a["commandId"]), body)
+
+
+@tool("list_repeated_changes",
+      "Values people keep changing at the same step of the same workflow before they approve its action, the most "
+      "changed first: how many times (`changes`), in how many cases, how many said why (`withReason`), and the latest "
+      "changes from what to what, by whom and why. A correction people make again and again is a rule, an entry of "
+      "the knowledge or an agent's instructions to put right: propose that change as a draft.",
+      {"days": dict(I, description="how far back to look, 1 to 365; 30 unless said"),
+       "least": dict(I, description="how many changes make a value repeated, at least 2")})
+def list_repeated_changes(a):
+    return call("GET", "/api/approvals/repeated-changes", query={"days": a.get("days"), "least": a.get("least")})
 
 
 # problems: what is wrong with the installation or works badly in it, what it costs, and what was drafted about it
