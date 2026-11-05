@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `get_agent_claims` says how an agent's values with quotes went lately: values not confirmed and why, cases sent to a person because of it and what their time cost, what the quotes cost on AI. **Needs:** a core with `GET /api/agents/{key}/claims` (`agentric-os`).
+
 - `explain_value` follows one value of a case back to its sources in one call (the answer a connected system gave then, the row of rules, the agent and the words it quoted, the person who changed it and why); `list_weak_values` lists a case's values with weak sources; `get_kept_answer` shows what a system answered then; `get_case_decisions` what the rules decided in the case, with the table as it was. **Needs:** a core with `GET /api/cases/{id}/values`, `.../values/explain`, `.../decisions`, `.../reads/{read}` (`agentric-os`).
 
 - `decide_approval` approves with values changed (`arguments`) and says why (`reason`, one line), kept with the case. `list_repeated_changes` lists the values people keep changing at the same step before they approve, with the latest changes and reasons. **Needs:** a core with `reason` and `GET /api/approvals/repeated-changes` (`agentric-os`).

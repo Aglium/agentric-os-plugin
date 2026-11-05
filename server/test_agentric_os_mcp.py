@@ -192,6 +192,8 @@ class Problems(unittest.TestCase):
         self.assertEqual(self.calls[-1][1], "/api/cases/c1/reads/42")
         self.run_tool("get_case_decisions", {"caseId": "c1"})
         self.assertEqual(self.calls[-1][1], "/api/cases/c1/decisions")
+        self.run_tool("get_agent_claims", {"agent": "invoice-receiver"})
+        self.assertEqual(self.calls[-1][1], "/api/agents/invoice-receiver/claims")
 
     def test_questions_of_agents_are_read_and_answered_where_the_installation_keeps_them(self):
         self.run_tool("list_questions", {})

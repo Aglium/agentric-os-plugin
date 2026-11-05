@@ -250,6 +250,18 @@ def list_agents(a):
     return call("GET", "/api/agents")
 
 
+@tool("get_agent_claims",
+      "How an agent's values with quotes went lately (an agent told to give its values with the exact words of their "
+      "source, `claims` of its profile): how many values the platform could not confirm and why (words not found, "
+      "words saying another value, a value given without words), how many cases went to a person because of it and "
+      "what their time cost, what decisions with quotes cost on AI next to those without, and the value most often not "
+      "confirmed. Switching it on or changing it is a `agent` change with `claims: {values, unconfirmed: mark|person}`.",
+      {"agent": dict(S, description="the agent's key, as list_agents gives it"),
+       "days": dict(I, description="how far back, 30 unless said")}, ["agent"])
+def get_agent_claims(a):
+    return call("GET", "/api/agents/%s/claims" % quote(a["agent"]), query={"days": a.get("days")})
+
+
 @tool("list_connections",
       "Connected systems: each with its events, operations (reads and actions) and whether it is online.")
 def list_connections(a):

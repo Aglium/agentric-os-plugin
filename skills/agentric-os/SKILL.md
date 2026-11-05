@@ -13,7 +13,7 @@ is made of the same few general parts, and you change them through the `agentric
 | Workflow | A process (BPMN) built from blocks: read from a system, ask rules, ask an agent, write a text, act, hand to a person | `list_workflows`, `get_workflow`, `list_blocks`, `check_workflow` |
 | Rules | Tables (DMN) workflows ask; a workflow's policy table decides which actions need a person's approval | `list_rules`, `get_rules` |
 | Texts | A shared library; a workflow names the texts it writes from | `list_texts`, `get_text` |
-| Agents | AI profiles: instructions, the reads they may use, the actions they may propose | `list_agents` |
+| Agents | AI profiles: instructions, the reads they may use, the actions they may propose, whether they give values with quotes and how that went | `list_agents`, `get_agent_claims` |
 | Connections | Connected systems with their events and operations | `list_connections` |
 | Knowledge | Places where the business keeps what it knows | `list_knowledge`, `search_knowledge` |
 | Prices and rates | Model prices and what an hour of each role costs | `get_prices` |
