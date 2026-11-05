@@ -371,6 +371,49 @@ def set_workflow_draft_senders(a):
                 {"senderDomains": a.get("senderDomains") or [], "senders": a.get("senders") or []})
 
 
+@tool("explain_value",
+      "Why a value of a case is what it is: its whole chain back to its sources, as a tree read from the top. Each "
+      "node says in words where the node above came from (`says`, `detail`), when, at which step, what it cost "
+      "(`cost`), and links to what it rests on: the answer a connected system gave then (`link.kind: read`, read it "
+      "with get_kept_answer), the rules and the row that decided, the agent's run and the knowledge it relied on, the "
+      "person who changed it and why (`reason`), the exact words an agent quoted and whether the platform found them "
+      "(`quote`). `weak` marks a weak source. Take the value's name (and `commandId` as `action` for a value of an "
+      "action) from list_weak_values or the case's values.",
+      {"caseId": S, "name": dict(S, description="the value's name, as the case's values give it; a part of one such as order.customer.email is followed too"),
+       "action": dict(S, description="the action the value is of (commandId); absent: a value of the case")},
+      ["caseId", "name"])
+def explain_value(a):
+    return call("GET", "/api/cases/%s/values/explain" % quote(a["caseId"]), query={"name": a["name"], "action": a.get("action")})
+
+
+@tool("list_weak_values",
+      "The values of a case, each with where it came from in a few words, and apart in `weak` those whose source is "
+      "weak: words an agent quoted that the platform did not find or that do not say the value (`quote`), a value a "
+      "person changed without saying why (`reason`), an answer that was not kept (`source`). `kept: false` means the "
+      "case ran before the platform kept where values came from. Use it to check a case value by value, then "
+      "explain_value for any that matters.",
+      {"caseId": S}, ["caseId"])
+def list_weak_values(a):
+    return call("GET", "/api/cases/%s/values" % quote(a["caseId"]))
+
+
+@tool("get_kept_answer",
+      "What a connected system answered to one read of a case, as it was then (the case's snapshot of its source): "
+      "the connection, what was read and with what, when, and the answer. The id is a `read` link of explain_value.",
+      {"caseId": S, "read": I}, ["caseId", "read"])
+def get_kept_answer(a):
+    return call("GET", "/api/cases/%s/reads/%s" % (quote(a["caseId"]), quote(a["read"])))
+
+
+@tool("get_case_decisions",
+      "What the rules decided in a case, each time a table was asked: what it saw and where each of those values came "
+      "from, the table as it was with the row that decided (`row`, null when none fitted), what it said, and who "
+      "last changed the table and why.",
+      {"caseId": S}, ["caseId"])
+def get_case_decisions(a):
+    return call("GET", "/api/cases/%s/decisions" % quote(a["caseId"]))
+
+
 @tool("list_approvals", "Actions in connected systems waiting for a person's decision, each with the reason given.")
 def list_approvals(a):
     return call("GET", "/api/approvals")

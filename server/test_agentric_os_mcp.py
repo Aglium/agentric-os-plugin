@@ -180,6 +180,19 @@ class Problems(unittest.TestCase):
         self.assertEqual(self.calls[-1][1], "/api/approvals/repeated-changes")
         self.assertEqual(self.calls[-1][3]["days"], 7)
 
+    def test_a_value_is_explained_and_the_weak_ones_listed_where_the_installation_keeps_them(self):
+        self.run_tool("explain_value", {"caseId": "c1", "name": "decision.claimed.revenue"})
+        self.assertEqual(self.calls[-1][:2], ("GET", "/api/cases/c1/values/explain"))
+        self.assertEqual(self.calls[-1][3], {"name": "decision.claimed.revenue", "action": None})
+        self.run_tool("explain_value", {"caseId": "c1", "name": "amount", "action": "a1"})
+        self.assertEqual(self.calls[-1][3]["action"], "a1")
+        self.run_tool("list_weak_values", {"caseId": "c1"})
+        self.assertEqual(self.calls[-1][1], "/api/cases/c1/values")
+        self.run_tool("get_kept_answer", {"caseId": "c1", "read": 42})
+        self.assertEqual(self.calls[-1][1], "/api/cases/c1/reads/42")
+        self.run_tool("get_case_decisions", {"caseId": "c1"})
+        self.assertEqual(self.calls[-1][1], "/api/cases/c1/decisions")
+
     def test_questions_of_agents_are_read_and_answered_where_the_installation_keeps_them(self):
         self.run_tool("list_questions", {})
         self.assertEqual(self.calls[-1][1], "/api/questions")

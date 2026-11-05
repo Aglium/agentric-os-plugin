@@ -22,6 +22,7 @@ is made of the same few general parts, and you change them through the `agentric
 | Examples and exams | Cases with a known right answer, and changes tried on them before they are applied | `list_examples`, `case_examples`, `add_example`, `remove_example`, `run_exam`, `get_exam`, `stop_exam` |
 | Problems | What is wrong with the installation or works badly in it, what it costs, and what was drafted about it | `list_problems`, `get_problem` |
 | Unusual situations and Test run | Situations agents keep meeting, and how a workflow in Test run compares with people | `list_repeating_situations`, `close_situation`, `test_run` |
+| Why a value is what it is | Each value of a case followed back to its sources: the answer a system gave then, the row of rules, the agent and the words it quoted, the person who changed it and why | `explain_value`, `list_weak_values`, `get_kept_answer`, `get_case_decisions` |
 | Corrections that repeat | Values people keep changing before they approve, with why: a rule, an entry of the knowledge or an agent's instructions to put right | `list_repeated_changes` |
 
 ## How to work
@@ -51,6 +52,12 @@ is made of the same few general parts, and you change them through the `agentric
    (`knowledge.lookups`) and which entries it says it relied on (`entries` with `applied: true`, and `why`). Entries
    that are found again and again but never applied, or that are applied with a wrong reading, are the ones to put
    right (`search_knowledge`, `list_knowledge`, then a `knowledge` change). What the lookups cost is in `knowledge.spent`.
+   **Why a value is what it is.** `explain_value` follows one value of a case back to its sources in one call: the
+   answer a connected system gave then (`get_kept_answer` shows it), the row of rules that decided
+   (`get_case_decisions` shows the table as it was), the agent and the exact words it quoted with whether the
+   platform found them, the person who changed it and why. To check a whole case, start with `list_weak_values`:
+   words not found, values changed without a reason, answers not kept. Say what you find in the user's words, and
+   never fill a gap in a chain with a guess.
 8. **Improve what works badly.** `list_problems` says what costs money now: steps that keep failing, but also agents
    people often correct and workflows that hand many cases to people, priced by the month. For one of them: read its
    `changes` first (somebody may be on it), open its cases (the `actions` say where; `list_cases`, `get_case`) and find
