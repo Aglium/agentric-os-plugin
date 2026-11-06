@@ -426,6 +426,43 @@ def get_case_decisions(a):
     return call("GET", "/api/cases/%s/decisions" % quote(a["caseId"]))
 
 
+@tool("report_correction",
+      "Say a value of a case is wrong and how it should be, as a person would with “This is wrong” on the case: "
+      "`name` as the case's values give it (and `action`, its commandId, for a value of an action), `value` how it "
+      "should be, `reason` why in one line, `wrongIn` where it went wrong if known (agent, rules, knowledge, step, "
+      "source for the other system itself, unknown; absent: where its chain says it came from). In the case it is "
+      "used where it still can be: an action waiting for approval goes with it and still waits for whoever decides, a "
+      "case still running goes on with it, a case that has gone further is kept as an example with it as the right "
+      "answer; nothing done in another system is changed. Corrections of the same value in the same place become "
+      "one problem for the Improver to draft a fix for. The answer says in `words` what it did. Only on the user's "
+      "explicit word, with the value they gave. Needs the right to work with cases.",
+      {"caseId": S, "name": dict(S, description="the value's name, as the case's values give it"),
+       "action": dict(S, description="the action the value is of (commandId); absent: a value of the case"),
+       "value": dict(S, description="how it should be, as the user said it"),
+       "reason": dict(S, description="why, one line of up to 300 characters"),
+       "wrongIn": dict(S, description="where it went wrong: agent, rules, knowledge, step, source or unknown")},
+      ["caseId", "name", "value"], read_only=False, destructive=True)
+def report_correction(a):
+    body = {"name": a["name"], "value": a["value"]}
+    for key in ("action", "reason", "wrongIn"):
+        if a.get(key):
+            body[key] = a[key]
+    return call("POST", "/api/cases/%s/corrections" % quote(a["caseId"]), body)
+
+
+@tool("list_corrections",
+      "Values people said were wrong and how they should be, with what each did in the case (`used`) and how far "
+      "fixing it went (`status`: OPEN nothing drafted yet, DRAFTED a change waits, FIXED applied, DECLINED the change "
+      "was declined, NO_FIX the Improver found no change, SOURCE to be fixed in the other system), with the change "
+      "(`changeId`) and the problem (`problemId`). With `caseId`, those of one case; without, the ones made with this "
+      "access.",
+      {"caseId": dict(S, description="the case; absent: the corrections made with this access")})
+def list_corrections(a):
+    if a.get("caseId"):
+        return call("GET", "/api/cases/%s/corrections" % quote(a["caseId"]))
+    return call("GET", "/api/corrections/mine")
+
+
 @tool("list_approvals", "Actions in connected systems waiting for a person's decision, each with the reason given.")
 def list_approvals(a):
     return call("GET", "/api/approvals")

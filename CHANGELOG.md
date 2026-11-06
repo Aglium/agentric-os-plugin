@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `report_correction` says a value of a case is wrong and how it should be, with why and where it went wrong, as “This is wrong” on the case does; `list_corrections` lists a case's corrections, or those made with this access, with how far fixing each went. **Needs:** a core with `POST/GET /api/cases/{id}/corrections`, `GET /api/corrections/mine` and correction `status` (`agentric-os`).
+
 - `get_agent_claims` says how an agent's values with quotes went lately: values not confirmed and why, cases sent to a person because of it and what their time cost, what the quotes cost on AI. **Needs:** a core with `GET /api/agents/{key}/claims` (`agentric-os`).
 
 - `explain_value` follows one value of a case back to its sources in one call (the answer a connected system gave then, the row of rules, the agent and the words it quoted, the person who changed it and why); `list_weak_values` lists a case's values with weak sources; `get_kept_answer` shows what a system answered then; `get_case_decisions` what the rules decided in the case, with the table as it was. **Needs:** a core with `GET /api/cases/{id}/values`, `.../values/explain`, `.../decisions`, `.../reads/{read}` (`agentric-os`).

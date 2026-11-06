@@ -195,6 +195,17 @@ class Problems(unittest.TestCase):
         self.run_tool("get_agent_claims", {"agent": "invoice-receiver"})
         self.assertEqual(self.calls[-1][1], "/api/agents/invoice-receiver/claims")
 
+    def test_a_value_said_to_be_wrong_is_corrected_on_its_case_and_corrections_are_read(self):
+        self.run_tool("report_correction", {"caseId": "c1", "name": "decision.claimed.amount", "value": "1150", "reason": "discount not taken off"})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/cases/c1/corrections",
+                                              {"name": "decision.claimed.amount", "value": "1150", "reason": "discount not taken off"}))
+        self.run_tool("report_correction", {"caseId": "c1", "name": "to", "action": "a1", "value": "orders@example.com", "wrongIn": "step"})
+        self.assertEqual(self.calls[-1][2], {"name": "to", "value": "orders@example.com", "action": "a1", "wrongIn": "step"})
+        self.run_tool("list_corrections", {"caseId": "c1"})
+        self.assertEqual(self.calls[-1][:2], ("GET", "/api/cases/c1/corrections"))
+        self.run_tool("list_corrections", {})
+        self.assertEqual(self.calls[-1][:2], ("GET", "/api/corrections/mine"))
+
     def test_questions_of_agents_are_read_and_answered_where_the_installation_keeps_them(self):
         self.run_tool("list_questions", {})
         self.assertEqual(self.calls[-1][1], "/api/questions")

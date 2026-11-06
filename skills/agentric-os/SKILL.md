@@ -23,6 +23,7 @@ is made of the same few general parts, and you change them through the `agentric
 | Problems | What is wrong with the installation or works badly in it, what it costs, and what was drafted about it | `list_problems`, `get_problem` |
 | Unusual situations and Test run | Situations agents keep meeting, and how a workflow in Test run compares with people | `list_repeating_situations`, `close_situation`, `test_run` |
 | Why a value is what it is | Each value of a case followed back to its sources: the answer a system gave then, the row of rules, the agent and the words it quoted, the person who changed it and why | `explain_value`, `list_weak_values`, `get_kept_answer`, `get_case_decisions` |
+| A value that is wrong | What a person says is wrong and how it should be: used in the case where it still can be, kept as the right answer, and fixed for the cases after it by the Improver | `report_correction`, `list_corrections` |
 | Corrections that repeat | Values people keep changing before they approve, with why: a rule, an entry of the knowledge or an agent's instructions to put right | `list_repeated_changes` |
 
 ## How to work
@@ -58,6 +59,13 @@ is made of the same few general parts, and you change them through the `agentric
    platform found them, the person who changed it and why. To check a whole case, start with `list_weak_values`:
    words not found, values changed without a reason, answers not kept. Say what you find in the user's words, and
    never fill a gap in a chain with a guess.
+   **A value that is wrong.** When the user says a value is wrong and how it should be, `report_correction` records
+   it with their reason: an action waiting for approval goes with the right value and still waits for whoever
+   decides, a case still running goes on with it, a case that has gone further keeps it as the right answer, and
+   nothing done in another system is changed (tell the user to correct it there). Say where it went wrong
+   (`wrongIn`) only as the chain or the user says. Corrections of the same value in the same place become one
+   problem the Improver drafts a fix for; `list_corrections` says how far each went (fixed, a change waits, declined,
+   no fix found, to be fixed in the other system). Only on the user's word, with the value they gave.
 8. **Improve what works badly.** `list_problems` says what costs money now: steps that keep failing, but also agents
    people often correct and workflows that hand many cases to people, priced by the month. For one of them: read its
    `changes` first (somebody may be on it), open its cases (the `actions` say where; `list_cases`, `get_case`) and find
