@@ -5,6 +5,8 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `get_redo_plan` says what doing an ended case again from a step would do with each action done after it, and `redo_case` does it, sending again only what the user says. **Needs:** a core with `GET/POST /api/cases/{id}/redo` (`agentric-os`).
+
 - `report_correction` says a value of a case is wrong and how it should be, with why and where it went wrong, as “This is wrong” on the case does; `list_corrections` lists a case's corrections, or those made with this access, with how far fixing each went. **Needs:** a core with `POST/GET /api/cases/{id}/corrections`, `GET /api/corrections/mine` and correction `status` (`agentric-os`).
 
 - `get_agent_claims` says how an agent's values with quotes went lately: values not confirmed and why, cases sent to a person because of it and what their time cost, what the quotes cost on AI. **Needs:** a core with `GET /api/agents/{key}/claims` (`agentric-os`).

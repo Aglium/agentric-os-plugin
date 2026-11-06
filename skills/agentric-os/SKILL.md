@@ -23,7 +23,7 @@ is made of the same few general parts, and you change them through the `agentric
 | Problems | What is wrong with the installation or works badly in it, what it costs, and what was drafted about it | `list_problems`, `get_problem` |
 | Unusual situations and Test run | Situations agents keep meeting, and how a workflow in Test run compares with people | `list_repeating_situations`, `close_situation`, `test_run` |
 | Why a value is what it is | Each value of a case followed back to its sources: the answer a system gave then, the row of rules, the agent and the words it quoted, the person who changed it and why | `explain_value`, `list_weak_values`, `get_kept_answer`, `get_case_decisions` |
-| A value that is wrong | What a person says is wrong and how it should be: used in the case where it still can be, kept as the right answer, and fixed for the cases after it by the Improver | `report_correction`, `list_corrections` |
+| A value that is wrong | What a person says is wrong and how it should be: used in the case where it still can be, kept as the right answer, and fixed for the cases after it by the Improver | `report_correction`, `list_corrections`, `get_redo_plan`, `redo_case` |
 | Corrections that repeat | Values people keep changing before they approve, with why: a rule, an entry of the knowledge or an agent's instructions to put right | `list_repeated_changes` |
 
 ## How to work
@@ -66,6 +66,10 @@ is made of the same few general parts, and you change them through the `agentric
    (`wrongIn`) only as the chain or the user says. Corrections of the same value in the same place become one
    problem the Improver drafts a fix for; `list_corrections` says how far each went (fixed, a change waits, declined,
    no fix found, to be fixed in the other system). Only on the user's word, with the value they gave.
+   A case that has already ended can be done again from a step with the corrected values: read `get_redo_plan`
+   first and tell the user what it does with each action done after the step (set again; cancel first, then do
+   again; a message sent again only if they say so; or that it cannot be done and why), and what it costs. Then
+   `redo_case` only on their explicit word, with the messages they want sent again.
 8. **Improve what works badly.** `list_problems` says what costs money now: steps that keep failing, but also agents
    people often correct and workflows that hand many cases to people, priced by the month. For one of them: read its
    `changes` first (somebody may be on it), open its cases (the `actions` say where; `list_cases`, `get_case`) and find

@@ -463,6 +463,37 @@ def list_corrections(a):
     return call("GET", "/api/corrections/mine")
 
 
+@tool("get_redo_plan",
+      "What doing a case that has ended again from one of its steps would do, with the values people corrected: the "
+      "steps it went through, and for each action done after the step in another system what redoing does with it as "
+      "its connection says (`does`: again; cancel-first, with the action that cancels it in `undo`; ask, sent again "
+      "only when the user says so; stops, the redo cannot be done from there). `can` and `says` say whether and why "
+      "not; `from` absent: right after the step that worked out the latest corrected value. `aiThen` is what those "
+      "steps spent on AI the first time.",
+      {"caseId": S, "from": dict(S, description="the step to do it again from, as `steps` names it")},
+      ["caseId"])
+def get_redo_plan(a):
+    path = "/api/cases/%s/redo" % quote(a["caseId"])
+    return call("GET", path, query={"from": a["from"]} if a.get("from") else None)
+
+
+@tool("redo_case",
+      "Do a case that has ended again from a step, as get_redo_plan says: what is to be cancelled first is cancelled "
+      "in the other system, then the case runs again from the step with the values people corrected. What was sent "
+      "goes out again only for the actions in `sendAgain` (their `command` from the plan). It acts in other systems "
+      "for real: tell the user first what is cancelled and what is sent again, and do it only on their explicit word. "
+      "Needs the right to work with cases.",
+      {"caseId": S, "from": dict(S, description="the step to do it again from"),
+       "sendAgain": {"type": "array", "items": S, "description": "actions sent before that are to go out again; absent: none"},
+       "reason": dict(S, description="why, one line of up to 300 characters")},
+      ["caseId", "from"], read_only=False, destructive=True)
+def redo_case(a):
+    body = {"from": a["from"], "sendAgain": list(a.get("sendAgain") or [])}
+    if a.get("reason"):
+        body["reason"] = a["reason"]
+    return call("POST", "/api/cases/%s/redo" % quote(a["caseId"]), body)
+
+
 @tool("list_approvals", "Actions in connected systems waiting for a person's decision, each with the reason given.")
 def list_approvals(a):
     return call("GET", "/api/approvals")

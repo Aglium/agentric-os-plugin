@@ -206,6 +206,16 @@ class Problems(unittest.TestCase):
         self.run_tool("list_corrections", {})
         self.assertEqual(self.calls[-1][:2], ("GET", "/api/corrections/mine"))
 
+    def test_a_case_is_done_again_from_a_step_after_its_plan_is_read(self):
+        self.run_tool("get_redo_plan", {"caseId": "c1"})
+        self.assertEqual(self.calls[-1][:2], ("GET", "/api/cases/c1/redo"))
+        self.run_tool("get_redo_plan", {"caseId": "c1", "from": "book"})
+        self.assertEqual(self.calls[-1][3], {"from": "book"})
+        self.run_tool("redo_case", {"caseId": "c1", "from": "book", "sendAgain": ["m1"], "reason": "the discount"})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/cases/c1/redo", {"from": "book", "sendAgain": ["m1"], "reason": "the discount"}))
+        self.run_tool("redo_case", {"caseId": "c1", "from": "book"})
+        self.assertEqual(self.calls[-1][2], {"from": "book", "sendAgain": []})
+
     def test_questions_of_agents_are_read_and_answered_where_the_installation_keeps_them(self):
         self.run_tool("list_questions", {})
         self.assertEqual(self.calls[-1][1], "/api/questions")
