@@ -245,6 +245,34 @@ def get_text(a):
     return call("GET", "/api/texts/%s" % quote(a["key"]))
 
 
+@tool("list_calculations", "Calculations: numbers workflows work out by formulas, line by line, never by AI (a price after "
+      "a discount, a commission, a valuation). Each with its lines (given by the step, or worked out by a formula over the "
+      "lines above, said in words), the lines worked out with the examples, the workflows working it out, and how often it "
+      "was worked out in the last 30 days and the work by hand that saved. A case's calculated lines are explained by "
+      "explain_value (their name is the step's result and the line, such as model.total).")
+def list_calculations(a):
+    return call("GET", "/api/calculation-sheets")
+
+
+@tool("get_calculation", "One calculation with its versions.", {"key": S}, ["key"])
+def get_calculation(a):
+    return call("GET", "/api/calculation-sheets/%s" % quote(a["key"]))
+
+
+@tool("try_calculation", "Works a calculation out on values without changing anything: a kept one by its key, or the "
+      "lines of one being written (as a change of kind calculation carries them). Answers every line with its value and "
+      "its formula with the numbers put in, or what stopped it in words.",
+      {"calculation": S, "lines": {"type": "array", "items": {"type": "object"}, "description": "lines of one being written, instead of a key"},
+       "values": {"type": "object", "description": "the given lines by key, as numbers: 0.15 for 15%"}}, ["values"])
+def try_calculation(a):
+    body = {"values": a.get("values") or {}}
+    if a.get("lines"):
+        body["lines"] = a["lines"]
+    else:
+        body["calculation"] = a.get("calculation")
+    return call("POST", "/api/calculation-sheets/try", body)
+
+
 @tool("list_agents", "AI agent profiles: instructions, model, the reads they may use, the actions they may propose.")
 def list_agents(a):
     return call("GET", "/api/agents")
