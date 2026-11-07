@@ -5,6 +5,7 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `try_calculation_on_past_cases` works a calculation, as kept or as a change being written, out again on the latest cases and says what would come out differently. **Needs:** a core with `POST /api/calculation-sheets/past` (`agentric-os`).
 - `list_calculations`, `get_calculation` and `try_calculation`: the calculations workflows work out by formulas, and working one out on values without changing anything; a case's calculated lines are explained by `explain_value` down through their formulas. **Needs:** a core with `/api/calculation-sheets` (`agentric-os`).
 - `get_redo_plan` says what doing an ended case again from a step would do with each action done after it, and `redo_case` does it, sending again only what the user says. **Needs:** a core with `GET/POST /api/cases/{id}/redo` (`agentric-os`).
 

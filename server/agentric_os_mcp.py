@@ -273,6 +273,18 @@ def try_calculation(a):
     return call("POST", "/api/calculation-sheets/try", body)
 
 
+@tool("try_calculation_on_past_cases", "Works the latest cases a calculation worked out (20 unless `limit` says) out "
+      "again with the values each was given then, and the lines as kept or as given in `lines` (a change being written), "
+      "and says for each what came out then and now, the change as a share, or why it could not be worked out again. "
+      "Use it before proposing a change of a calculation, to say what it would do. Changes nothing.",
+      {"calculation": S, "lines": {"type": "array", "items": {"type": "object"}}, "limit": I}, ["calculation"])
+def try_calculation_on_past_cases(a):
+    body = {"calculation": a["calculation"], "limit": a.get("limit", 20)}
+    if a.get("lines"):
+        body["lines"] = a["lines"]
+    return call("POST", "/api/calculation-sheets/past", body)
+
+
 @tool("list_agents", "AI agent profiles: instructions, model, the reads they may use, the actions they may propose.")
 def list_agents(a):
     return call("GET", "/api/agents")

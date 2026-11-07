@@ -202,6 +202,8 @@ class Problems(unittest.TestCase):
         self.assertEqual(self.calls[-1][1], "/api/calculation-sheets/deal-value")
         self.run_tool("try_calculation", {"calculation": "deal-value", "values": {"price": 10}})
         self.assertEqual(self.calls[-1][:3], ("POST", "/api/calculation-sheets/try", {"values": {"price": 10}, "calculation": "deal-value"}))
+        self.run_tool("try_calculation_on_past_cases", {"calculation": "deal-value"})
+        self.assertEqual(self.calls[-1][:3], ("POST", "/api/calculation-sheets/past", {"calculation": "deal-value", "limit": 20}))
         self.run_tool("try_calculation", {"lines": [{"key": "a"}], "values": {}})
         self.assertEqual(self.calls[-1][2], {"values": {}, "lines": [{"key": "a"}]})
 
