@@ -19,6 +19,7 @@ is made of the same few general parts, and you change them through the `agentric
 | Knowledge | Places where the business keeps what it knows | `list_knowledge`, `search_knowledge` |
 | Prices and rates | Model prices and what an hour of each role costs | `get_prices` |
 | Cases | Runs of workflows | `list_cases`, `get_case`, `list_approvals`, `list_questions`, `answer_question` |
+| Files of a case | Reports, scans and books of figures given to a case, read page by page; found in and quoted by page as its agents do, with what reading and finding cost | `list_case_files`, `search_case_files`, `read_case_file_page`, `give_case_file`, `read_case_file_again`, `remove_case_file` |
 | New workflows | Made from a description | `draft_workflow_from_description`, `get_workflow_launch`, `try_workflow_draft`, `set_workflow_draft_senders` |
 | Examples and exams | Cases with a known right answer, and changes tried on them before they are applied | `list_examples`, `case_examples`, `add_example`, `remove_example`, `run_exam`, `get_exam`, `stop_exam` |
 | Problems | What is wrong with the installation or works badly in it, what it costs, and what was drafted about it | `list_problems`, `get_problem` |
@@ -54,6 +55,10 @@ is made of the same few general parts, and you change them through the `agentric
    (`knowledge.lookups`) and which entries it says it relied on (`entries` with `applied: true`, and `why`). Entries
    that are found again and again but never applied, or that are applied with a wrong reading, are the ones to put
    right (`search_knowledge`, `list_knowledge`, then a `knowledge` change). What the lookups cost is in `knowledge.spent`.
+   **A value taken from a file of the case.** `list_case_files` says which files the case has, how each was read and
+   what it cost; `search_case_files` and `read_case_file_page` find and read the pages the way its agents do, so you
+   can see whether a figure is where the agent says. Give a case a file (`give_case_file`), read one again or remove
+   one only on the user's word: reading scans costs money, and a removed file cannot be found in any more.
    **Why a value is what it is.** `explain_value` follows one value of a case back to its sources in one call: the
    answer a connected system gave then (`get_kept_answer` shows it), the row of rules that decided
    (`get_case_decisions` shows the table as it was), the agent and the exact words it quoted with whether the

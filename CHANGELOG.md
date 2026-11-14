@@ -5,6 +5,7 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- The files of a case: `list_case_files` (how each was read, what reading cost, how many pages agents quoted), `search_case_files` and `read_case_file_page` (find and read pages as the case's agents do), `give_case_file` (a file of this computer, sent as it is), `read_case_file_again` and `remove_case_file`. **Needs:** a core with `/api/cases/{id}/files`, `/files/search` and `/files/{file}/pages/{page}` (`agentric-os`).
 - `try_calculation` takes the `columns` of a calculation being written and values by columns (a list or `{column: number}`), and says so. **Needs:** a core with calculations by columns (`agentric-os`).
 - `try_calculation_on_past_cases` works a calculation, as kept or as a change being written, out again on the latest cases and says what would come out differently. **Needs:** a core with `POST /api/calculation-sheets/past` (`agentric-os`).
 - `list_calculations`, `get_calculation` and `try_calculation`: the calculations workflows work out by formulas, and working one out on values without changing anything; a case's calculated lines are explained by `explain_value` down through their formulas. **Needs:** a core with `/api/calculation-sheets` (`agentric-os`).

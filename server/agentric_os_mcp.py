@@ -20,12 +20,14 @@ proposes runs until it is applied.
 """
 
 import json
+import mimetypes
 import os
 import socket
 import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+import uuid
 
 VERSION = "0.1.0"
 PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"]
@@ -91,19 +93,43 @@ def where_and_token():
 
 
 def call(method, path, body=None, query=None):
+    return send(method, path, json.dumps(body).encode("utf-8") if body is not None else None, "application/json", query)
+
+
+def send_file(path, local_path):
+    """Sends a file of this computer to the installation as a form with one part, `file`, read from disk as it is."""
+    local_path = os.path.expanduser(str(local_path or "").strip())
+    if not local_path:
+        raise Refused("Say which file to give: its path on this computer.")
+    if not os.path.isfile(local_path):
+        raise Refused("There is no file at %s on this computer. Give the path of an existing file." % local_path)
+    name = os.path.basename(local_path)
+    kind = mimetypes.guess_type(name)[0] or "application/octet-stream"
+    boundary = "agentric-os-" + uuid.uuid4().hex
+    try:
+        with open(local_path, "rb") as file:
+            content = file.read()
+    except OSError as error:
+        raise Refused("The file %s cannot be read (%s)." % (local_path, error.strerror or error))
+    head = ('--%s\r\nContent-Disposition: form-data; name="file"; filename="%s"\r\nContent-Type: %s\r\n\r\n'
+            % (boundary, name.replace('"', "'"), kind)).encode("utf-8")
+    data = head + content + ("\r\n--%s--\r\n" % boundary).encode("utf-8")
+    return send("POST", path, data, "multipart/form-data; boundary=" + boundary)
+
+
+def send(method, path, data, content_type, query=None):
     base, token = where_and_token()
     url = base + path
     if query:
         query = {k: v for k, v in query.items() if v is not None and v != ""}
         if query:
             url += "?" + urllib.parse.urlencode(query)
-    data = json.dumps(body).encode("utf-8") if body is not None else None
     request = urllib.request.Request(url, data=data, method=method)
     request.add_header("Authorization", "Bearer " + token)
     request.add_header("Accept", "application/json")
     request.add_header("User-Agent", "agentric-os-mcp/" + VERSION)
     if data is not None:
-        request.add_header("Content-Type", "application/json")
+        request.add_header("Content-Type", content_type)
     try:
         with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
             text = response.read().decode("utf-8")
@@ -542,6 +568,66 @@ def redo_case(a):
 @tool("list_approvals", "Actions in connected systems waiting for a person's decision, each with the reason given.")
 def list_approvals(a):
     return call("GET", "/api/approvals")
+
+
+@tool("list_case_files",
+      "The files given to a case (a report, a scan, a book of figures), newest first: each with how far reading it went "
+      "(`status`: waiting, reading, read, partly when some pages could not be read, failed, kept when nothing reads "
+      "documents), how many `pages` and how they were read (`reading.readBy`: as text, as tables, by a model that reads "
+      "pictures; `reading.unreadPages`), why in words (`problem`), what reading it cost (`cost.dollars`; `cost.unpriced` "
+      "when a model it used has no price) and how many of its pages agents quoted for values of the case (`quotedPages`).",
+      {"caseId": S}, ["caseId"])
+def list_case_files(a):
+    return call("GET", "/api/cases/%s/files" % quote(a["caseId"]))
+
+
+@tool("give_case_file",
+      "Give a case a file from this computer (a PDF, a scan, an Excel or Word file, a text; up to the installation's "
+      "largest file, 100 MB unless it says otherwise). The connection that reads documents then reads it page by page; "
+      "reading scanned pages with a model costs money, counted with the case. A workflow waiting for its documents goes on "
+      "once the file is read. Only on the user's word. Needs the right to work with cases.",
+      {"caseId": S, "path": dict(S, description="the file's path on this computer")}, ["caseId", "path"], read_only=False)
+def give_case_file(a):
+    return send_file("/api/cases/%s/files" % quote(a["caseId"]), a["path"])
+
+
+@tool("read_case_file_again",
+      "Have a file of a case read again: after it failed or was only partly read, or once a connection that reads "
+      "documents has been added. Reading again costs again what reading cost. Needs the right to work with cases.",
+      {"caseId": S, "file": dict(S, description="the file's id, from list_case_files")}, ["caseId", "file"], read_only=False)
+def read_case_file_again(a):
+    return call("POST", "/api/cases/%s/files/%s/read" % (quote(a["caseId"]), quote(a["file"])))
+
+
+@tool("remove_case_file",
+      "Remove a file from a case and from what the connection that read it remembers: agents can no longer find in it; "
+      "values already quoted from it keep their quote. It cannot be undone (give the file again to have it back). Only on "
+      "the user's explicit word. Needs the right to work with cases.",
+      {"caseId": S, "file": dict(S, description="the file's id, from list_case_files")}, ["caseId", "file"], read_only=False,
+      destructive=True)
+def remove_case_file(a):
+    return call("DELETE", "/api/cases/%s/files/%s" % (quote(a["caseId"]), quote(a["file"])))
+
+
+@tool("search_case_files",
+      "Find in the files of a case the pages that have what is asked, best first, as the case's agents find them: by "
+      "their words and, where the installation is set up for it, by what they mean. Each page found has its file, number, "
+      "the lines around what was found and the page's whole text, so it can be quoted with its page; `cost` is what "
+      "finding cost, counted with the case.",
+      {"caseId": S, "query": dict(S, description="what to look for, in plain words or the document's own"),
+       "limit": dict(I, description="how many pages at most, default 5, at most 20"),
+       "file": dict(S, description="only in this file of the case, by its id")}, ["caseId", "query"])
+def search_case_files(a):
+    return call("GET", "/api/cases/%s/files/search" % quote(a["caseId"]),
+                query={"query": a["query"], "limit": a.get("limit"), "file": a.get("file")})
+
+
+@tool("read_case_file_page",
+      "One page of a file of a case, its whole text (tables as rows between bars), how it was read and, when it could not "
+      "be, why.",
+      {"caseId": S, "file": dict(S, description="the file's id, from list_case_files"), "page": I}, ["caseId", "file", "page"])
+def read_case_file_page(a):
+    return call("GET", "/api/cases/%s/files/%s/pages/%s" % (quote(a["caseId"]), quote(a["file"]), quote(a["page"])))
 
 
 @tool("retry_case", "Send a stuck case on its way again: its failed step is tried once more. Needs the right to work "

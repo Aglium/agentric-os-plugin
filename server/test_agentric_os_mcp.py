@@ -251,6 +251,60 @@ class Problems(unittest.TestCase):
         self.assertEqual(self.calls[-1][:2], ("POST", "/api/workflow-launches/l1/routing/remove"))
 
 
+class CaseFiles(unittest.TestCase):
+    """The files of a case are listed, given, read again, removed and searched where the installation keeps them."""
+
+    def setUp(self):
+        self.calls = []
+        self.sent = []
+        self.real = (server.call, server.send)
+        server.call = lambda method, path, body=None, query=None: self.calls.append((method, path, body, query)) or {}
+        server.send = lambda method, path, data, content_type, query=None: self.sent.append((method, path, data, content_type)) or {}
+
+    def tearDown(self):
+        server.call, server.send = self.real
+
+    def run_tool(self, name, arguments):
+        tool = next(t for t in server.TOOLS if t["name"] == name)
+        return tool["run"](arguments)
+
+    def test_files_are_read_searched_and_quoted_where_the_installation_keeps_them(self):
+        self.run_tool("list_case_files", {"caseId": "c1"})
+        self.assertEqual(self.calls[-1][:2], ("GET", "/api/cases/c1/files"))
+        self.run_tool("search_case_files", {"caseId": "c1", "query": "what it owes", "limit": 3})
+        self.assertEqual(self.calls[-1][1], "/api/cases/c1/files/search")
+        self.assertEqual(self.calls[-1][3]["query"], "what it owes")
+        self.assertEqual(self.calls[-1][3]["limit"], 3)
+        self.run_tool("read_case_file_page", {"caseId": "c1", "file": "f1", "page": 4})
+        self.assertEqual(self.calls[-1][:2], ("GET", "/api/cases/c1/files/f1/pages/4"))
+        self.run_tool("read_case_file_again", {"caseId": "c1", "file": "f1"})
+        self.assertEqual(self.calls[-1][:2], ("POST", "/api/cases/c1/files/f1/read"))
+        self.run_tool("remove_case_file", {"caseId": "c1", "file": "f1"})
+        self.assertEqual(self.calls[-1][:2], ("DELETE", "/api/cases/c1/files/f1"))
+        removing = next(t for t in server.TOOLS if t["name"] == "remove_case_file")
+        self.assertTrue(removing["annotations"]["destructiveHint"])
+
+    def test_a_file_of_this_computer_is_given_as_it_is(self):
+        folder = tempfile.TemporaryDirectory()
+        self.addCleanup(folder.cleanup)
+        path = os.path.join(folder.name, "report 2025.pdf")
+        with open(path, "wb") as file:
+            file.write(b"%PDF-1.7 \x00\xff")
+        self.run_tool("give_case_file", {"caseId": "c1", "path": path})
+        method, where, data, kind = self.sent[-1]
+        self.assertEqual((method, where), ("POST", "/api/cases/c1/files"))
+        self.assertTrue(kind.startswith("multipart/form-data; boundary="))
+        self.assertIn(b'filename="report 2025.pdf"', data)
+        self.assertIn(b"Content-Type: application/pdf", data)
+        self.assertIn(b"%PDF-1.7 \x00\xff", data)
+
+    def test_a_file_that_is_not_there_is_said_in_words(self):
+        with self.assertRaises(server.Refused) as refused:
+            self.run_tool("give_case_file", {"caseId": "c1", "path": "/nowhere/report.pdf"})
+        self.assertIn("There is no file at /nowhere/report.pdf", str(refused.exception))
+        self.assertEqual(self.sent, [])
+
+
 class Versions(unittest.TestCase):
     def test_the_server_and_the_plugin_say_the_same_version(self):
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
