@@ -19,6 +19,7 @@ token without the right to apply cannot make a draft live. Every change is a dra
 proposes runs until it is applied.
 """
 
+import base64
 import json
 import mimetypes
 import os
@@ -96,21 +97,25 @@ def call(method, path, body=None, query=None):
     return send(method, path, json.dumps(body).encode("utf-8") if body is not None else None, "application/json", query)
 
 
-def send_file(path, local_path):
-    """Sends a file of this computer to the installation as a form with one part, `file`, read from disk as it is."""
+def local_file(local_path):
+    """A file of this computer, read from disk as it is: (its name, its bytes)."""
     local_path = os.path.expanduser(str(local_path or "").strip())
     if not local_path:
         raise Refused("Say which file to give: its path on this computer.")
     if not os.path.isfile(local_path):
         raise Refused("There is no file at %s on this computer. Give the path of an existing file." % local_path)
-    name = os.path.basename(local_path)
-    kind = mimetypes.guess_type(name)[0] or "application/octet-stream"
-    boundary = "agentric-os-" + uuid.uuid4().hex
     try:
         with open(local_path, "rb") as file:
-            content = file.read()
+            return os.path.basename(local_path), file.read()
     except OSError as error:
         raise Refused("The file %s cannot be read (%s)." % (local_path, error.strerror or error))
+
+
+def send_file(path, local_path):
+    """Sends a file of this computer to the installation as a form with one part, `file`, read from disk as it is."""
+    name, content = local_file(local_path)
+    kind = mimetypes.guess_type(name)[0] or "application/octet-stream"
+    boundary = "agentric-os-" + uuid.uuid4().hex
     head = ('--%s\r\nContent-Disposition: form-data; name="file"; filename="%s"\r\nContent-Type: %s\r\n\r\n'
             % (boundary, name.replace('"', "'"), kind)).encode("utf-8")
     data = head + content + ("\r\n--%s--\r\n" % boundary).encode("utf-8")
@@ -274,8 +279,9 @@ def get_text(a):
 @tool("list_calculations", "Calculations: numbers workflows work out by formulas, line by line, never by AI (a price after "
       "a discount, a commission, a valuation). Each with its lines (given by the step, or worked out by a formula over the "
       "lines above, said in words), the lines worked out with the examples, the workflows working it out, and how often it "
-      "was worked out in the last 30 days and the work by hand that saved. A case's calculated lines are explained by "
-      "explain_value (their name is the step's result and the line, such as model.total).")
+      "was worked out in the last 30 days and the work by hand that saved. One worked out by the business's own Excel "
+      "model (byWorkbook) names a cell of the model for each line instead of a formula. A case's calculated lines are "
+      "explained by explain_value (their name is the step's result and the line, such as model.total).")
 def list_calculations(a):
     return call("GET", "/api/calculation-sheets")
 
@@ -292,16 +298,38 @@ def get_calculation(a):
       {"calculation": S, "lines": {"type": "array", "items": {"type": "object"}, "description": "lines of one being written, instead of a key"},
        "columns": {"type": "array", "items": {"type": "object"}, "description": "columns of one being written: [{key, name, group}]"},
        "values": {"type": "object", "description": "the given lines by key, as numbers: 0.15 for 15%; a line by columns "
-                  "as a list in the order of the columns it is given in, or {column: number}"}}, ["values"])
+                  "as a list in the order of the columns it is given in, or {column: number}"},
+       "workbookPath": dict(S, description="the Excel model on this computer the lines being written name cells of; "
+                                           "none: the model of `calculation`, if it has one")}, ["values"])
 def try_calculation(a):
     body = {"values": a.get("values") or {}}
     if a.get("lines"):
         body["lines"] = a["lines"]
         if a.get("columns"):
             body["columns"] = a["columns"]
+        if a.get("calculation"):
+            body["calculation"] = a["calculation"]
+        if a.get("workbookPath"):
+            body["workbook"] = base64.b64encode(local_file(a["workbookPath"])[1]).decode("ascii")
     else:
         body["calculation"] = a.get("calculation")
     return call("POST", "/api/calculation-sheets/try", body)
+
+
+@tool("read_calculation_workbook",
+      "Read a business's own Excel model (an .xlsx on this computer) into the lines of a calculation worked out by it, "
+      "instead of writing its formulas again: the installation's reader of models proposes which cells a case gives, "
+      "which it reads back and which have to come to zero, checked against the model and worked out with its numbers. "
+      "Answers {name, description, columns, lines (each with its cell), problems, warnings, cost, byAi, note}. Asking the "
+      "reader costs money (cost); nothing is kept. To keep it, propose_change kind calculation with the lines as payload and "
+      "workbookPath, the same file. Needs the right to propose changes.",
+      {"path": dict(S, description="the model's path on this computer"),
+       "calculation": dict(S, description="the calculation it is for, when it is kept already: the lines its workflows "
+                                          "give keep their keys")}, ["path"], read_only=False)
+def read_calculation_workbook(a):
+    name, content = local_file(a["path"])
+    return send("POST", "/api/calculation-sheets/read-workbook", content, "application/octet-stream",
+                {"name": name, "calculation": a.get("calculation")})
 
 
 @tool("try_calculation_on_past_cases", "Works the latest cases a calculation worked out (20 unless `limit` says) out "
@@ -766,10 +794,15 @@ def list_change_kinds(a):
        "remove": B,
        "note": dict(S, description="why, in words the person who applies it will read"),
        "problem": dict(I, description="the problem the draft is about (id from list_problems): the draft then says "
-                                      "why it was made, and the problem lists it")},
+                                      "why it was made, and the problem lists it"),
+       "workbookPath": dict(S, description="for a calculation worked out by an Excel model: the model's path on this "
+                                           "computer, sent as the payload's workbook")},
       ["kind", "note"], read_only=False)
 def propose_change(a):
     body = {k: a[k] for k in ("kind", "target", "tenantId", "payload", "remove", "note", "problem") if k in a}
+    if a.get("workbookPath"):
+        body["payload"] = dict(body.get("payload") or {})
+        body["payload"]["workbook"] = base64.b64encode(local_file(a["workbookPath"])[1]).decode("ascii")
     return change(call("POST", "/api/changes", body))
 
 

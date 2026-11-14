@@ -284,6 +284,22 @@ class CaseFiles(unittest.TestCase):
         removing = next(t for t in server.TOOLS if t["name"] == "remove_case_file")
         self.assertTrue(removing["annotations"]["destructiveHint"])
 
+    def test_an_excel_model_is_read_into_lines_and_sent_with_its_calculation(self):
+        folder = tempfile.TemporaryDirectory()
+        self.addCleanup(folder.cleanup)
+        path = os.path.join(folder.name, "valuation.xlsx")
+        with open(path, "wb") as file:
+            file.write(b"PK\x03\x04model")
+        self.run_tool("read_calculation_workbook", {"path": path, "calculation": "valuation"})
+        method, where, data, kind = self.sent[-1]
+        self.assertEqual((method, where, data, kind), ("POST", "/api/calculation-sheets/read-workbook", b"PK\x03\x04model", "application/octet-stream"))
+        self.run_tool("propose_change", {"kind": "calculation", "target": "valuation", "note": "the firm's model", "payload": {"lines": []},
+                                         "workbookPath": path})
+        self.assertEqual(self.calls[-1][2]["payload"], {"lines": [], "workbook": "UEsDBG1vZGVs"})
+        self.run_tool("try_calculation", {"calculation": "valuation", "lines": [{"key": "a", "cell": "S!A1"}], "values": {}, "workbookPath": path})
+        self.assertEqual(self.calls[-1][2]["workbook"], "UEsDBG1vZGVs")
+        self.assertEqual(self.calls[-1][2]["calculation"], "valuation")
+
     def test_a_file_of_this_computer_is_given_as_it_is(self):
         folder = tempfile.TemporaryDirectory()
         self.addCleanup(folder.cleanup)
