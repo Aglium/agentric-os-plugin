@@ -261,13 +261,18 @@ def get_calculation(a):
 
 @tool("try_calculation", "Works a calculation out on values without changing anything: a kept one by its key, or the "
       "lines of one being written (as a change of kind calculation carries them). Answers every line with its value and "
-      "its formula with the numbers put in, or what stopped it in words.",
+      "its formula with the numbers put in, or what stopped it in words. A calculation with columns (such as years) "
+      "answers a line by columns with each cell; a check line that does not come to zero is named with its column.",
       {"calculation": S, "lines": {"type": "array", "items": {"type": "object"}, "description": "lines of one being written, instead of a key"},
-       "values": {"type": "object", "description": "the given lines by key, as numbers: 0.15 for 15%"}}, ["values"])
+       "columns": {"type": "array", "items": {"type": "object"}, "description": "columns of one being written: [{key, name, group}]"},
+       "values": {"type": "object", "description": "the given lines by key, as numbers: 0.15 for 15%; a line by columns "
+                  "as a list in the order of the columns it is given in, or {column: number}"}}, ["values"])
 def try_calculation(a):
     body = {"values": a.get("values") or {}}
     if a.get("lines"):
         body["lines"] = a["lines"]
+        if a.get("columns"):
+            body["columns"] = a["columns"]
     else:
         body["calculation"] = a.get("calculation")
     return call("POST", "/api/calculation-sheets/try", body)

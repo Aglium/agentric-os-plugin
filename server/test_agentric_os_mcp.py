@@ -206,6 +206,8 @@ class Problems(unittest.TestCase):
         self.assertEqual(self.calls[-1][:3], ("POST", "/api/calculation-sheets/past", {"calculation": "deal-value", "limit": 20}))
         self.run_tool("try_calculation", {"lines": [{"key": "a"}], "values": {}})
         self.assertEqual(self.calls[-1][2], {"values": {}, "lines": [{"key": "a"}]})
+        self.run_tool("try_calculation", {"lines": [{"key": "a", "columns": True}], "columns": [{"key": "2024"}], "values": {"a": [1]}})
+        self.assertEqual(self.calls[-1][2], {"values": {"a": [1]}, "lines": [{"key": "a", "columns": True}], "columns": [{"key": "2024"}]})
 
     def test_a_value_said_to_be_wrong_is_corrected_on_its_case_and_corrections_are_read(self):
         self.run_tool("report_correction", {"caseId": "c1", "name": "decision.claimed.amount", "value": "1150", "reason": "discount not taken off"})
