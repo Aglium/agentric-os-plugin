@@ -42,6 +42,10 @@ claude plugin validate .
 
 ## Rules
 
+- **The schema comes from `agentric-os-schema`.** `schema/` and `server/schema_check.py` are copies (`ci/sync-schema.sh`),
+  never edited here. When the platform changes what a configuration may say, the schema changes there first; the
+  copy is synced and the builders follow it in the same piece of work, so that what the plugin builds is what the
+  installation takes.
 - **Standard library only.** No dependency to install is a promise of the README.
 - **No rights of its own.** The plugin never decides what is allowed and never works around a refusal; a
   refusal is passed on in the installation's own words. Sign-in details of connections are never reachable.

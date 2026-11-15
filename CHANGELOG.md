@@ -5,6 +5,7 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- The guide says the schema comes from `agentric-os-schema` and is never edited here: when the platform changes what a configuration may say, the schema changes there first and the copy is synced.
 - The schema the plugin carries lets an “Ask an agent” step name a calculation to fill in (`table`), so that a workflow built here can have an agent find a calculation's lines by year in the files of a case. **Needs:** `agentric-os-schema` and a core that fills in a table (`agentric-os`).
 - The schema the plugin carries lets a line of a calculation worked out by an Excel model be an assumption of the model (`assumption: true`): a number the model keeps for every case, which a case may change with a reason, so that a calculation built here can say so. **Needs:** `agentric-os-schema` and a core with assumptions of the model (`agentric-os`).
 - The schema the plugin carries lets a column of a calculation worked out by an Excel model name the header cell of its period, so that a calculation by years built here keeps no years. **Needs:** `agentric-os-schema` and a core that takes a calculation's years from the case (`agentric-os`).
