@@ -1,0 +1,160 @@
+{
+ "description": "Evaluates an XPath expression against an XML payload.",
+ "name": "xpath",
+ "properties": {
+  "documentType": {
+   "description": "Name of class for document type The default value is org.w3c.dom.Document",
+   "displayName": "Document Type",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "expression": {
+   "description": "The expression value in your chosen language syntax",
+   "displayName": "Expression",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "value",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "factoryRef": {
+   "description": "References to a custom XPathFactory to lookup in the registry",
+   "displayName": "Factory Ref",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "logNamespaces": {
+   "defaultValue": false,
+   "description": "Whether to log namespaces which can assist during troubleshooting",
+   "displayName": "Log Namespaces",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "namespace": {
+   "description": "Injects the XML Namespaces of prefix - uri mappings",
+   "displayName": "Namespace",
+   "group": "common",
+   "javaType": "java.util.List<org.apache.camel.model.PropertyDefinition>",
+   "kind": "element",
+   "required": false,
+   "secret": false,
+   "type": "array"
+  },
+  "objectModel": {
+   "description": "The XPath object model to use",
+   "displayName": "Object Model",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "preCompile": {
+   "defaultValue": true,
+   "description": "Whether to enable pre-compiling the xpath expression during initialization phase. pre-compile is enabled by default. This can be used to turn off, for example in cases the compilation phase is desired at the starting phase, such as if the application is ahead of time compiled (for example with camel-quarkus) which would then load the xpath factory of the built operating system, and not a JVM runtime.",
+   "displayName": "Pre Compile",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "resultQName": {
+   "defaultValue": "NODESET",
+   "description": "Sets the output type supported by XPath.",
+   "displayName": "Result QName",
+   "enum": [
+    "NUMBER",
+    "STRING",
+    "BOOLEAN",
+    "NODESET",
+    "NODE"
+   ],
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "resultType": {
+   "description": "Sets the class of the result type (type from output)",
+   "displayName": "Result Type",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "saxon": {
+   "defaultValue": false,
+   "description": "Whether to use Saxon.",
+   "displayName": "Saxon",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "source": {
+   "description": "Source to use, instead of message body. You can prefix with variable:, header:, or property: to specify kind of source. Otherwise, the source is assumed to be a variable. Use empty or null to use default source, which is the message body.",
+   "displayName": "Source",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "threadSafety": {
+   "defaultValue": false,
+   "description": "Whether to enable thread-safety for the returned result of the xpath expression. This applies to when using NODESET as the result type, and the returned set has multiple elements. In this situation there can be thread-safety issues if you process the NODESET concurrently such as from a Camel Splitter EIP in parallel processing mode. This option prevents concurrency issues by doing defensive copies of the nodes. It is recommended to turn this option on if you are using camel-saxon or Saxon in your application. Saxon has thread-safety issues which can be prevented by turning this option on.",
+   "displayName": "Thread Safety",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "trim": {
+   "defaultValue": true,
+   "description": "Whether to trim the value to remove leading and trailing whitespaces and line breaks",
+   "displayName": "Trim",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "title": "XPath"
+}

@@ -1,0 +1,67 @@
+{
+ "description": "Catches exceptions as part of a try, catch, finally block",
+ "name": "doCatch",
+ "properties": {
+  "description": {
+   "description": "Sets the description of this node",
+   "displayName": "Description",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "disabled": {
+   "defaultValue": false,
+   "description": "Disables this EIP from the route.",
+   "displayName": "Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "exception": {
+   "description": "The exception(s) to catch.",
+   "displayName": "Exception",
+   "group": "common",
+   "javaType": "java.util.List<java.lang.String>",
+   "kind": "element",
+   "required": false,
+   "secret": false,
+   "type": "array"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "onWhen": {
+   "description": "Used for triggering doCatch in specific situations",
+   "displayName": "On When",
+   "group": "common",
+   "javaType": "org.apache.camel.model.OnWhenDefinition",
+   "kind": "element",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "outputs": {
+   "displayName": "Outputs",
+   "group": "common",
+   "javaType": "java.util.List",
+   "kind": "element",
+   "required": true,
+   "secret": false,
+   "type": "array"
+  }
+ },
+ "title": "Do Catch"
+}

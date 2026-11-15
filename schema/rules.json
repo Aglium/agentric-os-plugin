@@ -1,0 +1,30 @@
+{
+  "description": "A table of rules (a DMN decision table of a solution, rules/<name>.dmn, listed under decisions). A decide step asks it and keeps what its first matching row says; a workflow's policy judges each command its steps send. One row per case, readable by somebody who is not a developer.",
+  "document": {
+    "namespace": "https://www.omg.org/spec/DMN/20191111/MODEL/",
+    "rules": [
+      "One decision per file; its id is the key workflows name it by (rules: of a decide step, policy: of a workflow)",
+      "hitPolicy FIRST: the first row that fits answers; no row fitting gives an empty answer, and NEEDS_APPROVAL from a policy",
+      "Each input looks at a value of the case by its name (an expression without ${}), such as order.total or operation",
+      "Say it in words: a description of the decision (what the rules are for), of the table (what comes of no row fitting), of each input (where the value comes from) and of each row (why)"
+    ]
+  },
+  "cells": {
+    "any": "an empty cell or - fits any value",
+    "value": "one value: \"text\" in double quotes, a number, true or false",
+    "comparison": "< 100, >= 2, != \"NEW\": a comparison with one value",
+    "refused": "Several values with commas between them (\"a\",\"b\") cannot be read by the engine, and a row it cannot read stops the whole table: give each value a row of its own"
+  },
+  "policy": {
+    "description": "The rules a workflow's commands are judged by (policy: of the workflow). They look at what the command does and the case, and answer verdict.",
+    "inputs": {
+      "connector": "the connection the command goes to",
+      "operation": "what it asks the connection to do, such as message.send",
+      "arguments.<name>": "a value the command carries",
+      "<variable>": "anything the case worked out or read"
+    },
+    "output": {"name": "verdict", "values": ["AUTO", "NEEDS_APPROVAL", "DENY"]},
+    "outputsBesides": {"decides": "a role of People that decides this action, instead of the workflow's whoDecides"},
+    "rule": "Every command the workflow can send has a row. Start strict (NEEDS_APPROVAL) and loosen with what test runs show."
+  }
+}

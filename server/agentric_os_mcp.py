@@ -963,6 +963,428 @@ def read_api(a):
     return call("GET", path)
 
 
+# --- building configurations from the schema ------------------------------------------------------------------
+# Workflows, solutions and connections are built as data and checked against the schema (what a configuration may
+# say: agentric-os-schema), the installation's own when it is reached, else the copy carried in schema/. Files are
+# written only from what passed; the installation checks once more when a draft is proposed.
+
+import build_connection  # noqa: E402
+import build_rules  # noqa: E402
+import build_solution  # noqa: E402
+import build_workflow  # noqa: E402
+import schema_files  # noqa: E402
+
+
+def _fetch_schema(name):
+    if name == "index.json":
+        return call("GET", "/api/schema")
+    return call("GET", "/api/schema/file", query={"name": name})
+
+
+SCHEMA = schema_files.Schema(_fetch_schema)
+
+
+def schema_said(answer):
+    answer["builtOn"] = SCHEMA.where()
+    return answer
+
+
+def write_files(folder, written):
+    """Writes files into a folder of this computer; says which it wrote."""
+    folder = os.path.abspath(os.path.expanduser(str(folder or "").strip()))
+    if not folder or folder == os.path.abspath(os.sep):
+        raise Refused("Say which folder to write into: its path on this computer.")
+    paths = []
+    for name, text in written.items():
+        path = os.path.join(folder, *name.split("/"))
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(text)
+        paths.append(path)
+    return paths
+
+
+@tool("schema",
+      "What a configuration may say, as the installation runs it (or as this plugin carries it when no installation "
+      "is reached): its version and its files. Give `file` to read one, such as blocks.json, workflow.json, "
+      "solution.schema.json, connector.schema.json, connector-contract.json, runner.json. Building tools use it "
+      "themselves; read it to understand what can be built.",
+      {"file": dict(S, description="a file the schema lists; left out: what the schema holds")})
+def schema(a):
+    name = a.get("file")
+    if not name:
+        return schema_said({"schema": SCHEMA.file("index.json")})
+    if name == "camel/yaml-dsl.schema.json":
+        raise Refused("That is Camel's own schema of its YAML DSL, which check_connection checks routes against; it "
+                      "is too large to read whole. Ask for one EIP, language or data format with camel_doc instead.")
+    try:
+        return schema_said({"file": name, "says": SCHEMA.file(name)})
+    except LookupError:
+        raise Refused("The schema has no file %s. Its files: schema with no file." % name)
+
+
+@tool("connection_kinds",
+      "Kinds of connection (a channel, a place knowledge is kept, a calendar, ...): a connection that says it is of a "
+      "kind (provides:) offers the actions and tells the events every one of that kind does, so workflows written for "
+      "the kind work with it. Read before building a connection of a known kind.")
+def connection_kinds(a):
+    return schema_said({"kinds": SCHEMA.file("connection-kinds.json")})
+
+
+@tool("connection_contract",
+      "What the routes of a connection rely on and keep to: the address of each operation's route, how to refuse, "
+      "events pulled and pushed, idempotency, settings, helpers; the Camel version of the connections' program and "
+      "the components it carries. Read before writing routes.")
+def connection_contract(a):
+    return schema_said({"contract": SCHEMA.file("connector-contract.json"), "program": SCHEMA.file("runner.json"),
+                        "description": "connector.schema.json (read it with schema) is the format of connector.yaml"})
+
+
+@tool("camel_components",
+      "Apache Camel components for a connection's routes, from Camel's own catalog of the version the connections' "
+      "program runs: name, what it is for, how its address is written, and whether the program has it built in or "
+      "the platform's image carries it (others are fetched once when the connection first starts).",
+      {"search": dict(S, description="words to look for in the name or what it is for")})
+def camel_components(a):
+    runner = SCHEMA.file("runner.json")
+    built, carried = set(runner["builtIn"]), set(runner["carried"]["camel"])
+    words = str(a.get("search") or "").lower().split()
+    found = []
+    for c in SCHEMA.file("camel/index.json")["components"]:
+        text = (c["name"] + " " + (c.get("title") or "") + " " + (c.get("description") or "")).lower()
+        if all(w in text for w in words):
+            found.append(dict(c, has="built in" if c["name"] in built else "carried by the image" if c["name"] in carried else "fetched when first started"))
+    return schema_said({"camelVersion": runner["camelVersion"], "components": found})
+
+
+@tool("camel_doc",
+      "One part of Apache Camel as its catalog describes it: a component (its address and every option: which are "
+      "required, the values it takes, defaults, which are secrets), an EIP (a step of a route: setHeader, choice, "
+      "split, ...), a language (simple, jq, ...) or a data format (jackson, csv, ...). Read it before using that part "
+      "in a route.",
+      {"kind": {"type": "string", "enum": ["component", "eip", "language", "dataformat"]}, "name": S}, ["kind", "name"])
+def camel_doc(a):
+    folder = {"component": "components", "eip": "eips", "language": "languages", "dataformat": "dataformats"}[a["kind"]]
+    try:
+        return schema_said({"camelVersion": SCHEMA.file("runner.json")["camelVersion"],
+                            a["kind"]: SCHEMA.file("camel/%s/%s.json" % (folder, a["name"]))})
+    except LookupError:
+        listed = [c["name"] for c in SCHEMA.file("camel/index.json")[folder]]
+        raise Refused("There is no %s “%s” here. The ones there are: %s" % (a["kind"], a["name"], ", ".join(listed)))
+
+
+CONNECTION_ARGS = {
+    "description": {"type": "object", "description": "the connection's description, shaped like connector.yaml "
+                                                     "(connector.schema.json)"},
+    "routes": {"type": "array", "items": {"type": "object"},
+               "description": "its routes, shaped like Camel's YAML DSL: [{route: {id, from: {uri, parameters, "
+                              "steps}}}]; left out for a connection whose program comes from elsewhere"},
+}
+
+
+@tool("check_connection",
+      "Check a connection before anything is written or proposed: its description against the schema and against "
+      "itself (what is promised, read back, cancelled), its routes against Camel's YAML DSL and catalog (every "
+      "address and option), and both against the contract with the platform (a route for every operation, settings "
+      "named and never written in, refusals, events, no code). Says each problem with where it is; `ready` is true "
+      "when nothing stops it.", CONNECTION_ARGS, ["description"])
+def check_connection(a):
+    return schema_said(build_connection.check(SCHEMA, a["description"], a.get("routes")).answer())
+
+
+@tool("write_connection",
+      "Write a connection's files into a folder of this computer, connector.yaml and routes/<name>.camel.yaml, once "
+      "check_connection finds nothing that stops it. Nothing is written while it has problems.",
+      dict(CONNECTION_ARGS, folder=dict(S, description="the folder of the connection on this computer")),
+      ["folder", "description"], read_only=False)
+def write_connection(a):
+    report = build_connection.check(SCHEMA, a["description"], a.get("routes"))
+    if report.problems:
+        return schema_said(report.answer(written=[], said="Nothing was written: fix the problems first."))
+    written = write_files(a["folder"], build_connection.files(a["description"], a.get("routes")))
+    return schema_said(report.answer(written=written))
+
+
+@tool("propose_connection",
+      "Propose a new or changed connection to the installation as a draft, once check_connection finds nothing that "
+      "stops it: the installation checks it again, and a person applies it under Changes. Keeping its files starts "
+      "nothing; a person starts its program on the connection's page and enters its settings there.",
+      dict(CONNECTION_ARGS, note=dict(S, description="why, in words the person who applies it will read")),
+      ["description", "note"], read_only=False)
+def propose_connection(a):
+    report = build_connection.check(SCHEMA, a["description"], a.get("routes"))
+    if report.problems:
+        return schema_said(report.answer(said="Not proposed: fix the problems first."))
+    written = build_connection.files(a["description"], a.get("routes"))
+    routes = next((text for name, text in written.items() if name.startswith("routes/")), None)
+    looked = call("POST", "/api/connectors/check-file", {"file": written["connector.yaml"], "routes": routes})
+    payload = {"file": written["connector.yaml"]}
+    if routes is not None:
+        payload["routes"] = routes
+    draft = change(call("POST", "/api/changes", {"kind": "connection", "target": a["description"]["connector"],
+                                                 "payload": payload, "note": a["note"]}))
+    return schema_said(report.answer(installationSays=looked, draft=draft))
+
+
+def known_here(solution=None, folder=None, connections=None):
+    """What a workflow or a solution may name: what the installation has, when it is reached, and what the solution
+    being built brings. A list the installation could not give is left out, so it is not checked against."""
+    known = {}
+    try:
+        connectors = call("GET", "/api/connectors")
+        known["connections"] = {c["name"]: {o.get("name"): o.get("kind", "command") for o in (c.get("manifest") or {}).get("operations") or []}
+                                for c in connectors}
+        for c in connectors:
+            for source in (c.get("manifest") or {}).get("eventSources") or []:
+                if source.get("operation"):
+                    known["connections"][c["name"]].setdefault(source["operation"], "read")
+        known["agents"] = {a["key"] for a in call("GET", "/api/agents")}
+        known["texts"] = {t["key"] for t in call("GET", "/api/texts")}
+        known["rules"] = {d["key"] for d in call("GET", "/api/decisions")}
+        known["calculations"] = {c["key"] for c in call("GET", "/api/calculation-sheets")}
+    except Refused:
+        known = {}
+    for description in connections or []:
+        if isinstance(description, dict) and description.get("connector"):
+            offered = {o.get("name"): o.get("kind", "command") for o in description.get("operations") or [] if isinstance(o, dict)}
+            known.setdefault("connections", {})[description["connector"]] = offered
+    if isinstance(solution, dict):
+        for name, items in (("agents", "agents"), ("texts", "texts"), ("calculations", "calculations")):
+            if solution.get(items):
+                known[name] = set(known.get(name) or set()) | {i.get("key") for i in solution[items] if isinstance(i, dict)}
+        if folder and solution.get("decisions"):
+            rules = set(known.get("rules") or set())
+            for name in solution["decisions"]:
+                path = os.path.join(os.path.abspath(os.path.expanduser(folder)), *str(name).split("/"))
+                if os.path.isfile(path):
+                    try:
+                        rules.update(build_solution.decisions_in(path))
+                    except Exception:
+                        pass
+            known["rules"] = rules
+    return known
+
+
+PLAN = {"type": "object", "description": "the workflow as a plan: {key, name, about, start, byHandMinutes, byHandRole, "
+        "steps: [...]}; a step is a block {id, name, block, fields, next, onError: {CODE: step}, timer: {after | at, to}}, "
+        "a choice {id, name, choose: [{when: \"${...}\", to}, {otherwise: true, to}]}, values worked out {id, name, set: "
+        "{name: \"${...}\"}, next}, a person's approval {id, name, approval: true, next}, or an end {id, end: true}; any "
+        "step may say byHandMinutes, byHandRole, brings"}
+BUILDING_CONTEXT = {
+    "solution": {"type": "object", "description": "the solution the workflow belongs to, shaped like solution.yaml: "
+                                                  "its agents, texts, calculations and rules count as there"},
+    "folder": dict(S, description="the solution's folder on this computer, where its rules (DMN files) are"),
+    "connections": {"type": "array", "items": {"type": "object"},
+                    "description": "descriptions of connections being built alongside, shaped like connector.yaml"},
+}
+
+
+@tool("workflow_parts",
+      "What a workflow is built from: the blocks (what each does, its fields, which are required, how it can end) and "
+      "what else a workflow may contain (choices, values worked out, approvals, timers, the values a case starts with, "
+      "how values are named, the helpers of expressions, what the work is worth). Read before making a plan.")
+def workflow_parts(a):
+    return schema_said({"blocks": SCHEMA.file("blocks.json"), "workflow": SCHEMA.file("workflow.json")})
+
+
+@tool("check_workflow_plan",
+      "Check a workflow made as a plan of blocks, before it is written or proposed: every block and field, every way "
+      "(nothing leads nowhere, every step comes to an end), every error caught one the step can end with, every value "
+      "used worked out before on every way to it, and every connection, operation, agent, text, table of rules and "
+      "calculation named one the installation or the solution has. Says each problem with where it is.",
+      dict(BUILDING_CONTEXT, plan=PLAN), ["plan"])
+def check_workflow_plan(a):
+    known = known_here(a.get("solution"), a.get("folder"), a.get("connections"))
+    return schema_said(build_workflow.check(SCHEMA, a["plan"], known).answer(checkedNames=sorted(known)))
+
+
+@tool("write_workflow",
+      "Write a workflow made as a plan into a solution's folder of this computer, as workflows/<key>.bpmn20.xml, once "
+      "check_workflow_plan finds nothing that stops it. The BPMN is written from the plan; nothing is written while "
+      "the plan has problems. Gives the processKey and the file for solution.yaml.",
+      dict(BUILDING_CONTEXT, plan=PLAN, folder=dict(S, description="the solution's folder on this computer")),
+      ["plan", "folder"], read_only=False)
+def write_workflow(a):
+    known = known_here(a.get("solution"), a.get("folder"), a.get("connections"))
+    report = build_workflow.check(SCHEMA, a["plan"], known)
+    if report.problems:
+        return schema_said(report.answer(written=[], said="Nothing was written: fix the problems first."))
+    solution = (a.get("solution") or {}).get("solution")
+    name = "workflows/%s.bpmn20.xml" % a["plan"]["key"]
+    written = write_files(a["folder"], {name: build_workflow.bpmn(SCHEMA, a["plan"], solution)})
+    return schema_said(report.answer(written=written, forSolutionYaml={"key": a["plan"]["key"], "name": a["plan"]["name"],
+                                                                     "process": name, "processKey": a["plan"]["key"]}))
+
+
+@tool("propose_workflow",
+      "Propose a workflow made as a plan to the installation as a draft, in Test run (it records what it would do and "
+      "sends nothing), once check_workflow_plan finds nothing that stops it. The installation checks it again; a "
+      "person applies it under Changes. Going Live is its own later change. A workflow of a new solution, whose agents, "
+      "texts or rules are new too, goes with propose_solution.",
+      dict(plan=PLAN, note=dict(S, description="why, in words the person who applies it will read"),
+           startOn={"type": "array", "items": S, "description": "the types of event that open a case of it"},
+           startWhen=dict(S, description="an expression an event must also meet"),
+           policy=dict(S, description="the table of rules that judges its commands"),
+           tags={"type": "array", "items": S}),
+      ["plan", "note"], read_only=False)
+def propose_workflow(a):
+    known = known_here()
+    report = build_workflow.check(SCHEMA, a["plan"], known)
+    if report.problems:
+        return schema_said(report.answer(said="Not proposed: fix the problems first."))
+    xml = build_workflow.bpmn(SCHEMA, a["plan"])
+    looked = call("POST", "/api/case-types/validate", {"processKey": a["plan"]["key"], "bpmnXml": xml})
+    payload = {"name": a["plan"]["name"], "processKey": a["plan"]["key"], "bpmnXml": xml, "shadow": True,
+               "startOn": a.get("startOn") or []}
+    for said, key in (("startWhen", "startWhen"), ("policy", "policyDecisionKey"), ("tags", "tags")):
+        if a.get(said):
+            payload[key] = a[said]
+    draft = change(call("POST", "/api/changes", {"kind": "workflow", "target": a["plan"]["key"], "payload": payload, "note": a["note"]}))
+    return schema_said(report.answer(installationSays=looked, draft=draft))
+
+
+RULES_PLAN = {"type": "object", "description": "the table as a plan: {key, name, about, noRowFits, policy: true when it "
+              "judges a workflow's commands, inputs: [{label, looksAt, type, about}], outputs: [{name, label, type}], rows: "
+              "[{when: [one cell per input: a value, null for any, or {compare: \"> 100\"}], then: [one value per output], why}]}"}
+
+
+@tool("check_rules",
+      "Check a table of rules made as a plan (what a decide step asks, or the policy that judges a workflow's commands) "
+      "the way the engine will read it: every column looks at a named value, every row has a cell per column and a "
+      "value per output, every cell is one the engine can read, a policy answers AUTO, NEEDS_APPROVAL or DENY.",
+      {"plan": RULES_PLAN}, ["plan"])
+def check_rules(a):
+    return schema_said(build_rules.check(SCHEMA, a["plan"]).answer(howRulesAreRead=SCHEMA.file("rules.json")))
+
+
+@tool("write_rules",
+      "Write a table of rules made as a plan into a solution's folder as rules/<key>.dmn, once check_rules finds "
+      "nothing that stops it. Gives the file to list under decisions in solution.yaml.",
+      {"plan": RULES_PLAN, "folder": dict(S, description="the solution's folder on this computer"),
+       "solution": dict(S, description="the solution's name")}, ["plan", "folder"], read_only=False)
+def write_rules(a):
+    report = build_rules.check(SCHEMA, a["plan"])
+    if report.problems:
+        return schema_said(report.answer(written=[], said="Nothing was written: fix the problems first."))
+    name = "rules/%s.dmn" % a["plan"]["key"]
+    written = write_files(a["folder"], {name: build_rules.dmn(a["plan"], a.get("solution"))})
+    return schema_said(report.answer(written=written, forSolutionYaml={"decisions": [name]}))
+
+
+@tool("propose_rules",
+      "Propose a new or changed table of rules made as a plan to the installation as a draft, once check_rules finds "
+      "nothing that stops it. Changing a table changes every workflow that asks it: list_rules says who asks it.",
+      {"plan": RULES_PLAN, "note": dict(S, description="why, in words the person who applies it will read")},
+      ["plan", "note"], read_only=False)
+def propose_rules(a):
+    report = build_rules.check(SCHEMA, a["plan"])
+    if report.problems:
+        return schema_said(report.answer(said="Not proposed: fix the problems first."))
+    draft = change(call("POST", "/api/changes", {"kind": "rules", "target": a["plan"]["key"],
+                                                 "payload": {"dmnXml": build_rules.dmn(a["plan"])}, "note": a["note"]}))
+    return schema_said(report.answer(draft=draft))
+
+
+SOLUTION_ARGS = {
+    "folder": dict(S, description="the solution's folder on this computer: solution.yaml goes there, the files it names are there"),
+    "solution": {"type": "object", "description": "the solution shaped like solution.yaml (solution.schema.json)"},
+    "connections": BUILDING_CONTEXT["connections"],
+}
+
+
+@tool("check_solution",
+      "Check a whole solution in its folder the way the installation will install it: solution.yaml against the "
+      "schema, every file it names there, each workflow's process the key it says, every agent, text, table of rules, "
+      "calculation and connection's operation that a workflow or an agent names one the solution or the installation "
+      "has, reads given to agents as tools and commands as commands.", SOLUTION_ARGS, ["folder", "solution"])
+def check_solution(a):
+    known = known_here(None, None, a.get("connections"))
+    return schema_said(build_solution.check(SCHEMA, a["folder"], a["solution"], known).answer(checkedAgainst=sorted(known)))
+
+
+@tool("write_solution",
+      "Write solution.yaml into the solution's folder once check_solution finds nothing that stops it.",
+      SOLUTION_ARGS, ["folder", "solution"], read_only=False)
+def write_solution(a):
+    known = known_here(None, None, a.get("connections"))
+    report = build_solution.check(SCHEMA, a["folder"], a["solution"], known)
+    if report.problems:
+        return schema_said(report.answer(written=[], said="Nothing was written: fix the problems first."))
+    return schema_said(report.answer(written=write_files(a["folder"], {"solution.yaml": build_solution.solution_yaml(a["solution"])})))
+
+
+@tool("propose_solution",
+      "Propose a whole solution from its folder to the installation, as drafts a person applies under Changes: its "
+      "connections, tables of rules, texts, agents and workflows (in Test run), in the order they are to be applied, "
+      "once check_solution and check_connection find nothing that stops it. Calculations are proposed with "
+      "propose_change (kind calculation).",
+      {"folder": SOLUTION_ARGS["folder"], "solution": SOLUTION_ARGS["solution"],
+       "connections": {"type": "array", "items": {"type": "object"},
+                       "description": "the solution's new or changed connections: [{description, routes}]"},
+       "note": dict(S, description="why, in words the person who applies the drafts will read")},
+      ["folder", "solution", "note"], read_only=False)
+def propose_solution(a):
+    folder = os.path.abspath(os.path.expanduser(a["folder"]))
+    solution = a["solution"]
+    connections = [c for c in a.get("connections") or [] if isinstance(c, dict)]
+    found = {"connections": {}}
+    for c in connections:
+        report = build_connection.check(SCHEMA, c.get("description"), c.get("routes"))
+        if report.problems:
+            found["connections"][str((c.get("description") or {}).get("connector"))] = report.problems
+    report = build_solution.check(SCHEMA, folder, solution, known_here(None, None, [c.get("description") for c in connections]))
+    if report.problems or any(found["connections"].values()):
+        return schema_said(report.answer(connectionProblems=found["connections"], said="Nothing was proposed: fix the problems first."))
+
+    def read(name):
+        with open(os.path.join(folder, *str(name).split("/")), encoding="utf-8") as f:
+            return f.read()
+
+    def ref(said):
+        connector, operation = said.split(".", 1)
+        return {"connector": connector, "operation": operation}
+
+    drafts = []
+
+    def propose(kind, target, payload, what):
+        answer = change(call("POST", "/api/changes", {"kind": kind, "target": target, "payload": payload, "note": a["note"]}))
+        drafts.append({"what": what, "draft": answer.get("id"), "problems": answer.get("problems") or []})
+
+    for c in connections:
+        written = build_connection.files(c["description"], c.get("routes"))
+        payload = {"file": written["connector.yaml"]}
+        routes = next((t for n, t in written.items() if n.startswith("routes/")), None)
+        if routes is not None:
+            payload["routes"] = routes
+        propose("connection", c["description"]["connector"], payload, "the connection %s" % c["description"]["connector"])
+    for name in solution.get("decisions") or []:
+        for key in build_solution.decisions_in(os.path.join(folder, *name.split("/"))):
+            propose("rules", key, {"dmnXml": read(name)}, "the rules %s" % key)
+    for text in solution.get("texts") or []:
+        propose("text", text["key"], {"name": text.get("name") or text["key"], "text": read(text["file"])}, "the text %s" % text["key"])
+    for agent in solution.get("agents") or []:
+        payload = {k: v for k, v in agent.items() if k not in ("key", "tools", "commands")}
+        payload["tools"] = [ref(t) for t in agent.get("tools") or []]
+        payload["commands"] = [ref(t) for t in agent.get("commands") or []]
+        payload["helpers"] = [h if isinstance(h, dict) else {"agent": h} for h in agent.get("helpers") or []]
+        payload.setdefault("name", agent["key"])
+        propose("agent", agent["key"], payload, "the agent %s" % agent["key"])
+    for case_type in solution.get("caseTypes") or []:
+        payload = {"name": case_type.get("name") or case_type["key"], "processKey": case_type["processKey"],
+                   "bpmnXml": read(case_type["process"]), "shadow": True, "startOn": case_type.get("startOn") or []}
+        for said, key in (("startWhen", "startWhen"), ("policy", "policyDecisionKey"), ("tags", "tags"), ("schedule", "schedule"),
+                          ("takesFrom", "takesFrom"), ("whoDecides", "whoDecides"), ("enabled", "enabled")):
+            if case_type.get(said) is not None:
+                payload[key] = case_type[said]
+        if case_type.get("tenantId"):
+            payload["tenantId"] = case_type["tenantId"]
+        propose("workflow", case_type["key"], payload, "the workflow %s, in Test run" % case_type["key"])
+    return schema_said({"drafts": drafts, "applyInThisOrder": [d["what"] for d in drafts],
+                        "said": "The drafts are under Changes. Problems a draft names that another draft of this "
+                                "solution settles go away once that one is applied first, in this order.",
+                        "notProposed": ["the calculation %s: propose_change kind calculation" % c["key"] for c in solution.get("calculations") or []]})
+
+
 # --- MCP over stdio --------------------------------------------------------------------------------------------
 
 def handle(message):
@@ -975,7 +1397,10 @@ def handle(message):
                 "serverInfo": {"name": "agentric-os", "version": VERSION},
                 "instructions": "Agentric OS installation. Look first (overview, list_*), then propose changes as "
                                 "drafts with a note saying why; check workflows with check_workflow before "
-                                "proposing; apply only on the user's explicit word. Show money where it matters: "
+                                "proposing; apply only on the user's explicit word. To build a connection, a workflow "
+                                "or a solution, never write its files by hand: read connection_contract or "
+                                "workflow_parts, make it as data, check it (check_connection, check_workflow_plan, "
+                                "check_solution) until it is ready, then write or propose it. Show money where it matters: "
                                 "what a change costs, saves or earns."}
     if method == "ping":
         return {}

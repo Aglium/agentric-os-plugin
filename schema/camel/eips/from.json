@@ -1,0 +1,47 @@
+{
+ "description": "Act as a message source as input to a route",
+ "name": "from",
+ "properties": {
+  "description": {
+   "description": "Sets the description of this node",
+   "displayName": "Description",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "uri": {
+   "description": "Sets the URI of the endpoint to use",
+   "displayName": "Uri",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "variableReceive": {
+   "description": "To use a variable to store a copy of the received message body (only body, not headers). This is handy for easy access to the received message body via variables.",
+   "displayName": "Variable Receive",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  }
+ },
+ "title": "From"
+}

@@ -1,0 +1,185 @@
+{
+ "description": "Splits a single message into many sub-messages.",
+ "name": "split",
+ "properties": {
+  "aggregationStrategy": {
+   "description": "Sets a reference to the AggregationStrategy to be used to assemble the replies from the split messages, into a single outgoing message from the Splitter. By default Camel will use the original incoming message to the splitter (leave it unchanged). You can also use a POJO as the AggregationStrategy",
+   "displayName": "Aggregation Strategy",
+   "group": "common",
+   "javaType": "org.apache.camel.AggregationStrategy",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "aggregationStrategyMethodAllowNull": {
+   "defaultValue": false,
+   "description": "If this option is false then the aggregate method is not used if there was no data to enrich. If this option is true then null values is used as the oldExchange (when no data to enrich), when using POJOs as the AggregationStrategy",
+   "displayName": "Aggregation Strategy Method Allow Null",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "aggregationStrategyMethodName": {
+   "description": "This option can be used to explicit declare the method name to use, when using POJOs as the AggregationStrategy.",
+   "displayName": "Aggregation Strategy Method Name",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "delimiter": {
+   "defaultValue": ",",
+   "description": "Delimiter used in splitting messages. Can be turned off using the value false. To force not splitting then the delimiter can be set to single to use the value as a single list, this can be needed in some special situations. The default value is comma.",
+   "displayName": "Delimiter",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "description": {
+   "description": "Sets the description of this node",
+   "displayName": "Description",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "disabled": {
+   "defaultValue": false,
+   "description": "Disables this EIP from the route.",
+   "displayName": "Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "executorService": {
+   "description": "To use a custom Thread Pool to be used for parallel processing. Notice if you set this option, then parallel processing is automatically implied, and you do not have to enable that option as well.",
+   "displayName": "Executor Service",
+   "group": "advanced",
+   "javaType": "java.util.concurrent.ExecutorService",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "expression": {
+   "description": "Expression of how to split the message body, such as as-is, using a tokenizer, or using a xpath.",
+   "displayName": "Expression",
+   "group": "common",
+   "javaType": "org.apache.camel.model.language.ExpressionDefinition",
+   "kind": "expression",
+   "required": true,
+   "secret": false,
+   "type": "object"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "onPrepare": {
+   "description": "Uses the Processor when preparing the org.apache.camel.Exchange to be sent. This can be used to deep-clone messages that should be sent, or any custom logic needed before the exchange is sent.",
+   "displayName": "On Prepare",
+   "group": "advanced",
+   "javaType": "org.apache.camel.Processor",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "outputs": {
+   "displayName": "Outputs",
+   "group": "common",
+   "javaType": "java.util.List<org.apache.camel.model.ProcessorDefinition<java.lang.Object>>",
+   "kind": "element",
+   "required": true,
+   "secret": false,
+   "type": "array"
+  },
+  "parallelProcessing": {
+   "defaultValue": false,
+   "description": "If enabled then processing each split messages occurs concurrently. Note the caller thread will still wait until all messages has been fully processed, before it continues. It's only processing the sub messages from the splitter which happens concurrently. When parallel processing is enabled, then the Camel routing engin will continue processing using last used thread from the parallel thread pool. However, if you want to use the original thread that called the splitter, then make sure to enable the synchronous option as well. In parallel processing mode, you may want to also synchronous = true to force this EIP to process the sub-tasks using the upper bounds of the thread-pool. If using synchronous = false then Camel will allow its reactive routing engine to use as many threads as possible, which may be available due to sub-tasks using other thread-pools such as CompletableFuture.runAsync or others.",
+   "displayName": "Parallel Processing",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "shareUnitOfWork": {
+   "defaultValue": false,
+   "description": "Shares the org.apache.camel.spi.UnitOfWork with the parent and each of the sub messages. Splitter will by default not share unit of work between the parent exchange and each split exchange. This means each split exchange has its own individual unit of work.",
+   "displayName": "Share Unit Of Work",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "stopOnException": {
+   "defaultValue": false,
+   "description": "Will now stop further processing if an exception or failure occurred during processing of an org.apache.camel.Exchange and the caused exception will be thrown. Will also stop if processing the exchange failed (has a fault message) or an exception was thrown and handled by the error handler (such as using onException). In all situations the splitter will stop further processing. This is the same behavior as in pipeline, which is used by the routing engine. The default behavior is to not stop but continue processing till the end",
+   "displayName": "Stop On Exception",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "streaming": {
+   "defaultValue": false,
+   "description": "When in streaming mode, then the splitter splits the original message on-demand, and each split message is processed one by one. This reduces memory usage as the splitter do not split all the messages first, but then we do not know the total size, and therefore the org.apache.camel.Exchange#SPLIT_SIZE is empty. In non-streaming mode (default) the splitter will split each message first, to know the total size, and then process each message one by one. This requires to keep all the split messages in memory and therefore requires more memory. The total size is provided in the org.apache.camel.Exchange#SPLIT_SIZE header. The streaming mode also affects the aggregation behavior. If enabled then Camel will process replies out-of-order, e.g. in the order they come back. If disabled, Camel will process replies in the same order as the messages was split.",
+   "displayName": "Streaming",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "synchronous": {
+   "defaultValue": false,
+   "description": "Sets whether synchronous processing should be strictly used. When enabled then the same thread is used to continue routing after the split is complete, even if parallel processing is enabled.",
+   "displayName": "Synchronous",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "timeout": {
+   "defaultValue": "0",
+   "description": "Sets a total timeout specified in millis, when using parallel processing. If the Splitter hasn't been able to split and process all the sub messages within the given timeframe, then the timeout triggers and the Splitter breaks out and continues. Notice if you provide a TimeoutAwareAggregationStrategy then the timeout method is invoked before breaking out. If the timeout is reached with running tasks still remaining, certain tasks for which it is difficult for Camel to shut down in a graceful manner may continue to run. So use this option with a bit of care.",
+   "displayName": "Timeout",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  }
+ },
+ "title": "Split"
+}

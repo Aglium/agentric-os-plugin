@@ -1,0 +1,47 @@
+{
+ "description": "Route to be executed when all other choices evaluate to false",
+ "name": "otherwise",
+ "properties": {
+  "description": {
+   "description": "Sets the description of this node",
+   "displayName": "Description",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "disabled": {
+   "defaultValue": false,
+   "description": "Disables this EIP from the route.",
+   "displayName": "Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "outputs": {
+   "displayName": "Outputs",
+   "group": "common",
+   "javaType": "java.util.List<org.apache.camel.model.ProcessorDefinition<java.lang.Object>>",
+   "kind": "element",
+   "required": true,
+   "secret": false,
+   "type": "array"
+  }
+ },
+ "title": "Otherwise"
+}

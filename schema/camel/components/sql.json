@@ -1,0 +1,594 @@
+{
+ "consumerOnly": false,
+ "description": "Perform SQL queries using Spring JDBC.",
+ "headers": {
+  "CamelSqlGeneratedColumns": {
+   "description": "Set it to specify the expected generated columns",
+   "javaType": "String[] or int[]"
+  },
+  "CamelSqlGeneratedKeyRows": {
+   "description": "Rows that contains the generated keys (a list of maps of keys).",
+   "javaType": "List<Map<String, Object>>"
+  },
+  "CamelSqlGeneratedKeysRowCount": {
+   "description": "The number of rows in the header that contains generated keys.",
+   "javaType": "Integer"
+  },
+  "CamelSqlParameters": {
+   "description": "The SQL parameters when using the option useMessageBodyForSql",
+   "javaType": "Iterator"
+  },
+  "CamelSqlQuery": {
+   "description": "Query to execute. This query takes precedence over the query specified in the endpoint URI. Note that query parameters in the header _are_ represented by a instead of a pass:# symbol",
+   "javaType": "String"
+  },
+  "CamelSqlRetrieveGeneratedKeys": {
+   "description": "Set its value to true to retrieve generated keys",
+   "javaType": "Boolean"
+  },
+  "CamelSqlRowCount": {
+   "description": "The number of rows returned for select operations, returned as an Integer object. This header is not provided when using outputType=StreamList.",
+   "javaType": "Integer"
+  },
+  "CamelSqlUpdateCount": {
+   "description": "The number of rows updated for update operations, returned as an Integer object. This header is not provided when using outputType=StreamList.",
+   "javaType": "Integer"
+  }
+ },
+ "lenientProperties": false,
+ "name": "sql",
+ "producerOnly": false,
+ "properties": {
+  "allowNamedParameters": {
+   "defaultValue": true,
+   "description": "Whether to allow using named parameters in the queries.",
+   "displayName": "Allow Named Parameters",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "alwaysPopulateStatement": {
+   "defaultValue": false,
+   "description": "If enabled then the populateStatement method from org.apache.camel.component.sql.SqlPrepareStatementStrategy is always invoked, also if there is no expected parameters to be prepared. When this is false then the populateStatement is only invoked if there is 1 or more expected parameters to be set; for example this avoids reading the message body/headers for SQL queries with no parameters.",
+   "displayName": "Always Populate Statement",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "backoffErrorThreshold": {
+   "description": "The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.",
+   "displayName": "Backoff Error Threshold",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "backoffIdleThreshold": {
+   "description": "The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.",
+   "displayName": "Backoff Idle Threshold",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "backoffMultiplier": {
+   "description": "To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.",
+   "displayName": "Backoff Multiplier",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "batch": {
+   "defaultValue": false,
+   "description": "Enables or disables batch mode",
+   "displayName": "Batch",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "batchAutoCommitDisabled": {
+   "defaultValue": true,
+   "description": "Whether to optimize batch by turning off auto-commit which can dramatic improve performance, and instead execute as a manual commit after the entire batch operation is complete",
+   "displayName": "Batch Auto Commit Disabled",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "breakBatchOnConsumeFail": {
+   "defaultValue": false,
+   "description": "Sets whether to break batch if onConsume failed.",
+   "displayName": "Break Batch On Consume Fail",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "dataSource": {
+   "description": "Sets the DataSource to use to communicate with the database at endpoint level.",
+   "displayName": "Data Source",
+   "group": "common",
+   "javaType": "javax.sql.DataSource",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "delay": {
+   "defaultValue": 500,
+   "description": "Milliseconds before the next poll.",
+   "displayName": "Delay",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "expectedUpdateCount": {
+   "defaultValue": -1,
+   "description": "Sets an expected update count to validate when using onConsume.",
+   "displayName": "Expected Update Count",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "fetchSize": {
+   "description": "Gives the JDBC driver a hint as to the number of rows that should be fetched from the database when more rows are needed for ResultSet objects generated by this Statement. If the value specified is zero, then the hint is ignored. The default value is zero. This is important for processing large result sets: Setting this higher than the default value will increase processing speed at the cost of memory consumption; setting this lower can avoid transferring row data that will never be read by the application.",
+   "displayName": "Fetch Size",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "greedy": {
+   "defaultValue": false,
+   "description": "If greedy is enabled, then the ScheduledPollConsumer will run immediately again, if the previous run polled 1 or more messages.",
+   "displayName": "Greedy",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "initialDelay": {
+   "defaultValue": 1000,
+   "description": "Milliseconds before the first poll starts.",
+   "displayName": "Initial Delay",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "lazyStartProducer": {
+   "defaultValue": false,
+   "description": "Whether the producer should be started lazy (on the first message). By starting lazy you can use this to allow CamelContext and routes to startup in situations where a producer may otherwise fail during starting and cause the route to fail being started. By deferring this startup to be lazy then the startup failure can be handled during routing messages via Camel's routing error handlers. Beware that when the first message is processed then creating and starting the producer may take a little time and prolong the total processing time of the processing.",
+   "displayName": "Lazy Start Producer",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "maxMessagesPerPoll": {
+   "description": "Sets the maximum number of messages to poll",
+   "displayName": "Max Messages Per Poll",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "noop": {
+   "defaultValue": false,
+   "description": "If set, will ignore the results of the SQL query and use the existing IN message as the OUT message for the continuation of processing",
+   "displayName": "Noop",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "onConsume": {
+   "description": "After processing each row then this query can be executed, if the Exchange was processed successfully, for example to mark the row as processed. The query can have parameter.",
+   "displayName": "On Consume",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "onConsumeBatchComplete": {
+   "description": "After processing the entire batch, this query can be executed to bulk update rows etc. The query cannot have parameters.",
+   "displayName": "On Consume Batch Complete",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "onConsumeFailed": {
+   "description": "After processing each row then this query can be executed, if the Exchange failed, for example to mark the row as failed. The query can have parameter.",
+   "displayName": "On Consume Failed",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "outputClass": {
+   "description": "Specify the full package and class name to use as conversion when outputType=SelectOne.",
+   "displayName": "Output Class",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "outputHeader": {
+   "description": "Store the query result in a header instead of the message body. By default, outputHeader == null and the query result is stored in the message body, any existing content in the message body is discarded. If outputHeader is set, the value is used as the name of the header to store the query result and the original message body is preserved.",
+   "displayName": "Output Header",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "outputType": {
+   "defaultValue": "SelectList",
+   "description": "Make the output of consumer or producer to SelectList as List of Map, or SelectOne as single Java object in the following way: a) If the query has only single column, then that JDBC Column object is returned. (such as SELECT COUNT( ) FROM PROJECT will return a Long object. b) If the query has more than one column, then it will return a Map of that result. c) If the outputClass is set, then it will convert the query result into an Java bean object by calling all the setters that match the column names. It will assume your class has a default constructor to create instance with. d) If the query resulted in more than one rows, it throws an non-unique result exception. StreamList streams the result of the query using an Iterator. This can be used with the Splitter EIP in streaming mode to process the ResultSet in streaming fashion.",
+   "displayName": "Output Type",
+   "enum": [
+    "SelectOne",
+    "SelectList",
+    "StreamList"
+   ],
+   "group": "common",
+   "javaType": "org.apache.camel.component.sql.SqlOutputType",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "parametersCount": {
+   "description": "If set greater than zero, then Camel will use this count value of parameters to replace instead of querying via JDBC metadata API. This is useful if the JDBC vendor could not return correct parameters count, then user may override instead.",
+   "displayName": "Parameters Count",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "placeholder": {
+   "defaultValue": "#",
+   "description": "Specifies a character that will be replaced to in SQL query. Notice, that it is simple String.replaceAll() operation and no SQL parsing is involved (quoted strings will also change).",
+   "displayName": "Placeholder",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "pollStrategy": {
+   "description": "A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.",
+   "displayName": "Poll Strategy",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.PollingConsumerPollStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "prepareStatementStrategy": {
+   "description": "Allows to plugin to use a custom org.apache.camel.component.sql.SqlPrepareStatementStrategy to control preparation of the query and prepared statement.",
+   "displayName": "Prepare Statement Strategy",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.sql.SqlPrepareStatementStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "processingStrategy": {
+   "description": "Allows to plugin to use a custom org.apache.camel.component.sql.SqlProcessingStrategy to execute queries when the consumer has processed the rows/batch.",
+   "displayName": "Processing Strategy",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.component.sql.SqlProcessingStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "query": {
+   "description": "Sets the SQL query to perform. You can externalize the query by using file: or classpath: as prefix and specify the location of the file.",
+   "displayName": "Query",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "repeatCount": {
+   "defaultValue": 0,
+   "description": "Specifies a maximum limit of number of fires. So if you set it to 1, the scheduler will only fire once. If you set it to 5, it will only fire five times. A value of zero or negative means fire forever.",
+   "displayName": "Repeat Count",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "routeEmptyResultSet": {
+   "defaultValue": false,
+   "description": "Sets whether empty resultset should be allowed to be sent to the next hop. Defaults to false. So the empty resultset will be filtered out.",
+   "displayName": "Route Empty Result Set",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "rowMapperFactory": {
+   "description": "Factory for creating RowMapper",
+   "displayName": "Row Mapper Factory",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.sql.RowMapperFactory",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "runLoggingLevel": {
+   "defaultValue": "TRACE",
+   "description": "The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.",
+   "displayName": "Run Logging Level",
+   "enum": [
+    "TRACE",
+    "DEBUG",
+    "INFO",
+    "WARN",
+    "ERROR",
+    "OFF"
+   ],
+   "group": "scheduler",
+   "javaType": "org.apache.camel.LoggingLevel",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "scheduledExecutorService": {
+   "description": "Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.",
+   "displayName": "Scheduled Executor Service",
+   "group": "scheduler",
+   "javaType": "java.util.concurrent.ScheduledExecutorService",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "scheduler": {
+   "defaultValue": "none",
+   "description": "To use a cron scheduler from either camel-spring or camel-quartz component. Use value spring or quartz for built in scheduler",
+   "displayName": "Scheduler",
+   "group": "scheduler",
+   "javaType": "java.lang.Object",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "schedulerProperties": {
+   "description": "To configure additional properties when using a custom scheduler or any of the Quartz, Spring based scheduler. This is a multi-value option with prefix: scheduler.",
+   "displayName": "Scheduler Properties",
+   "group": "scheduler",
+   "javaType": "java.util.Map<java.lang.String, java.lang.Object>",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "scheduler.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "sendEmptyMessageWhenIdle": {
+   "defaultValue": false,
+   "description": "If the polling consumer did not poll any files, you can enable this option to send an empty message (no body) instead.",
+   "displayName": "Send Empty Message When Idle",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "separator": {
+   "defaultValue": ",",
+   "description": "The separator to use when parameter values is taken from message body (if the body is a String type), to be inserted at # placeholders. Notice if you use named parameters, then a Map type is used instead. The default value is comma",
+   "displayName": "Separator",
+   "group": "common",
+   "javaType": "char",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "startScheduler": {
+   "defaultValue": true,
+   "description": "Whether the scheduler should be auto started.",
+   "displayName": "Start Scheduler",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "templateOptions": {
+   "description": "Configures the Spring JdbcTemplate with the key/values from the Map. This is a multi-value option with prefix: template.",
+   "displayName": "Template Options",
+   "group": "advanced",
+   "javaType": "java.util.Map<java.lang.String, java.lang.Object>",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "template.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "timeUnit": {
+   "defaultValue": "MILLISECONDS",
+   "description": "Time unit for initialDelay and delay options.",
+   "displayName": "Time Unit",
+   "enum": [
+    "NANOSECONDS",
+    "MICROSECONDS",
+    "MILLISECONDS",
+    "SECONDS",
+    "MINUTES",
+    "HOURS",
+    "DAYS"
+   ],
+   "group": "scheduler",
+   "javaType": "java.util.concurrent.TimeUnit",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "transacted": {
+   "defaultValue": false,
+   "description": "Enables or disables transaction. If enabled then if processing an exchange failed then the consumer breaks out processing any further exchanges to cause a rollback eager.",
+   "displayName": "Transacted",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useFixedDelay": {
+   "defaultValue": true,
+   "description": "Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.",
+   "displayName": "Use Fixed Delay",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useIterator": {
+   "defaultValue": true,
+   "description": "Sets how resultset should be delivered to route. Indicates delivery as either a list or individual object. defaults to true.",
+   "displayName": "Use Iterator",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useMessageBodyForSql": {
+   "defaultValue": false,
+   "description": "Whether to use the message body as the SQL and then headers for parameters. If this option is enabled then the SQL in the uri is not used. Note that query parameters in the message body are represented by a question mark instead of a # symbol.",
+   "displayName": "Use Message Body For Sql",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "usePlaceholder": {
+   "defaultValue": true,
+   "description": "Sets whether to use placeholder and replace all placeholder characters with sign in the SQL queries.",
+   "displayName": "Use Placeholder",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "scheme": "sql",
+ "syntax": "sql:query",
+ "title": "SQL",
+ "version": "4.14.9"
+}

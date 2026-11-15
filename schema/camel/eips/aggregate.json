@@ -1,0 +1,329 @@
+{
+ "description": "Aggregates many messages into a single message",
+ "name": "aggregate",
+ "properties": {
+  "aggregateController": {
+   "description": "To use a org.apache.camel.processor.aggregate.AggregateController to allow external sources to control this aggregator.",
+   "displayName": "Aggregate Controller",
+   "group": "advanced",
+   "javaType": "org.apache.camel.processor.aggregate.AggregateController",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "aggregationRepository": {
+   "description": "The AggregationRepository to use. Sets the custom aggregate repository to use. Will by default use org.apache.camel.processor.aggregate.MemoryAggregationRepository",
+   "displayName": "Aggregation Repository",
+   "group": "common",
+   "javaType": "org.apache.camel.spi.AggregationRepository",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "aggregationStrategy": {
+   "description": "The AggregationStrategy to use. For example to lookup a bean with the name foo, the value is simply just #bean:foo. Configuring an AggregationStrategy is required, and is used to merge the incoming Exchange with the existing already merged exchanges. At first call the oldExchange parameter is null. On subsequent invocations the oldExchange contains the merged exchanges and newExchange is of course the new incoming Exchange.",
+   "displayName": "Aggregation Strategy",
+   "group": "common",
+   "javaType": "org.apache.camel.AggregationStrategy",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "aggregationStrategyMethodAllowNull": {
+   "defaultValue": false,
+   "description": "If this option is false then the aggregate method is not used for the very first aggregation. If this option is true then null values is used as the oldExchange (at the very first aggregation), when using beans as the AggregationStrategy.",
+   "displayName": "Aggregation Strategy Method Allow Null",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "aggregationStrategyMethodName": {
+   "description": "This option can be used to explicit declare the method name to use, when using beans as the AggregationStrategy.",
+   "displayName": "Aggregation Strategy Method Name",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "closeCorrelationKeyOnCompletion": {
+   "description": "Closes a correlation key when its complete. Any late received exchanges which has a correlation key that has been closed, it will be defined and a ClosedCorrelationKeyException is thrown.",
+   "displayName": "Close Correlation Key On Completion",
+   "group": "advanced",
+   "javaType": "java.lang.Integer",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "completeAllOnStop": {
+   "defaultValue": false,
+   "description": "Indicates to wait to complete all current and partial (pending) aggregated exchanges when the context is stopped. This also means that we will wait for all pending exchanges which are stored in the aggregation repository to complete so the repository is empty before we can stop. You may want to enable this when using the memory based aggregation repository that is memory based only, and do not store data on disk. When this option is enabled, then the aggregator is waiting to complete all those exchanges before its stopped, when stopping CamelContext or the route using it.",
+   "displayName": "Complete All On Stop",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "completionFromBatchConsumer": {
+   "defaultValue": false,
+   "description": "Enables the batch completion mode where we aggregate from a org.apache.camel.BatchConsumer and aggregate the total number of exchanges the org.apache.camel.BatchConsumer has reported as total by checking the exchange property org.apache.camel.Exchange#BATCH_COMPLETE when its complete. This option cannot be used together with discardOnAggregationFailure.",
+   "displayName": "Completion From Batch Consumer",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "completionInterval": {
+   "description": "A repeating period in millis by which the aggregator will complete all current aggregated exchanges. Camel has a background task which is triggered every period. You cannot use this option together with completionTimeout, only one of them can be used.",
+   "displayName": "Completion Interval",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "completionOnNewCorrelationGroup": {
+   "defaultValue": false,
+   "description": "Enables completion on all previous groups when a new incoming correlation group. This can for example be used to complete groups with same correlation keys when they are in consecutive order. Notice when this is enabled then only 1 correlation group can be in progress as when a new correlation group starts, then the previous groups is forced completed.",
+   "displayName": "Completion On New Correlation Group",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "completionPredicate": {
+   "description": "A Predicate to indicate when an aggregated exchange is complete. If this is not specified and the AggregationStrategy object implements Predicate, the aggregationStrategy object will be used as the completionPredicate.",
+   "displayName": "Completion Predicate",
+   "group": "advanced",
+   "javaType": "org.apache.camel.model.ExpressionSubElementDefinition",
+   "kind": "expression",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "completionSize": {
+   "description": "Number of messages aggregated before the aggregation is complete. This option can be set as either a fixed value or using an Expression which allows you to evaluate a size dynamically - will use Integer as result. If both are set Camel will fallback to use the fixed value if the Expression result was null or 0.",
+   "displayName": "Completion Size",
+   "group": "common",
+   "javaType": "java.lang.Integer",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "completionSizeExpression": {
+   "description": "Number of messages aggregated before the aggregation is complete. This option can be set as either a fixed value or using an Expression which allows you to evaluate a size dynamically - will use Integer as result. If both are set Camel will fallback to use the fixed value if the Expression result was null or 0.",
+   "displayName": "Completion Size Expression",
+   "group": "advanced",
+   "javaType": "org.apache.camel.model.ExpressionSubElementDefinition",
+   "kind": "expression",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "completionTimeout": {
+   "description": "Time in millis that an aggregated exchange should be inactive before its complete (timeout). This option can be set as either a fixed value or using an Expression which allows you to evaluate a timeout dynamically - will use Long as result. If both are set Camel will fallback to use the fixed value if the Expression result was null or 0. You cannot use this option together with completionInterval, only one of the two can be used. By default the timeout checker runs every second, you can use the completionTimeoutCheckerInterval option to configure how frequently to run the checker. The timeout is an approximation and there is no guarantee that the a timeout is triggered exactly after the timeout value. It is not recommended to use very low timeout values or checker intervals.",
+   "displayName": "Completion Timeout",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "completionTimeoutCheckerInterval": {
+   "defaultValue": "1000",
+   "description": "Interval in millis that is used by the background task that checks for timeouts ( org.apache.camel.TimeoutMap ). By default the timeout checker runs every second. The timeout is an approximation and there is no guarantee that the a timeout is triggered exactly after the timeout value. It is not recommended to use very low timeout values or checker intervals.",
+   "displayName": "Completion Timeout Checker Interval",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "completionTimeoutExpression": {
+   "description": "Time in millis that an aggregated exchange should be inactive before its complete (timeout). This option can be set as either a fixed value or using an Expression which allows you to evaluate a timeout dynamically - will use Long as result. If both are set Camel will fallback to use the fixed value if the Expression result was null or 0. You cannot use this option together with completionInterval, only one of the two can be used. By default the timeout checker runs every second, you can use the completionTimeoutCheckerInterval option to configure how frequently to run the checker. The timeout is an approximation and there is no guarantee that the a timeout is triggered exactly after the timeout value. It is not recommended to use very low timeout values or checker intervals.",
+   "displayName": "Completion Timeout Expression",
+   "group": "advanced",
+   "javaType": "org.apache.camel.model.ExpressionSubElementDefinition",
+   "kind": "expression",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "correlationExpression": {
+   "description": "The expression used to calculate the correlation key to use for aggregation. The Exchange which has the same correlation key is aggregated together. If the correlation key could not be evaluated an Exception is thrown. You can disable this by using the ignoreBadCorrelationKeys option.",
+   "displayName": "Correlation Expression",
+   "group": "common",
+   "javaType": "org.apache.camel.model.ExpressionSubElementDefinition",
+   "kind": "expression",
+   "required": true,
+   "secret": false,
+   "type": "object"
+  },
+  "description": {
+   "description": "Sets the description of this node",
+   "displayName": "Description",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "disabled": {
+   "defaultValue": false,
+   "description": "Disables this EIP from the route.",
+   "displayName": "Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "discardOnAggregationFailure": {
+   "defaultValue": false,
+   "description": "Discards the aggregated message when aggregation failed (an exception was thrown from AggregationStrategy . This means the partly aggregated message is dropped and not sent out of the aggregator. This option cannot be used together with completionFromBatchConsumer.",
+   "displayName": "Discard On Aggregation Failure",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "discardOnCompletionTimeout": {
+   "defaultValue": false,
+   "description": "Discards the aggregated message on completion timeout. This means on timeout the aggregated message is dropped and not sent out of the aggregator.",
+   "displayName": "Discard On Completion Timeout",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "eagerCheckCompletion": {
+   "defaultValue": false,
+   "description": "Use eager completion checking which means that the completionPredicate will use the incoming Exchange. As opposed to without eager completion checking the completionPredicate will use the aggregated Exchange.",
+   "displayName": "Eager Check Completion",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "executorService": {
+   "description": "If using parallelProcessing you can specify a custom thread pool to be used. In fact also if you are not using parallelProcessing this custom thread pool is used to send out aggregated exchanges as well.",
+   "displayName": "Executor Service",
+   "group": "advanced",
+   "javaType": "java.util.concurrent.ExecutorService",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "forceCompletionOnStop": {
+   "defaultValue": false,
+   "description": "Indicates to complete all current aggregated exchanges when the context is stopped",
+   "displayName": "Force Completion On Stop",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "ignoreInvalidCorrelationKeys": {
+   "defaultValue": false,
+   "description": "If a correlation key cannot be successfully evaluated it will be ignored by logging a DEBUG and then just ignore the incoming Exchange.",
+   "displayName": "Ignore Invalid Correlation Keys",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "optimisticLockRetryPolicy": {
+   "description": "Allows to configure retry settings when using optimistic locking.",
+   "displayName": "Optimistic Lock Retry Policy",
+   "group": "advanced",
+   "javaType": "org.apache.camel.model.OptimisticLockRetryPolicyDefinition",
+   "kind": "element",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "optimisticLocking": {
+   "defaultValue": false,
+   "description": "Turns on using optimistic locking, which requires the aggregationRepository being used, is supporting this by implementing org.apache.camel.spi.OptimisticLockingAggregationRepository .",
+   "displayName": "Optimistic Locking",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "outputs": {
+   "displayName": "Outputs",
+   "group": "common",
+   "javaType": "java.util.List",
+   "kind": "element",
+   "required": true,
+   "secret": false,
+   "type": "array"
+  },
+  "parallelProcessing": {
+   "defaultValue": false,
+   "description": "When aggregated are completed they are being send out of the aggregator. This option indicates whether or not Camel should use a thread pool with multiple threads for concurrency. If no custom thread pool has been specified then Camel creates a default pool with 10 concurrent threads.",
+   "displayName": "Parallel Processing",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "timeoutCheckerExecutorService": {
+   "description": "If using either of the completionTimeout, completionTimeoutExpression, or completionInterval options a background thread is created to check for the completion for every aggregator. Set this option to provide a custom thread pool to be used rather than creating a new thread for every aggregator.",
+   "displayName": "Timeout Checker Executor Service",
+   "group": "advanced",
+   "javaType": "java.util.concurrent.ScheduledExecutorService",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  }
+ },
+ "title": "Aggregate"
+}

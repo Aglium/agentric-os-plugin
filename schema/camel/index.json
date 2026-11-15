@@ -1,0 +1,447 @@
+{
+ "camelVersion": "4.14.9",
+ "components": [
+  {
+   "description": "Send messages to (or consume from) Apache ActiveMQ 5.x. This component extends the Camel JMS component.",
+   "name": "activemq",
+   "syntax": "activemq:destinationType:destinationName",
+   "title": "ActiveMQ 5.x"
+  },
+  {
+   "description": "Store and retrieve objects from AWS S3 Storage Service.",
+   "name": "aws2-s3",
+   "syntax": "aws2-s3://bucketNameOrArn",
+   "title": "AWS S3 Storage Service"
+  },
+  {
+   "description": "Send and receive messages to/from AWS SQS.",
+   "name": "aws2-sqs",
+   "syntax": "aws2-sqs:queueNameOrArn",
+   "title": "AWS Simple Queue Service (SQS)"
+  },
+  {
+   "description": "Invoke methods of Java beans stored in Camel registry.",
+   "name": "bean",
+   "syntax": "bean:beanName",
+   "title": "Bean"
+  },
+  {
+   "description": "Expose SOAP WebServices using Apache CXF or connect to external WebServices using CXF WS client.",
+   "name": "cxf",
+   "syntax": "cxf:beanId:address",
+   "title": "CXF"
+  },
+  {
+   "description": "Call another endpoint from the same Camel Context synchronously.",
+   "name": "direct",
+   "syntax": "direct:name",
+   "title": "Direct"
+  },
+  {
+   "description": "Read and write files.",
+   "name": "file",
+   "syntax": "file:directoryName",
+   "title": "File"
+  },
+  {
+   "description": "Upload and download files to/from FTP servers.",
+   "name": "ftp",
+   "syntax": "ftp:host:port/directoryName",
+   "title": "FTP"
+  },
+  {
+   "description": "Perform operations on git repositories.",
+   "name": "git",
+   "syntax": "git:localPath",
+   "title": "Git"
+  },
+  {
+   "description": "Manage files in Google Drive.",
+   "name": "google-drive",
+   "syntax": "google-drive:apiName/methodName",
+   "title": "Google Drive"
+  },
+  {
+   "description": "Manage spreadsheets in Google Sheets.",
+   "name": "google-sheets",
+   "syntax": "google-sheets:apiName/methodName",
+   "title": "Google Sheets"
+  },
+  {
+   "description": "Send requests to external HTTP servers using Apache HTTP Client 5.x.",
+   "name": "http",
+   "syntax": "http://httpUri",
+   "title": "HTTP"
+  },
+  {
+   "description": "Send and receive emails using imap, pop3 and smtp protocols.",
+   "name": "imap",
+   "syntax": "imap:host:port",
+   "title": "IMAP"
+  },
+  {
+   "description": "Send and receive emails using imap, pop3 and smtp protocols.",
+   "name": "imaps",
+   "syntax": "imaps:host:port",
+   "title": "IMAPS (Secure)"
+  },
+  {
+   "description": "Access databases through SQL and JDBC.",
+   "name": "jdbc",
+   "syntax": "jdbc:dataSourceName",
+   "title": "JDBC"
+  },
+  {
+   "description": "Send and receive messages to/from JMS message brokers.",
+   "name": "jms",
+   "syntax": "jms:destinationType:destinationName",
+   "title": "JMS"
+  },
+  {
+   "description": "Send and receive messages to/from an Apache Kafka broker.",
+   "name": "kafka",
+   "syntax": "kafka:topic",
+   "title": "Kafka"
+  },
+  {
+   "description": "Perform operations on MongoDB documents and collections.",
+   "name": "mongodb",
+   "syntax": "mongodb:connectionBean",
+   "title": "MongoDB"
+  },
+  {
+   "description": "Communicate with MQTT message brokers using Eclipse Paho MQTT v5 Client.",
+   "name": "paho-mqtt5",
+   "syntax": "paho-mqtt5:topic",
+   "title": "Paho MQTT 5"
+  },
+  {
+   "description": "Expose HTTP endpoints using the HTTP server available in the current platform.",
+   "name": "platform-http",
+   "syntax": "platform-http:path",
+   "title": "Platform HTTP"
+  },
+  {
+   "description": "To call REST services using OpenAPI specification as contract.",
+   "name": "rest-openapi",
+   "syntax": "rest-openapi:specificationUri#operationId",
+   "title": "REST OpenApi"
+  },
+  {
+   "description": "Communicate with Salesforce using Java DTOs.",
+   "name": "salesforce",
+   "syntax": "salesforce:operationName:topicName",
+   "title": "Salesforce"
+  },
+  {
+   "description": "Upload and download files to/from SFTP servers.",
+   "name": "sftp",
+   "syntax": "sftp:host:port/directoryName",
+   "title": "SFTP"
+  },
+  {
+   "description": "Send and receive messages to/from Slack.",
+   "name": "slack",
+   "syntax": "slack:channel",
+   "title": "Slack"
+  },
+  {
+   "description": "Send and receive emails using imap, pop3 and smtp protocols.",
+   "name": "smtp",
+   "syntax": "smtp:host:port",
+   "title": "SMTP"
+  },
+  {
+   "description": "Send and receive emails using imap, pop3 and smtp protocols.",
+   "name": "smtps",
+   "syntax": "smtps:host:port",
+   "title": "SMTPS"
+  },
+  {
+   "description": "Send and receive messages from RabbitMQ using the Spring RabbitMQ client.",
+   "name": "spring-rabbitmq",
+   "syntax": "spring-rabbitmq:exchangeName",
+   "title": "Spring RabbitMQ"
+  },
+  {
+   "description": "Perform SQL queries using Spring JDBC.",
+   "name": "sql",
+   "syntax": "sql:query",
+   "title": "SQL"
+  },
+  {
+   "description": "Send and receive messages using the Telegram Bot API.",
+   "name": "telegram",
+   "syntax": "telegram:type",
+   "title": "Telegram"
+  },
+  {
+   "description": "Generate messages in specified intervals using java.util.Timer.",
+   "name": "timer",
+   "syntax": "timer:timerName",
+   "title": "Timer"
+  }
+ ],
+ "dataformats": [
+  {
+   "description": "Marshal POJOs to JSON and back using Jackson.",
+   "name": "jackson",
+   "title": "JSON Jackson"
+  },
+  {
+   "description": "Handle CSV (Comma Separated Values) payloads.",
+   "name": "csv",
+   "title": "CSV"
+  },
+  {
+   "description": "Unmarshal an XML payloads to POJOs and back using XMLMapper extension of Jackson.",
+   "name": "jacksonXml",
+   "title": "Jackson XML"
+  },
+  {
+   "description": "Compression and decompress streams using java.util.zip.ZipStream.",
+   "name": "zipFile",
+   "title": "Zip File"
+  },
+  {
+   "description": "Encode and decode data using Base64.",
+   "name": "base64",
+   "title": "Base64"
+  }
+ ],
+ "eips": [
+  {
+   "description": "A Camel route",
+   "name": "route",
+   "title": "Route"
+  },
+  {
+   "description": "Act as a message source as input to a route",
+   "name": "from",
+   "title": "From"
+  },
+  {
+   "description": "Sends the message to a static endpoint",
+   "name": "to",
+   "title": "To"
+  },
+  {
+   "description": "Sends the message to a dynamic endpoint",
+   "name": "toD",
+   "title": "To D"
+  },
+  {
+   "description": "Sets the value of a message header",
+   "name": "setHeader",
+   "title": "Set Header"
+  },
+  {
+   "description": "Allows setting multiple headers on the message at the same time.",
+   "name": "setHeaders",
+   "title": "Set Headers"
+  },
+  {
+   "description": "Sets a named property on the message exchange",
+   "name": "setProperty",
+   "title": "Set Property"
+  },
+  {
+   "description": "Sets the contents of the message body",
+   "name": "setBody",
+   "title": "Set Body"
+  },
+  {
+   "description": "Removes a named header from the message",
+   "name": "removeHeader",
+   "title": "Remove Header"
+  },
+  {
+   "description": "Removes message headers whose name matches a specified pattern",
+   "name": "removeHeaders",
+   "title": "Remove Headers"
+  },
+  {
+   "description": "Removes a named property from the message exchange",
+   "name": "removeProperty",
+   "title": "Remove Property"
+  },
+  {
+   "description": "Route messages based on a series of predicates",
+   "name": "choice",
+   "title": "Choice"
+  },
+  {
+   "description": "Triggers a route when the expression evaluates to true",
+   "name": "when",
+   "title": "When"
+  },
+  {
+   "description": "Route to be executed when all other choices evaluate to false",
+   "name": "otherwise",
+   "title": "Otherwise"
+  },
+  {
+   "description": "Filter out messages based using a predicate",
+   "name": "filter",
+   "title": "Filter"
+  },
+  {
+   "description": "Splits a single message into many sub-messages.",
+   "name": "split",
+   "title": "Split"
+  },
+  {
+   "description": "Aggregates many messages into a single message",
+   "name": "aggregate",
+   "title": "Aggregate"
+  },
+  {
+   "description": "Marshals data into a specified format for transmission over a transport or component",
+   "name": "marshal",
+   "title": "Marshal"
+  },
+  {
+   "description": "Converts the message data received from the wire into a format that Apache Camel processors can consume",
+   "name": "unmarshal",
+   "title": "Unmarshal"
+  },
+  {
+   "description": "Converts the message body to another type",
+   "name": "convertBodyTo",
+   "title": "Convert Body To"
+  },
+  {
+   "description": "Transforms the message body based on an expression",
+   "name": "transform",
+   "title": "Transform"
+  },
+  {
+   "description": "Used for printing custom messages to the logger.",
+   "name": "log",
+   "title": "Logger"
+  },
+  {
+   "description": "Throws an exception",
+   "name": "throwException",
+   "title": "Throw Exception"
+  },
+  {
+   "description": "Marks the beginning of a try, catch, finally block",
+   "name": "doTry",
+   "title": "Do Try"
+  },
+  {
+   "description": "Catches exceptions as part of a try, catch, finally block",
+   "name": "doCatch",
+   "title": "Do Catch"
+  },
+  {
+   "description": "Path traversed when a try, catch, finally block exits",
+   "name": "doFinally",
+   "title": "Do Finally"
+  },
+  {
+   "description": "Calls a Java bean",
+   "name": "bean",
+   "title": "Bean"
+  },
+  {
+   "description": "Processes a message multiple times",
+   "name": "loop",
+   "title": "Loop"
+  },
+  {
+   "description": "Stops the processing of the current message",
+   "name": "stop",
+   "title": "Stop"
+  },
+  {
+   "description": "Delays processing for a specified length of time",
+   "name": "delay",
+   "title": "Delay"
+  },
+  {
+   "description": "Enriches a message with data from a secondary resource",
+   "name": "enrich",
+   "title": "Enrich"
+  },
+  {
+   "description": "Enriches messages with data polled from a secondary resource",
+   "name": "pollEnrich",
+   "title": "Poll Enrich"
+  },
+  {
+   "description": "Routes the same message to multiple paths either sequentially or in parallel.",
+   "name": "multicast",
+   "title": "Multicast"
+  },
+  {
+   "description": "Route messages to a number of dynamically specified recipients",
+   "name": "recipientList",
+   "title": "Recipient List"
+  },
+  {
+   "description": "Filters out duplicate messages",
+   "name": "idempotentConsumer",
+   "title": "Idempotent Consumer"
+  },
+  {
+   "description": "Route to be executed when an exception is thrown",
+   "name": "onException",
+   "title": "On Exception"
+  },
+  {
+   "description": "Reusable configuration for Camel route(s).",
+   "name": "routeConfiguration",
+   "title": "Route Configuration"
+  },
+  {
+   "description": "Executes a script from a language which does not change the message body.",
+   "name": "script",
+   "title": "Script"
+  }
+ ],
+ "languages": [
+  {
+   "description": "Evaluates a Camel simple expression.",
+   "name": "simple",
+   "title": "Simple"
+  },
+  {
+   "description": "A fixed value set only once during the route startup.",
+   "name": "constant",
+   "title": "Constant"
+  },
+  {
+   "description": "Gets a header from the Exchange.",
+   "name": "header",
+   "title": "Header"
+  },
+  {
+   "description": "Gets a property from the Exchange.",
+   "name": "exchangeProperty",
+   "title": "ExchangeProperty"
+  },
+  {
+   "description": "Evaluates a JQ expression against a JSON message body.",
+   "name": "jq",
+   "title": "JQ"
+  },
+  {
+   "description": "Evaluates a JSONPath expression against a JSON message body.",
+   "name": "jsonpath",
+   "title": "JSONPath"
+  },
+  {
+   "description": "Evaluates an XPath expression against an XML payload.",
+   "name": "xpath",
+   "title": "XPath"
+  },
+  {
+   "description": "Evaluates a Groovy script.",
+   "name": "groovy",
+   "title": "Groovy"
+  }
+ ],
+ "yamlDsl": "yaml-dsl.schema.json"
+}

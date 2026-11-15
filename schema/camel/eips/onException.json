@@ -1,0 +1,159 @@
+{
+ "description": "Route to be executed when an exception is thrown",
+ "name": "onException",
+ "properties": {
+  "continued": {
+   "description": "Sets whether the exchange should handle and continue routing from the point of failure. If this option is enabled then its considered handled as well.",
+   "displayName": "Continued",
+   "group": "advanced",
+   "javaType": "org.apache.camel.model.ExpressionSubElementDefinition",
+   "kind": "expression",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "description": {
+   "description": "Sets the description of this node",
+   "displayName": "Description",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "disabled": {
+   "defaultValue": false,
+   "description": "Disables this EIP from the route.",
+   "displayName": "Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "exception": {
+   "description": "A set of exceptions to react upon.",
+   "displayName": "Exception",
+   "group": "common",
+   "javaType": "java.util.List<java.lang.String>",
+   "kind": "element",
+   "required": true,
+   "secret": false,
+   "type": "array"
+  },
+  "handled": {
+   "description": "Sets whether the exchange should be marked as handled or not.",
+   "displayName": "Handled",
+   "group": "common",
+   "javaType": "org.apache.camel.model.ExpressionSubElementDefinition",
+   "kind": "expression",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "onExceptionOccurredRef": {
+   "description": "Sets a reference to a processor that should be processed just after an exception occurred. Can be used to perform custom logging about the occurred exception at the exact time it happened. Important: Any exception thrown from this processor will be ignored.",
+   "displayName": "On Exception Occurred Ref",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "onRedeliveryRef": {
+   "description": "Sets a reference to a processor that should be processed before a redelivery attempt. Can be used to change the org.apache.camel.Exchange before its being redelivered.",
+   "displayName": "On Redelivery Ref",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "onWhen": {
+   "description": "To use an expression to only trigger this in specific situations",
+   "displayName": "On When",
+   "group": "common",
+   "javaType": "org.apache.camel.model.OnWhenDefinition",
+   "kind": "element",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "outputs": {
+   "displayName": "Outputs",
+   "group": "common",
+   "javaType": "java.util.List",
+   "kind": "element",
+   "required": true,
+   "secret": false,
+   "type": "array"
+  },
+  "redeliveryPolicy": {
+   "description": "Used for configuring redelivery options",
+   "displayName": "Redelivery Policy",
+   "group": "common",
+   "javaType": "org.apache.camel.model.RedeliveryPolicyDefinition",
+   "kind": "element",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "redeliveryPolicyRef": {
+   "description": "Sets a reference to a redelivery policy to lookup in the org.apache.camel.spi.Registry to be used.",
+   "displayName": "Redelivery Policy Ref",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "retryWhile": {
+   "description": "Sets the retry while predicate. Will continue retrying until predicate returns false.",
+   "displayName": "Retry While",
+   "group": "advanced",
+   "javaType": "org.apache.camel.model.ExpressionSubElementDefinition",
+   "kind": "expression",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "useOriginalBody": {
+   "defaultValue": false,
+   "description": "Will use the original input org.apache.camel.Message body (original body only) when an org.apache.camel.Exchange is moved to the dead letter queue. Notice: this only applies when all redeliveries attempt have failed and the org.apache.camel.Exchange is doomed for failure. Instead of using the current inprogress org.apache.camel.Exchange IN message we use the original IN message instead. This allows you to store the original input in the dead letter queue instead of the inprogress snapshot of the IN message. For instance if you route transform the IN body during routing and then failed. With the original exchange store in the dead letter queue it might be easier to manually re submit the org.apache.camel.Exchange again as the IN message is the same as when Camel received it. So you should be able to send the org.apache.camel.Exchange to the same input. The difference between useOriginalMessage and useOriginalBody is that the former includes both the original body and headers, where as the latter only includes the original body. You can use the latter to enrich the message with custom headers and include the original message body. The former wont let you do this, as its using the original message body and headers as they are. You cannot enable both useOriginalMessage and useOriginalBody. The original input message is defensively copied, and the copied message body is converted to org.apache.camel.StreamCache if possible (stream caching is enabled, can be disabled globally or on the original route), to ensure the body can be read when the original message is being used later. If the body is converted to org.apache.camel.StreamCache then the message body on the current org.apache.camel.Exchange is replaced with the org.apache.camel.StreamCache body. If the body is not converted to org.apache.camel.StreamCache then the body will not be able to re-read when accessed later. Important: The original input means the input message that are bounded by the current org.apache.camel.spi.UnitOfWork . An unit of work typically spans one route, or multiple routes if they are connected using internal endpoints such as direct or seda. When messages is passed via external endpoints such as JMS or HTTP then the consumer will create a new unit of work, with the message it received as input as the original input. Also some EIP patterns such as splitter, multicast, will create a new unit of work boundary for the messages in their sub-route (eg the split message); however these EIPs have an option named shareUnitOfWork which allows to combine with the parent unit of work in regard to error handling and therefore use the parent original message. By default this feature is off.",
+   "displayName": "Use Original Body",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useOriginalMessage": {
+   "defaultValue": false,
+   "description": "Will use the original input org.apache.camel.Message (original body and headers) when an org.apache.camel.Exchange is moved to the dead letter queue. Notice: this only applies when all redeliveries attempt have failed and the org.apache.camel.Exchange is doomed for failure. Instead of using the current inprogress org.apache.camel.Exchange IN message we use the original IN message instead. This allows you to store the original input in the dead letter queue instead of the inprogress snapshot of the IN message. For instance if you route transform the IN body during routing and then failed. With the original exchange store in the dead letter queue it might be easier to manually re submit the org.apache.camel.Exchange again as the IN message is the same as when Camel received it. So you should be able to send the org.apache.camel.Exchange to the same input. The difference between useOriginalMessage and useOriginalBody is that the former includes both the original body and headers, where as the latter only includes the original body. You can use the latter to enrich the message with custom headers and include the original message body. The former wont let you do this, as its using the original message body and headers as they are. You cannot enable both useOriginalMessage and useOriginalBody. The original input message is defensively copied, and the copied message body is converted to org.apache.camel.StreamCache if possible (stream caching is enabled, can be disabled globally or on the original route), to ensure the body can be read when the original message is being used later. If the body is converted to org.apache.camel.StreamCache then the message body on the current org.apache.camel.Exchange is replaced with the org.apache.camel.StreamCache body. If the body is not converted to org.apache.camel.StreamCache then the body will not be able to re-read when accessed later. Important: The original input means the input message that are bounded by the current org.apache.camel.spi.UnitOfWork . An unit of work typically spans one route, or multiple routes if they are connected using internal endpoints such as direct or seda. When messages is passed via external endpoints such as JMS or HTTP then the consumer will create a new unit of work, with the message it received as input as the original input. Also some EIP patterns such as splitter, multicast, will create a new unit of work boundary for the messages in their sub-route (eg the split message); however these EIPs have an option named shareUnitOfWork which allows to combine with the parent unit of work in regard to error handling and therefore use the parent original message. By default this feature is off.",
+   "displayName": "Use Original Message",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "title": "On Exception"
+}

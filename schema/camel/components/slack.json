@@ -1,0 +1,329 @@
+{
+ "consumerOnly": false,
+ "description": "Send and receive messages to/from Slack.",
+ "headers": {},
+ "lenientProperties": false,
+ "name": "slack",
+ "producerOnly": false,
+ "properties": {
+  "backoffErrorThreshold": {
+   "description": "The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.",
+   "displayName": "Backoff Error Threshold",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "backoffIdleThreshold": {
+   "description": "The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.",
+   "displayName": "Backoff Idle Threshold",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "backoffMultiplier": {
+   "description": "To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.",
+   "displayName": "Backoff Multiplier",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "channel": {
+   "description": "The channel name (syntax #name) or slack user (syntax userName) to send a message directly to an user.",
+   "displayName": "Channel",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "conversationType": {
+   "defaultValue": "PUBLIC_CHANNEL",
+   "description": "Type of conversation",
+   "displayName": "Conversation Type",
+   "enum": [
+    "PUBLIC_CHANNEL",
+    "PRIVATE_CHANNEL",
+    "MPIM",
+    "IM"
+   ],
+   "group": "consumer",
+   "javaType": "com.slack.api.model.ConversationType",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "delay": {
+   "defaultValue": "10000",
+   "description": "Milliseconds before the next poll.",
+   "displayName": "Delay",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "greedy": {
+   "defaultValue": false,
+   "description": "If greedy is enabled, then the ScheduledPollConsumer will run immediately again, if the previous run polled 1 or more messages.",
+   "displayName": "Greedy",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "initialDelay": {
+   "defaultValue": 1000,
+   "description": "Milliseconds before the first poll starts.",
+   "displayName": "Initial Delay",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "lazyStartProducer": {
+   "defaultValue": false,
+   "description": "Whether the producer should be started lazy (on the first message). By starting lazy you can use this to allow CamelContext and routes to startup in situations where a producer may otherwise fail during starting and cause the route to fail being started. By deferring this startup to be lazy then the startup failure can be handled during routing messages via Camel's routing error handlers. Beware that when the first message is processed then creating and starting the producer may take a little time and prolong the total processing time of the processing.",
+   "displayName": "Lazy Start Producer",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "maxResults": {
+   "defaultValue": "10",
+   "description": "The Max Result for the poll",
+   "displayName": "Max Results",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "naturalOrder": {
+   "defaultValue": false,
+   "description": "Create exchanges in natural order (oldest to newest) or not",
+   "displayName": "Natural Order",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "pollStrategy": {
+   "description": "A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.",
+   "displayName": "Poll Strategy",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.PollingConsumerPollStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "repeatCount": {
+   "defaultValue": 0,
+   "description": "Specifies a maximum limit of number of fires. So if you set it to 1, the scheduler will only fire once. If you set it to 5, it will only fire five times. A value of zero or negative means fire forever.",
+   "displayName": "Repeat Count",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "runLoggingLevel": {
+   "defaultValue": "TRACE",
+   "description": "The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.",
+   "displayName": "Run Logging Level",
+   "enum": [
+    "TRACE",
+    "DEBUG",
+    "INFO",
+    "WARN",
+    "ERROR",
+    "OFF"
+   ],
+   "group": "scheduler",
+   "javaType": "org.apache.camel.LoggingLevel",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "scheduledExecutorService": {
+   "description": "Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.",
+   "displayName": "Scheduled Executor Service",
+   "group": "scheduler",
+   "javaType": "java.util.concurrent.ScheduledExecutorService",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "scheduler": {
+   "defaultValue": "none",
+   "description": "To use a cron scheduler from either camel-spring or camel-quartz component. Use value spring or quartz for built in scheduler",
+   "displayName": "Scheduler",
+   "group": "scheduler",
+   "javaType": "java.lang.Object",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "schedulerProperties": {
+   "description": "To configure additional properties when using a custom scheduler or any of the Quartz, Spring based scheduler. This is a multi-value option with prefix: scheduler.",
+   "displayName": "Scheduler Properties",
+   "group": "scheduler",
+   "javaType": "java.util.Map<java.lang.String, java.lang.Object>",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "scheduler.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "sendEmptyMessageWhenIdle": {
+   "defaultValue": false,
+   "description": "If the polling consumer did not poll any files, you can enable this option to send an empty message (no body) instead.",
+   "displayName": "Send Empty Message When Idle",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "serverUrl": {
+   "defaultValue": "https://slack.com",
+   "description": "The Server URL of the Slack instance",
+   "displayName": "Server Url",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "startScheduler": {
+   "defaultValue": true,
+   "description": "Whether the scheduler should be auto started.",
+   "displayName": "Start Scheduler",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "timeUnit": {
+   "defaultValue": "MILLISECONDS",
+   "description": "Time unit for initialDelay and delay options.",
+   "displayName": "Time Unit",
+   "enum": [
+    "NANOSECONDS",
+    "MICROSECONDS",
+    "MILLISECONDS",
+    "SECONDS",
+    "MINUTES",
+    "HOURS",
+    "DAYS"
+   ],
+   "group": "scheduler",
+   "javaType": "java.util.concurrent.TimeUnit",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "token": {
+   "description": "The token to access Slack. This app needs to have channels:history, groups:history, im:history, mpim:history, channels:read, groups:read, im:read and mpim:read permissions. The User OAuth Token is the kind of token needed.",
+   "displayName": "Token",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  },
+  "useFixedDelay": {
+   "defaultValue": true,
+   "description": "Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.",
+   "displayName": "Use Fixed Delay",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "webhookUrl": {
+   "description": "The incoming webhook URL",
+   "displayName": "Webhook Url",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  }
+ },
+ "scheme": "slack",
+ "syntax": "slack:channel",
+ "title": "Slack",
+ "version": "4.14.9"
+}

@@ -1,0 +1,12 @@
+Agentric OS schema
+Copyright © 2026 Aglium.
+
+The files under camel/ are taken from the catalog of Apache Camel (org.apache.camel:camel-catalog), of the version
+runner.json names, trimmed to what a builder of routes needs. Apache Camel is licensed under the Apache License,
+Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0). Its NOTICE says:
+
+  Apache Camel
+  Copyright 2007-2025 The Apache Software Foundation
+
+  This product includes software developed at
+  The Apache Software Foundation (http://www.apache.org/).

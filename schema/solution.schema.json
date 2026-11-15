@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aglium.com/agentric-os-schema/solution.schema.json",
+  "title": "A solution (solution.yaml)",
+  "description": "What a solution consists of: workflows (case types with their BPMN files), tables of rules (DMN files), texts, calculations, agents, measures, transcriptions and the settings the installation is asked for. Files are named relative to solution.yaml. Installing it again replaces its workflows and agents; what people changed in the installation (texts, tags, schedules, who decides, choices) stays as they left it.",
+  "type": "object",
+  "required": ["solution"],
+  "additionalProperties": false,
+  "properties": {
+    "solution": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "The solution's name"},
+    "decisions": {"type": "array", "items": {"type": "string", "pattern": "\\.dmn$"}, "description": "The tables of rules (DMN files) it brings, among them the policy that judges its commands"},
+    "agents": {"type": "array", "items": {"$ref": "#/$defs/agent"}},
+    "caseTypes": {"type": "array", "items": {"$ref": "#/$defs/caseType"}, "description": "Its workflows"},
+    "texts": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+    "calculations": {"type": "array", "items": {"$ref": "#/$defs/calculationEntry"}},
+    "measures": {"type": "array", "items": {"$ref": "#/$defs/measure"}},
+    "transcriptions": {"type": "array", "items": {"$ref": "#/$defs/transcription"}},
+    "settings": {"type": "array", "items": {"$ref": "#/$defs/setting"}}
+  },
+  "$defs": {
+    "key": {"type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]*$"},
+    "operationRef": {"type": "string", "pattern": "^[a-z][a-z0-9-]*\\.[a-zA-Z][a-zA-Z0-9.]*$", "description": "connection.operation, such as orders.order.get"},
+    "agent": {
+      "type": "object",
+      "required": ["key", "instructions"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {"$ref": "#/$defs/key"},
+        "name": {"type": "string", "description": "What people call it"},
+        "instructions": {"type": "string", "description": "Who the agent is and how it must decide"},
+        "model": {"type": "string", "description": "Which model it runs on; left out: the installation's"},
+        "tools": {"type": "array", "items": {"$ref": "#/$defs/operationRef"}, "description": "Reads it may call"},
+        "commands": {"type": "array", "items": {"$ref": "#/$defs/operationRef"}, "description": "Commands it may propose; it never carries them out itself"},
+        "outcomes": {"type": "array", "items": {"type": "string"}, "description": "What it may conclude with"},
+        "notesGaps": {"type": "boolean", "description": "true: it notes what it could not find in the knowledge, for a person to fill in"},
+        "helpers": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {"$ref": "#/$defs/key"},
+              {"type": "object", "required": ["agent"], "additionalProperties": false, "properties": {"agent": {"$ref": "#/$defs/key"}, "why": {"type": "string"}}}
+            ]
+          },
+          "description": "Other agents it may ask for help, with what each is asked for"
+        },
+        "checker": {"$ref": "#/$defs/key", "description": "The agent that checks each decision"},
+        "attempts": {"type": "integer", "minimum": 1, "description": "How many times it may decide when the checker asks for changes"},
+        "spendLimit": {"type": "number", "minimum": 0, "description": "Dollars one decision may cost at most, helpers and checks included"},
+        "claims": {
+          "oneOf": [
+            {"type": "boolean"},
+            {"type": "object", "additionalProperties": false, "properties": {"values": {"type": "array", "items": {"type": "string"}}, "unconfirmed": {"enum": ["mark", "person"]}}}
+          ],
+          "description": "Values it gives with the words they rest on: true for any, or which values and what happens when the words are not found (mark them, or a person checks)"
+        },
+        "whenStuck": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "corrections": {"type": "integer", "minimum": 0, "description": "How many times an answer that cannot be used is sent back to it (0 to 3)"},
+            "replans": {"type": "integer", "minimum": 0, "description": "How many times it decides again when an action it proposed did not go through (0 to 3)"},
+            "senior": {"$ref": "#/$defs/key", "description": "The agent asked to settle what it cannot"},
+            "waitMinutes": {"type": "integer", "minimum": 0, "description": "A system not answering or data missing: wait this long, then ask again"},
+            "waits": {"type": "integer", "minimum": 0},
+            "permits": {"enum": ["off", "all", "selected"], "description": "Whether a person may allow it once what it may not propose"},
+            "permitted": {"type": "array", "items": {"$ref": "#/$defs/operationRef"}, "description": "With selected: what may be allowed once"},
+            "situationLimit": {"type": "number", "minimum": 0, "description": "Dollars settling one unusual situation may cost at most"}
+          },
+          "description": "What it does when it cannot settle a case as asked"
+        }
+      }
+    },
+    "caseType": {
+      "type": "object",
+      "required": ["key", "process", "processKey"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {"$ref": "#/$defs/key"},
+        "name": {"type": "string", "description": "What people call the workflow"},
+        "process": {"type": "string", "pattern": "\\.bpmn20\\.xml$", "description": "Its BPMN file (workflow.json says what it may contain)"},
+        "processKey": {"type": "string", "description": "The id of the process in that file"},
+        "startOn": {"type": "array", "items": {"type": "string"}, "description": "The types of event that open a case of it"},
+        "startWhen": {"type": "string", "description": "An expression an event must also meet, such as ${event.status == 'PAID'}"},
+        "policy": {"type": "string", "description": "The table of rules that judges its commands: which go out, which wait for a person, which are refused"},
+        "shadow": {"type": "boolean", "description": "true: Test run. It records the actions it would take and sends none. A new workflow starts so."},
+        "enabled": {"type": "boolean"},
+        "tags": {"type": "array", "items": {"type": "string"}, "description": "What people find the workflow by"},
+        "schedule": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["every", "at"],
+            "additionalProperties": false,
+            "properties": {
+              "every": {"enum": ["day", "week", "month"]},
+              "on": {"type": "array", "items": {"type": ["string", "integer"]}, "description": "For a week the days' names; for a month 1 to 31 or last"},
+              "at": {"type": "string", "pattern": "^[0-2][0-9]:[0-5][0-9]$"}
+            }
+          },
+          "description": "Times it opens a case by itself, in the installation's time zone"
+        },
+        "takesFrom": {"type": "array", "items": {"type": "string"}, "description": "The channel connections it takes messages from; [\"*\"] for every channel"},
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "choices"],
+            "additionalProperties": false,
+            "properties": {
+              "key": {"$ref": "#/$defs/key"},
+              "label": {"type": "string"},
+              "preset": {"type": "string", "description": "Taken when nobody chose"},
+              "chosen": {"type": "string"},
+              "choices": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["value"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {"type": "string"},
+                    "label": {"type": "string"},
+                    "about": {"type": "string"},
+                    "needs": {"type": "array", "items": {"type": "string"}, "description": "Kinds of connection it needs (connection-kinds.json)"}
+                  }
+                }
+              }
+            }
+          },
+          "description": "Ways it may do some of its work; read in the workflow as ${options.<key>}"
+        },
+        "measures": {"type": "object", "additionalProperties": {"type": "string"}, "description": "The solution's measures its cases keep, each with the expression its value comes from"},
+        "creditLater": {"type": "object", "additionalProperties": false, "properties": {"to": {"type": "string"}, "withinDays": {"type": "integer", "minimum": 1}}, "description": "Its cases take money that comes in after they closed"},
+        "stillUseful": {"type": "object", "additionalProperties": false, "properties": {"from": {"type": "string"}, "days": {"type": "integer", "minimum": 1}}, "description": "Until when a stopped case of it is still worth carrying on"},
+        "whoDecides": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "by": {"enum": ["anyone", "named", "role"]},
+            "named": {"type": "string", "description": "With named: a value of the case that names the person, such as {{connector.crm.record.fields.owner}}"},
+            "role": {"type": "string", "description": "With role: a role of People"},
+            "fallbackRole": {"type": "string", "description": "May decide too after afterHours working hours, when the person is away or unknown"},
+            "afterHours": {"type": "integer", "minimum": 0},
+            "others": {"type": "string"}
+          },
+          "description": "Who decides its actions that wait for approval; anybody who may approve when not said"
+        },
+        "tenantId": {"type": "string", "description": "This entry is one tenant's own version of the workflow"}
+      }
+    },
+    "text": {
+      "type": "object",
+      "required": ["key", "file"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {"$ref": "#/$defs/key"},
+        "name": {"type": "string", "description": "What people call it"},
+        "file": {"type": "string", "description": "The text, with places for values in double braces: {{connector.<connection>.<thing>.<detail>}}, {{settings.<key>}}, {{#name}}...{{/name}} kept only when there is such a value, {{> key}} another text"}
+      }
+    },
+    "calculationEntry": {
+      "type": "object",
+      "required": ["key", "file"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {"$ref": "#/$defs/key"},
+        "name": {"type": "string"},
+        "file": {"type": "string", "description": "A calculation written line by line (calculation.schema.json), or the business's own Excel model (.xlsx)"}
+      }
+    },
+    "measure": {
+      "type": "object",
+      "required": ["key"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {"$ref": "#/$defs/key"},
+        "label": {"type": "string"},
+        "kind": {"enum": ["words", "money", "number", "steps", "time"], "description": "money with a currency; steps with steps, earns and ends; time worked out from a steps measure (of, from, to)"},
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "earnedWhen": {"type": "string", "description": "For money: the steps measure whose earning step makes it earned"},
+        "steps": {"type": "array", "items": {"type": "string"}},
+        "earns": {"type": "array", "items": {"type": "string"}},
+        "ends": {"type": "array", "items": {"type": "string"}},
+        "of": {"type": "string"},
+        "from": {"type": "string"},
+        "to": {"type": "string"}
+      }
+    },
+    "transcription": {
+      "type": "object",
+      "required": ["key", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {"$ref": "#/$defs/key"},
+        "name": {"type": "string"},
+        "audioStays": {"type": "boolean"},
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["kind"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"enum": ["speech", "check", "speakers", "cleanup"]},
+              "label": {"type": "string"},
+              "provider": {"type": "string"},
+              "model": {"type": "string"},
+              "agent": {"$ref": "#/$defs/key"},
+              "language": {"type": "string"},
+              "enabled": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "setting": {
+      "type": "object",
+      "required": ["key"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {"type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]*$", "description": "Read in workflows and texts as settings.<key>"},
+        "label": {"type": "string"},
+        "description": {"type": "string"}
+      }
+    }
+  }
+}

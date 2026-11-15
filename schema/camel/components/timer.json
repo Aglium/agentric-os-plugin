@@ -1,0 +1,193 @@
+{
+ "consumerOnly": true,
+ "description": "Generate messages in specified intervals using java.util.Timer.",
+ "headers": {
+  "CamelMessageTimestamp": {
+   "description": "The timestamp of the message",
+   "javaType": "long"
+  },
+  "CamelTimerFiredTime": {
+   "description": "The fired time",
+   "javaType": "Date"
+  }
+ },
+ "lenientProperties": false,
+ "name": "timer",
+ "producerOnly": false,
+ "properties": {
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "daemon": {
+   "defaultValue": true,
+   "description": "Specifies whether the thread associated with the timer endpoint runs as a daemon. The default value is true.",
+   "displayName": "Daemon",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "delay": {
+   "defaultValue": "1000",
+   "description": "The number of milliseconds to wait before the first event is generated. Should not be used in conjunction with the time option. The default value is 1000.",
+   "displayName": "Delay",
+   "group": "consumer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "fixedRate": {
+   "defaultValue": false,
+   "description": "Events take place at approximately regular intervals, separated by the specified period.",
+   "displayName": "Fixed Rate",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "includeMetadata": {
+   "defaultValue": false,
+   "description": "Whether to include metadata in the exchange such as fired time, timer name, timer count etc.",
+   "displayName": "Include Metadata",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "pattern": {
+   "description": "Allows you to specify a custom Date pattern to use for setting the time option using URI syntax.",
+   "displayName": "Pattern",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "period": {
+   "defaultValue": "1000",
+   "description": "Generate periodic events every period. Must be zero or positive value. The default value is 1000.",
+   "displayName": "Period",
+   "group": "consumer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "repeatCount": {
+   "description": "Specifies a maximum limit for the number of fires. Therefore, if you set it to 1, the timer will only fire once. If you set it to 5, it will only fire five times. A value of zero or negative means fire forever.",
+   "displayName": "Repeat Count",
+   "group": "consumer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "runLoggingLevel": {
+   "defaultValue": "TRACE",
+   "description": "The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.",
+   "displayName": "Run Logging Level",
+   "enum": [
+    "TRACE",
+    "DEBUG",
+    "INFO",
+    "WARN",
+    "ERROR",
+    "OFF"
+   ],
+   "group": "scheduler",
+   "javaType": "org.apache.camel.LoggingLevel",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "synchronous": {
+   "defaultValue": false,
+   "description": "Sets whether synchronous processing should be strictly used",
+   "displayName": "Synchronous",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "time": {
+   "description": "A java.util.Date the first event should be generated. If using the URI, the pattern expected is: yyyy-MM-dd HH:mm:ss or yyyy-MM-dd'T'HH:mm:ss.",
+   "displayName": "Time",
+   "group": "advanced",
+   "javaType": "java.util.Date",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "timer": {
+   "description": "To use a custom Timer",
+   "displayName": "Timer",
+   "group": "advanced",
+   "javaType": "java.util.Timer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "timerName": {
+   "description": "The name of the timer",
+   "displayName": "Timer Name",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  }
+ },
+ "scheme": "timer",
+ "syntax": "timer:timerName",
+ "title": "Timer",
+ "version": "4.14.9"
+}

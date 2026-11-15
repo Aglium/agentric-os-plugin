@@ -1,0 +1,221 @@
+{
+ "consumerOnly": false,
+ "description": "To call REST services using OpenAPI specification as contract.",
+ "headers": {},
+ "lenientProperties": false,
+ "name": "rest-openapi",
+ "producerOnly": false,
+ "properties": {
+  "apiContextPath": {
+   "description": "Sets the context-path to use for servicing the OpenAPI specification",
+   "displayName": "Api Context Path",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "basePath": {
+   "description": "API basePath, for example /v3. Default is unset, if set overrides the value present in OpenApi specification and in the component configuration.",
+   "displayName": "Base Path",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "clientRequestValidation": {
+   "defaultValue": false,
+   "description": "Whether to enable validation of the client request to check if the incoming request is valid according to the OpenAPI specification",
+   "displayName": "Client Request Validation",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "clientResponseValidation": {
+   "defaultValue": false,
+   "description": "Whether to enable validation of the client request to check if the outgoing response from Camel is valid according to the OpenAPI specification",
+   "displayName": "Client Response Validation",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "componentName": {
+   "description": "Name of the Camel component that will perform the requests. The component must be present in Camel registry and it must implement RestProducerFactory service provider interface. If not set CLASSPATH is searched for single component that implements RestProducerFactory SPI. Overrides component configuration.",
+   "displayName": "Component Name",
+   "group": "producer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "consumerComponentName": {
+   "description": "Name of the Camel component that will service the requests. The component must be present in Camel registry and it must implement RestOpenApiConsumerFactory service provider interface. If not set CLASSPATH is searched for single component that implements RestOpenApiConsumerFactory SPI. Overrides component configuration.",
+   "displayName": "Consumer Component Name",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "consumes": {
+   "description": "What payload type this component capable of consuming. Could be one type, like application/json or multiple types as application/json, application/xml; q=0.5 according to the RFC7231. This equates or multiple types as application/json, application/xml; q=0.5 according to the RFC7231. This equates to the value of Accept HTTP header. If set overrides any value found in the OpenApi specification and. in the component configuration",
+   "displayName": "Consumes",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "host": {
+   "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint, component or in the corresponding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first, rest-openapi next, and global configuration last. If set overrides any value found in the OpenApi specification, RestConfiguration. Overrides all other configuration.",
+   "displayName": "Host",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "lazyStartProducer": {
+   "defaultValue": false,
+   "description": "Whether the producer should be started lazy (on the first message). By starting lazy you can use this to allow CamelContext and routes to startup in situations where a producer may otherwise fail during starting and cause the route to fail being started. By deferring this startup to be lazy then the startup failure can be handled during routing messages via Camel's routing error handlers. Beware that when the first message is processed then creating and starting the producer may take a little time and prolong the total processing time of the processing.",
+   "displayName": "Lazy Start Producer",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "missingOperation": {
+   "defaultValue": "fail",
+   "description": "Whether the consumer should fail,ignore or return a mock response for OpenAPI operations that are not mapped to a corresponding route.",
+   "displayName": "Missing Operation",
+   "enum": [
+    "fail",
+    "ignore",
+    "mock"
+   ],
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "mockIncludePattern": {
+   "defaultValue": "classpath:camel-mock/**",
+   "description": "Used for inclusive filtering of mock data from directories. The pattern is using Ant-path style pattern. Multiple patterns can be specified separated by comma.",
+   "displayName": "Mock Include Pattern",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "operationId": {
+   "description": "ID of the operation from the OpenApi specification. This is required when using producer",
+   "displayName": "Operation Id",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "produces": {
+   "description": "What payload type this component is producing. For example application/json according to the RFC7231. This equates to the value of Content-Type HTTP header. If set overrides any value present in the OpenApi specification. Overrides all other configuration.",
+   "displayName": "Produces",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "requestValidationEnabled": {
+   "defaultValue": false,
+   "description": "Enable validation of requests against the configured OpenAPI specification",
+   "displayName": "Request Validation Enabled",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "restOpenapiProcessorStrategy": {
+   "description": "To use a custom strategy for how to process Rest DSL requests",
+   "displayName": "Rest Openapi Processor Strategy",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.component.rest.openapi.RestOpenapiProcessorStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "specificationUri": {
+   "defaultValue": "openapi.json",
+   "description": "Path to the OpenApi specification file. The scheme, host base path are taken from this specification, but these can be overridden with properties on the component or endpoint level. If not given the component tries to load openapi.json resource from the classpath. Note that the host defined on the component and endpoint of this Component should contain the scheme, hostname and optionally the port in the URI syntax (i.e. http://api.example.com:8080). Overrides component configuration. The OpenApi specification can be loaded from different sources by prefixing with file: classpath: http: https:. Support for https is limited to using the JDK installed UrlHandler, and as such it can be cumbersome to setup TLS/SSL certificates for https (such as setting a number of javax.net.ssl JVM system properties). How to do that consult the JDK documentation for UrlHandler. Default value notice: By default loads openapi.json file",
+   "displayName": "Specification Uri",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  }
+ },
+ "scheme": "rest-openapi",
+ "syntax": "rest-openapi:specificationUri#operationId",
+ "title": "REST OpenApi",
+ "version": "4.14.9"
+}

@@ -1,0 +1,842 @@
+{
+ "alternativeSchemes": "imap,imaps,pop3,pop3s,smtp,smtps",
+ "consumerOnly": false,
+ "description": "Send and receive emails using imap, pop3 and smtp protocols.",
+ "headers": {
+  "Bcc": {
+   "description": "Bcc",
+   "javaType": "String"
+  },
+  "CamelMailCopyTo": {
+   "description": "After processing a mail message, it can be copied to a mail folder with the given name.",
+   "javaType": "String"
+  },
+  "CamelMailDelete": {
+   "description": "Deletes the messages after they have been processed.",
+   "javaType": "boolean"
+  },
+  "CamelMailMessageId": {
+   "description": "The message ID.",
+   "javaType": "String"
+  },
+  "CamelMailMoveTo": {
+   "description": "After processing a mail message, it can be moved to a mail folder with the given name.",
+   "javaType": "String"
+  },
+  "Cc": {
+   "description": "Cc",
+   "javaType": "String"
+  },
+  "From": {
+   "description": "From",
+   "javaType": "String"
+  },
+  "Reply-To": {
+   "description": "Reply to",
+   "javaType": "String"
+  },
+  "Subject": {
+   "description": "Subject",
+   "javaType": "String"
+  },
+  "To": {
+   "description": "To",
+   "javaType": "String"
+  },
+  "contentType": {
+   "description": "The content type",
+   "javaType": "String"
+  }
+ },
+ "lenientProperties": false,
+ "name": "smtp",
+ "producerOnly": false,
+ "properties": {
+  "additionalJavaMailProperties": {
+   "description": "Sets additional java mail properties, that will append/override any default properties that are set based on all the other options. This is useful if you need to add some special options but want to keep the others as is. This is a multi-value option with prefix: mail.",
+   "displayName": "Additional Java Mail Properties",
+   "group": "advanced",
+   "javaType": "java.util.Properties",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "mail.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "alternativeBodyHeader": {
+   "defaultValue": "CamelMailAlternativeBody",
+   "description": "Specifies the key to an IN message header that contains an alternative email body. For example, if you send emails in text/html format and want to provide an alternative mail body for non-HTML email clients, set the alternative mail body with this key as a header.",
+   "displayName": "Alternative Body Header",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "attachmentsContentTransferEncodingResolver": {
+   "description": "To use a custom AttachmentsContentTransferEncodingResolver to resolve what content-type-encoding to use for attachments.",
+   "displayName": "Attachments Content Transfer Encoding Resolver",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.mail.AttachmentsContentTransferEncodingResolver",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "authenticator": {
+   "description": "The authenticator for login. If set then the password and username are ignored. It can be used for tokens which can expire and therefore must be read dynamically.",
+   "displayName": "Authenticator",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.mail.MailAuthenticator",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "backoffErrorThreshold": {
+   "description": "The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.",
+   "displayName": "Backoff Error Threshold",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "backoffIdleThreshold": {
+   "description": "The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.",
+   "displayName": "Backoff Idle Threshold",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "backoffMultiplier": {
+   "description": "To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.",
+   "displayName": "Backoff Multiplier",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "bcc": {
+   "description": "Sets the BCC email address. Separate multiple email addresses with comma.",
+   "displayName": "Bcc",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "binding": {
+   "description": "Sets the binding used to convert from a Camel message to and from a Mail message",
+   "displayName": "Binding",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.mail.MailBinding",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "cc": {
+   "description": "Sets the CC email address. Separate multiple email addresses with comma.",
+   "displayName": "Cc",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "closeFolder": {
+   "defaultValue": true,
+   "description": "Whether the consumer should close the folder after polling. Setting this option to false and having disconnect=false as well, then the consumer keeps the folder open between polls.",
+   "displayName": "Close Folder",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "connectionTimeout": {
+   "defaultValue": 30000,
+   "description": "The connection timeout in milliseconds.",
+   "displayName": "Connection Timeout",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "contentType": {
+   "defaultValue": "text/plain",
+   "description": "The mail message content type. Use text/html for HTML mails.",
+   "displayName": "Content Type",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "contentTypeResolver": {
+   "description": "Resolver to determine Content-Type for file attachments.",
+   "displayName": "Content Type Resolver",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.mail.ContentTypeResolver",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "copyTo": {
+   "description": "After processing a mail message, it can be copied to a mail folder with the given name. You can override this configuration value with a header with the key copyTo, allowing you to copy messages to folder names configured at runtime.",
+   "displayName": "Copy To",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "debugMode": {
+   "defaultValue": false,
+   "description": "Enable debug mode on the underlying mail framework. The SUN Mail framework logs the debug messages to System.out by default.",
+   "displayName": "Debug Mode",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "decodeFilename": {
+   "defaultValue": false,
+   "description": "If set to true, the MimeUtility.decodeText method will be used to decode the filename. This is similar to setting JVM system property mail.mime.encodefilename.",
+   "displayName": "Decode Filename",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "delay": {
+   "defaultValue": "60000",
+   "description": "Milliseconds before the next poll.",
+   "displayName": "Delay",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "delete": {
+   "defaultValue": false,
+   "description": "Deletes the messages after they have been processed. This is done by setting the DELETED flag on the mail message. If false, the SEEN flag is set instead. You can override this configuration option by setting a header with the key delete to determine if the mail should be deleted or not.",
+   "displayName": "Delete",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "disconnect": {
+   "defaultValue": false,
+   "description": "Whether the consumer should disconnect after polling. If enabled, this forces Camel to connect on each poll.",
+   "displayName": "Disconnect",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "failOnDuplicateFileAttachment": {
+   "defaultValue": false,
+   "description": "Whether to fail processing the mail if the mail message contains attachments with duplicate file names. If set to false, then the duplicate attachment is skipped and a WARN is logged. If set to true, then an exception is thrown failing to process the mail message.",
+   "displayName": "Fail On Duplicate File Attachment",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "fetchSize": {
+   "defaultValue": -1,
+   "description": "Sets the maximum number of messages to consume during a poll. This can be used to avoid overloading a mail server, if a mailbox folder contains a lot of messages. The default value of -1 means no fetch size and all messages will be consumed. Setting the value to 0 is a special corner case, where Camel will not consume any messages at all.",
+   "displayName": "Fetch Size",
+   "group": "consumer (advanced)",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "folderName": {
+   "defaultValue": "INBOX",
+   "description": "The folder to poll.",
+   "displayName": "Folder Name",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "from": {
+   "defaultValue": "camel@localhost",
+   "description": "The from email address",
+   "displayName": "From",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "generateMissingAttachmentNames": {
+   "description": "Set this to 'uuid' to set a UUID for the filename of the attachment if no filename was set",
+   "displayName": "Generate Missing Attachment Names",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "greedy": {
+   "defaultValue": false,
+   "description": "If greedy is enabled, then the ScheduledPollConsumer will run immediately again, if the previous run polled 1 or more messages.",
+   "displayName": "Greedy",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "handleDuplicateAttachmentNames": {
+   "description": "Set the strategy to handle duplicate filenames of attachments never: attachments that have a filename which is already present in the attachments will be ignored unless failOnDuplicateFileAttachment is set to true. uuidPrefix: this will prefix the duplicate attachment filenames each with an uuid and underscore (uuid_filename.fileextension). uuidSuffix: this will suffix the duplicate attachment filenames each with an underscore and uuid (filename_uuid.fileextension).",
+   "displayName": "Handle Duplicate Attachment Names",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "handleFailedMessage": {
+   "defaultValue": false,
+   "description": "If the mail consumer cannot retrieve a given mail message, then this option allows handling the caused exception by the consumer's error handler. By enabling the bridge error handler on the consumer, then the Camel routing error handler can handle the exception instead. The default behavior would be the consumer throws an exception and no mails from the batch would be able to be routed by Camel.",
+   "displayName": "Handle Failed Message",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "headerFilterStrategy": {
+   "description": "To use a custom org.apache.camel.spi.HeaderFilterStrategy to filter headers.",
+   "displayName": "Header Filter Strategy",
+   "group": "advanced",
+   "javaType": "org.apache.camel.spi.HeaderFilterStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "host": {
+   "description": "The mail server host name",
+   "displayName": "Host",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "idempotentRepository": {
+   "description": "A pluggable repository org.apache.camel.spi.IdempotentRepository which allows to cluster consuming from the same mailbox, and let the repository coordinate whether a mail message is valid for the consumer to process. By default no repository is in use.",
+   "displayName": "Idempotent Repository",
+   "group": "filter",
+   "javaType": "org.apache.camel.spi.IdempotentRepository",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "idempotentRepositoryRemoveOnCommit": {
+   "defaultValue": true,
+   "description": "When using idempotent repository, then when the mail message has been successfully processed and is committed, should the message id be removed from the idempotent repository (default) or be kept in the repository. By default its assumed the message id is unique and has no value to be kept in the repository, because the mail message will be marked as seen/moved or deleted to prevent it from being consumed again. And therefore having the message id stored in the idempotent repository has little value. However this option allows to store the message id, for whatever reason you may have.",
+   "displayName": "Idempotent Repository Remove On Commit",
+   "group": "filter",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "ignoreUnsupportedCharset": {
+   "defaultValue": false,
+   "description": "Option to let Camel ignore unsupported charset in the local JVM when sending mails. If the charset is unsupported, then charset=XXX (where XXX represents the unsupported charset) is removed from the content-type, and it relies on the platform default instead.",
+   "displayName": "Ignore Unsupported Charset",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "ignoreUriScheme": {
+   "defaultValue": false,
+   "description": "Option to let Camel ignore unsupported charset in the local JVM when sending mails. If the charset is unsupported, then charset=XXX (where XXX represents the unsupported charset) is removed from the content-type, and it relies on the platform default instead.",
+   "displayName": "Ignore Uri Scheme",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "initialDelay": {
+   "defaultValue": 1000,
+   "description": "Milliseconds before the first poll starts.",
+   "displayName": "Initial Delay",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "javaMailProperties": {
+   "description": "Sets the java mail options. Will clear any default properties and only use the properties provided for this method.",
+   "displayName": "Java Mail Properties",
+   "group": "advanced",
+   "javaType": "java.util.Properties",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "javaMailSender": {
+   "description": "To use a custom org.apache.camel.component.mail.JavaMailSender for sending emails.",
+   "displayName": "Java Mail Sender",
+   "group": "producer (advanced)",
+   "javaType": "org.apache.camel.component.mail.JavaMailSender",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "lazyStartProducer": {
+   "defaultValue": false,
+   "description": "Whether the producer should be started lazy (on the first message). By starting lazy you can use this to allow CamelContext and routes to startup in situations where a producer may otherwise fail during starting and cause the route to fail being started. By deferring this startup to be lazy then the startup failure can be handled during routing messages via Camel's routing error handlers. Beware that when the first message is processed then creating and starting the producer may take a little time and prolong the total processing time of the processing.",
+   "displayName": "Lazy Start Producer",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "mailUidGenerator": {
+   "description": "A pluggable MailUidGenerator that allows to use custom logic to generate UUID of the mail message.",
+   "displayName": "Mail Uid Generator",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.component.mail.MailUidGenerator",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "mapMailMessage": {
+   "defaultValue": true,
+   "description": "Specifies whether Camel should map the received mail message to Camel body/headers/attachments. If set to true, the body of the mail message is mapped to the body of the Camel IN message, the mail headers are mapped to IN headers, and the attachments to Camel IN attachment message. If this option is set to false, then the IN message contains a raw jakarta.mail.Message. You can retrieve this raw message by calling exchange.getIn().getBody(jakarta.mail.Message.class).",
+   "displayName": "Map Mail Message",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "maxMessagesPerPoll": {
+   "description": "Specifies the maximum number of messages to gather per poll. By default, no maximum is set. Can be used to set a limit of e.g. 1000 to avoid downloading thousands of files when the server starts up. Set a value of 0 or negative to disable this option.",
+   "displayName": "Max Messages Per Poll",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "mimeDecodeHeaders": {
+   "defaultValue": false,
+   "description": "This option enables transparent MIME decoding and unfolding for mail headers.",
+   "displayName": "Mime Decode Headers",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "moveTo": {
+   "description": "After processing a mail message, it can be moved to a mail folder with the given name. You can override this configuration value with a header with the key moveTo, allowing you to move messages to folder names configured at runtime.",
+   "displayName": "Move To",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "password": {
+   "description": "The password for login. See also setAuthenticator(MailAuthenticator).",
+   "displayName": "Password",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  },
+  "peek": {
+   "defaultValue": true,
+   "description": "Will mark the jakarta.mail.Message as peeked before processing the mail message. This applies to IMAPMessage messages types only. By using peek, the mail will not be eagerly marked as SEEN on the mail server, which allows us to roll back the mail message if there is a processing error in Camel.",
+   "displayName": "Peek",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "pollStrategy": {
+   "description": "A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.",
+   "displayName": "Poll Strategy",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.PollingConsumerPollStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "port": {
+   "description": "The port number of the mail server",
+   "displayName": "Port",
+   "group": "common",
+   "javaType": "int",
+   "kind": "path",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "postProcessAction": {
+   "description": "Refers to an MailBoxPostProcessAction for doing post processing tasks on the mailbox once the normal processing ended.",
+   "displayName": "Post Process Action",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.component.mail.MailBoxPostProcessAction",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "repeatCount": {
+   "defaultValue": 0,
+   "description": "Specifies a maximum limit of number of fires. So if you set it to 1, the scheduler will only fire once. If you set it to 5, it will only fire five times. A value of zero or negative means fire forever.",
+   "displayName": "Repeat Count",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "replyTo": {
+   "description": "The Reply-To recipients (the receivers of the response mail). Separate multiple email addresses with a comma.",
+   "displayName": "Reply To",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "runLoggingLevel": {
+   "defaultValue": "TRACE",
+   "description": "The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.",
+   "displayName": "Run Logging Level",
+   "enum": [
+    "TRACE",
+    "DEBUG",
+    "INFO",
+    "WARN",
+    "ERROR",
+    "OFF"
+   ],
+   "group": "scheduler",
+   "javaType": "org.apache.camel.LoggingLevel",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "scheduledExecutorService": {
+   "description": "Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.",
+   "displayName": "Scheduled Executor Service",
+   "group": "scheduler",
+   "javaType": "java.util.concurrent.ScheduledExecutorService",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "scheduler": {
+   "defaultValue": "none",
+   "description": "To use a cron scheduler from either camel-spring or camel-quartz component. Use value spring or quartz for built in scheduler",
+   "displayName": "Scheduler",
+   "group": "scheduler",
+   "javaType": "java.lang.Object",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "schedulerProperties": {
+   "description": "To configure additional properties when using a custom scheduler or any of the Quartz, Spring based scheduler. This is a multi-value option with prefix: scheduler.",
+   "displayName": "Scheduler Properties",
+   "group": "scheduler",
+   "javaType": "java.util.Map<java.lang.String, java.lang.Object>",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "scheduler.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "searchTerm": {
+   "description": "Refers to a jakarta.mail.search.SearchTerm which allows to filter mails based on search criteria such as subject, body, from, sent after a certain date etc. This is a multi-value option with prefix: searchTerm.",
+   "displayName": "Search Term",
+   "group": "filter",
+   "javaType": "jakarta.mail.search.SearchTerm",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "searchTerm.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "sendEmptyMessageWhenIdle": {
+   "defaultValue": false,
+   "description": "If the polling consumer did not poll any files, you can enable this option to send an empty message (no body) instead.",
+   "displayName": "Send Empty Message When Idle",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "session": {
+   "description": "Specifies the mail session that camel should use for all mail interactions. Useful in scenarios where mail sessions are created and managed by some other resource, such as a JavaEE container. When using a custom mail session, then the hostname and port from the mail session will be used (if configured on the session).",
+   "displayName": "Session",
+   "group": "advanced",
+   "javaType": "jakarta.mail.Session",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "skipFailedMessage": {
+   "defaultValue": false,
+   "description": "If the mail consumer cannot retrieve a given mail message, then this option allows skipping the message and move on to retrieve the next mail message. The default behavior would be the consumer throws an exception and no mails from the batch would be able to be routed by Camel.",
+   "displayName": "Skip Failed Message",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "sortTerm": {
+   "description": "Sorting order for messages. Only natively supported for IMAP. Emulated to some degree when using POP3 or when IMAP server does not have the SORT capability.",
+   "displayName": "Sort Term",
+   "group": "sort",
+   "javaType": "org.eclipse.angus.mail.imap.SortTerm[]",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "sslContextParameters": {
+   "description": "To configure security using SSLContextParameters.",
+   "displayName": "Ssl Context Parameters",
+   "group": "security",
+   "javaType": "org.apache.camel.support.jsse.SSLContextParameters",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "startScheduler": {
+   "defaultValue": true,
+   "description": "Whether the scheduler should be auto started.",
+   "displayName": "Start Scheduler",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "subject": {
+   "description": "The Subject of the message being sent. Note: Setting the subject in the header takes precedence over this option.",
+   "displayName": "Subject",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "timeUnit": {
+   "defaultValue": "MILLISECONDS",
+   "description": "Time unit for initialDelay and delay options.",
+   "displayName": "Time Unit",
+   "enum": [
+    "NANOSECONDS",
+    "MICROSECONDS",
+    "MILLISECONDS",
+    "SECONDS",
+    "MINUTES",
+    "HOURS",
+    "DAYS"
+   ],
+   "group": "scheduler",
+   "javaType": "java.util.concurrent.TimeUnit",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "to": {
+   "description": "Sets the destination email address. Separate multiple email addresses with comma.",
+   "displayName": "To",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "unseen": {
+   "defaultValue": true,
+   "description": "Whether to limit by unseen mails only.",
+   "displayName": "Unseen",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useFixedDelay": {
+   "defaultValue": true,
+   "description": "Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.",
+   "displayName": "Use Fixed Delay",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useInlineAttachments": {
+   "defaultValue": false,
+   "description": "Whether to use disposition inline or attachment.",
+   "displayName": "Use Inline Attachments",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useJavaMailSessionPropertiesFromHeaders": {
+   "defaultValue": false,
+   "description": "Whether to allow dynamic JavaMail session properties (message headers whose key starts with mail.smtp. or mail.smtps.) to override the endpoint configuration on a per-message basis. This is disabled by default. Only enable it when these headers originate exclusively from trusted route logic, never from data crossing a trust boundary (for example HTTP query parameters, or JMS/Kafka messages from untrusted producers). When enabled, an attacker able to set these headers could weaken transport security (such as mail.smtp.ssl.trust or mail.smtp.starttls.enable) or redirect the SMTP connection.",
+   "displayName": "Use Java Mail Session Properties From Headers",
+   "group": "security",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "username": {
+   "description": "The username for login. See also setAuthenticator(MailAuthenticator).",
+   "displayName": "Username",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  }
+ },
+ "scheme": "smtp",
+ "syntax": "smtp:host:port",
+ "title": "SMTP",
+ "version": "4.14.9"
+}

@@ -1,0 +1,339 @@
+{
+ "description": "Handle CSV (Comma Separated Values) payloads.",
+ "name": "csv",
+ "properties": {
+  "allowMissingColumnNames": {
+   "defaultValue": false,
+   "description": "Whether to allow missing column names.",
+   "displayName": "Allow Missing Column Names",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "captureHeaderRecord": {
+   "defaultValue": false,
+   "description": "Whether the unmarshalling should capture the header record and store it in the message header",
+   "displayName": "Capture Header Record",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "commentMarker": {
+   "description": "Sets the comment marker of the reference format.",
+   "displayName": "Comment Marker",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "commentMarkerDisabled": {
+   "defaultValue": false,
+   "description": "Disables the comment marker of the reference format.",
+   "displayName": "Comment Marker Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "delimiter": {
+   "description": "Sets the delimiter to use. The default value is , (comma)",
+   "displayName": "Delimiter",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "escape": {
+   "description": "Sets the escape character to use",
+   "displayName": "Escape",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "escapeDisabled": {
+   "defaultValue": false,
+   "description": "Use for disabling using escape character",
+   "displayName": "Escape Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "formatName": {
+   "defaultValue": "DEFAULT",
+   "description": "The name of the format to use, the default value is CSVFormat.DEFAULT",
+   "displayName": "Format Name",
+   "enum": [
+    "DEFAULT",
+    "EXCEL",
+    "INFORMIX_UNLOAD",
+    "INFORMIX_UNLOAD_CSV",
+    "MYSQL",
+    "RFC4180"
+   ],
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "formatRef": {
+   "description": "The reference format to use, it will be updated with the other format options, the default value is CSVFormat.DEFAULT",
+   "displayName": "Format Ref",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "header": {
+   "description": "To configure the CSV headers",
+   "displayName": "Header",
+   "group": "common",
+   "javaType": "java.util.List<java.lang.String>",
+   "kind": "element",
+   "required": false,
+   "secret": false,
+   "type": "array"
+  },
+  "headerDisabled": {
+   "defaultValue": false,
+   "description": "Use for disabling headers",
+   "displayName": "Header Disabled",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "id": {
+   "description": "The id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "ignoreEmptyLines": {
+   "defaultValue": false,
+   "description": "Whether to ignore empty lines.",
+   "displayName": "Ignore Empty Lines",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "ignoreHeaderCase": {
+   "defaultValue": false,
+   "description": "Sets whether or not to ignore case when accessing header names.",
+   "displayName": "Ignore Header Case",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "ignoreSurroundingSpaces": {
+   "defaultValue": false,
+   "description": "Whether to ignore surrounding spaces",
+   "displayName": "Ignore Surrounding Spaces",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "lazyLoad": {
+   "defaultValue": false,
+   "description": "Whether the unmarshalling should produce an iterator that reads the lines on the fly or if all the lines must be read at one.",
+   "displayName": "Lazy Load",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "marshallerFactoryRef": {
+   "description": "Sets the implementation of the CsvMarshallerFactory interface which is able to customize marshalling/unmarshalling behavior by extending CsvMarshaller or creating it from scratch.",
+   "displayName": "Marshaller Factory Ref",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "nullString": {
+   "description": "Sets the null string",
+   "displayName": "Null String",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "nullStringDisabled": {
+   "defaultValue": false,
+   "description": "Used to disable null strings",
+   "displayName": "Null String Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "quote": {
+   "description": "Sets the quote to use which by default is double-quote character",
+   "displayName": "Quote",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "quoteDisabled": {
+   "defaultValue": false,
+   "description": "Used to disable quotes",
+   "displayName": "Quote Disabled",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "quoteMode": {
+   "description": "Sets the quote mode",
+   "displayName": "Quote Mode",
+   "enum": [
+    "ALL",
+    "ALL_NON_NULL",
+    "MINIMAL",
+    "NON_NUMERIC",
+    "NONE"
+   ],
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "recordConverterRef": {
+   "description": "Refers to a custom CsvRecordConverter to lookup from the registry to use.",
+   "displayName": "Record Converter Ref",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "recordSeparator": {
+   "description": "Sets the record separator (aka new line) which by default is new line characters (CRLF)",
+   "displayName": "Record Separator",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "recordSeparatorDisabled": {
+   "description": "Used for disabling record separator",
+   "displayName": "Record Separator Disabled",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "skipHeaderRecord": {
+   "defaultValue": false,
+   "description": "Whether to skip the header record in the output",
+   "displayName": "Skip Header Record",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "trailingDelimiter": {
+   "defaultValue": false,
+   "description": "Sets whether or not to add a trailing delimiter.",
+   "displayName": "Trailing Delimiter",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "trim": {
+   "defaultValue": false,
+   "description": "Sets whether or not to trim leading and trailing blanks.",
+   "displayName": "Trim",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useMaps": {
+   "defaultValue": false,
+   "description": "Whether the unmarshalling should produce maps (HashMap)for the lines values instead of lists. It requires to have header (either defined or collected).",
+   "displayName": "Use Maps",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useOrderedMaps": {
+   "defaultValue": false,
+   "description": "Whether the unmarshalling should produce ordered maps (LinkedHashMap) for the lines values instead of lists. It requires to have header (either defined or collected).",
+   "displayName": "Use Ordered Maps",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "title": "CSV"
+}

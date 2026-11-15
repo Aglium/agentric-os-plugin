@@ -1,0 +1,938 @@
+{
+ "consumerOnly": false,
+ "description": "Communicate with Salesforce using Java DTOs.",
+ "headers": {
+  "CamelSalesforceChangeEventSchema": {
+   "description": "The change event schema.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceChangeOrigin": {
+   "description": "The change origin.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceChangeType": {
+   "description": "The change type.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceChannel": {
+   "description": "The channel.",
+   "javaType": "String"
+  },
+  "CamelSalesforceClientId": {
+   "description": "The client id.",
+   "javaType": "String"
+  },
+  "CamelSalesforceCommitNumber": {
+   "description": "The commit number.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceCommitTimestamp": {
+   "description": "The commit timestamp.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceCommitUser": {
+   "description": "The commit user.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceCreatedDate": {
+   "description": "The created date.",
+   "javaType": "java.time.ZonedDateTime"
+  },
+  "CamelSalesforceEntityName": {
+   "description": "The entity name.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceEventType": {
+   "description": "The event type.",
+   "javaType": "String"
+  },
+  "CamelSalesforceEventUuid": {
+   "description": "The Streaming API eventUuid.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceIsTransactionEnd": {
+   "description": "Is transaction end.",
+   "javaType": "Object"
+  },
+  "CamelSalesforcePlatformEventSchema": {
+   "description": "The platform event schema.",
+   "javaType": "Object"
+  },
+  "CamelSalesforcePubSubEventId": {
+   "description": "The Pub/Sub API event id.",
+   "javaType": "String"
+  },
+  "CamelSalesforcePubSubReplayId": {
+   "description": "The Pub/Sub API replayId.",
+   "javaType": "String"
+  },
+  "CamelSalesforcePubSubRpcId": {
+   "description": "The Pub/Sub API rpc id.",
+   "javaType": "String"
+  },
+  "CamelSalesforceQueryResultTotalSize": {
+   "description": "Total number of records matching a query.",
+   "javaType": "int"
+  },
+  "CamelSalesforceRecordIds": {
+   "description": "The record ids.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceReplayId": {
+   "description": "The Streaming API replayId.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceSequenceNumber": {
+   "description": "The sequence number.",
+   "javaType": "Object"
+  },
+  "CamelSalesforceTopicName": {
+   "description": "The topic name.",
+   "javaType": "String"
+  },
+  "CamelSalesforceTransactionKey": {
+   "description": "The transaction key.",
+   "javaType": "Object"
+  }
+ },
+ "lenientProperties": false,
+ "name": "salesforce",
+ "producerOnly": false,
+ "properties": {
+  "allOrNone": {
+   "defaultValue": false,
+   "description": "Composite API option to indicate to rollback all records if any are not successful.",
+   "displayName": "All Or None",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "apexMethod": {
+   "description": "APEX method name",
+   "displayName": "Apex Method",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "apexQueryParams": {
+   "description": "Query params for APEX method",
+   "displayName": "Apex Query Params",
+   "group": "common",
+   "javaType": "java.util.Map<java.lang.String, java.lang.Object>",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "apexUrl": {
+   "description": "APEX method URL",
+   "displayName": "Apex Url",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "apiVersion": {
+   "defaultValue": "56.0",
+   "description": "Salesforce API version.",
+   "displayName": "Api Version",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "backoffIncrement": {
+   "defaultValue": "1000",
+   "description": "Backoff interval increment for Streaming connection restart attempts for failures beyond CometD auto-reconnect.",
+   "displayName": "Backoff Increment",
+   "group": "common",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "batchId": {
+   "description": "Bulk API Batch ID",
+   "displayName": "Batch Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "compositeMethod": {
+   "description": "Composite (raw) method.",
+   "displayName": "Composite Method",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "contentType": {
+   "description": "Bulk API content type, one of XML, CSV, ZIP_XML, ZIP_CSV",
+   "displayName": "Content Type",
+   "enum": [
+    "XML",
+    "CSV",
+    "JSON",
+    "ZIP_XML",
+    "ZIP_CSV",
+    "ZIP_JSON"
+   ],
+   "group": "common",
+   "javaType": "org.apache.camel.component.salesforce.api.dto.bulk.ContentType",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "defaultReplayId": {
+   "defaultValue": -1,
+   "description": "Default replayId setting if no value is found in initialReplayIdMap",
+   "displayName": "Default Replay Id",
+   "group": "common",
+   "javaType": "java.lang.Long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "eventName": {
+   "description": "Name of Platform Event, Change Data Capture Event, custom event, etc.",
+   "displayName": "Event Name",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "eventSchemaFormat": {
+   "description": "EXPANDED: Apache Avro format but doesn't strictly adhere to the record complex type. COMPACT: Apache Avro, adheres to the specification for the record complex type. This parameter is available in API version 43.0 and later.",
+   "displayName": "Event Schema Format",
+   "enum": [
+    "EXPANDED",
+    "COMPACT"
+   ],
+   "group": "producer",
+   "javaType": "org.apache.camel.component.salesforce.internal.dto.EventSchemaFormatEnum",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "eventSchemaId": {
+   "description": "The ID of the event schema.",
+   "displayName": "Event Schema Id",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "fallBackReplayId": {
+   "defaultValue": -1,
+   "description": "ReplayId to fall back to after an Invalid Replay Id response",
+   "displayName": "Fall Back Replay Id",
+   "group": "common",
+   "javaType": "java.lang.Long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "fallbackToLatestReplayId": {
+   "defaultValue": false,
+   "description": "Whether the pub/sub consumer needs to fallback to the latest replay id when the provided id is not valid. If set to false, the component will keep retrying; in order to treat this as an exception you can use BridgeExceptionHandlerToErrorHandler and handle the exception in the route.",
+   "displayName": "Fallback To Latest Replay Id",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "format": {
+   "description": "Payload format to use for Salesforce API calls, either JSON or XML, defaults to JSON. As of Camel 3.12, this option only applies to the Raw operation.",
+   "displayName": "Format",
+   "enum": [
+    "JSON",
+    "XML"
+   ],
+   "group": "common",
+   "javaType": "org.apache.camel.component.salesforce.internal.PayloadFormat",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "httpClient": {
+   "description": "Custom Jetty Http Client to use to connect to Salesforce.",
+   "displayName": "Http Client",
+   "group": "common",
+   "javaType": "org.apache.camel.component.salesforce.SalesforceHttpClient",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "includeDetails": {
+   "defaultValue": false,
+   "description": "Include details in Salesforce1 Analytics report, defaults to false.",
+   "displayName": "Include Details",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "initialReplayIdMap": {
+   "description": "Replay IDs to start from per channel name.",
+   "displayName": "Initial Replay Id Map",
+   "group": "common",
+   "javaType": "java.util.Map<java.lang.String, java.lang.Long>",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "instanceId": {
+   "description": "Salesforce1 Analytics report execution instance ID",
+   "displayName": "Instance Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "jobId": {
+   "description": "Bulk API Job ID",
+   "displayName": "Job Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "lazyStartProducer": {
+   "defaultValue": false,
+   "description": "Whether the producer should be started lazy (on the first message). By starting lazy you can use this to allow CamelContext and routes to startup in situations where a producer may otherwise fail during starting and cause the route to fail being started. By deferring this startup to be lazy then the startup failure can be handled during routing messages via Camel's routing error handlers. Beware that when the first message is processed then creating and starting the producer may take a little time and prolong the total processing time of the processing.",
+   "displayName": "Lazy Start Producer",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "limit": {
+   "description": "Limit on number of returned records. Applicable to some of the API, check the Salesforce documentation.",
+   "displayName": "Limit",
+   "group": "common",
+   "javaType": "java.lang.Integer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "locator": {
+   "description": "Locator provided by salesforce Bulk 2.0 API for use in getting results for a Query job.",
+   "displayName": "Locator",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "maxBackoff": {
+   "defaultValue": "30000",
+   "description": "Maximum backoff interval for Streaming connection restart attempts for failures beyond CometD auto-reconnect.",
+   "displayName": "Max Backoff",
+   "group": "common",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "maxRecords": {
+   "description": "The maximum number of records to retrieve per set of results for a Bulk 2.0 Query. The request is still subject to the size limits. If you are working with a very large number of query results, you may experience a timeout before receiving all the data from Salesforce. To prevent a timeout, specify the maximum number of records your client is expecting to receive in the maxRecords parameter. This splits the results into smaller sets with this value as the maximum size.",
+   "displayName": "Max Records",
+   "group": "common",
+   "javaType": "java.lang.Integer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "notFoundBehaviour": {
+   "defaultValue": "EXCEPTION",
+   "description": "Sets the behaviour of 404 not found status received from Salesforce API. Should the body be set to NULL NotFoundBehaviour#NULL or should a exception be signaled on the exchange NotFoundBehaviour#EXCEPTION - the default.",
+   "displayName": "Not Found Behaviour",
+   "enum": [
+    "EXCEPTION",
+    "NULL"
+   ],
+   "group": "common",
+   "javaType": "org.apache.camel.component.salesforce.NotFoundBehaviour",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "notifyForFields": {
+   "description": "Notify for fields, options are ALL, REFERENCED, SELECT, WHERE",
+   "displayName": "Notify For Fields",
+   "enum": [
+    "ALL",
+    "REFERENCED",
+    "SELECT",
+    "WHERE"
+   ],
+   "group": "common",
+   "javaType": "org.apache.camel.component.salesforce.internal.dto.NotifyForFieldsEnum",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "notifyForOperationCreate": {
+   "defaultValue": false,
+   "description": "Notify for create operation, defaults to false (API version &gt;= 29.0)",
+   "displayName": "Notify For Operation Create",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "notifyForOperationDelete": {
+   "defaultValue": false,
+   "description": "Notify for delete operation, defaults to false (API version &gt;= 29.0)",
+   "displayName": "Notify For Operation Delete",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "notifyForOperationUndelete": {
+   "defaultValue": false,
+   "description": "Notify for un-delete operation, defaults to false (API version &gt;= 29.0)",
+   "displayName": "Notify For Operation Undelete",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "notifyForOperationUpdate": {
+   "defaultValue": false,
+   "description": "Notify for update operation, defaults to false (API version &gt;= 29.0)",
+   "displayName": "Notify For Operation Update",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "notifyForOperations": {
+   "description": "Notify for operations, options are ALL, CREATE, EXTENDED, UPDATE (API version &lt; 29.0)",
+   "displayName": "Notify For Operations",
+   "enum": [
+    "ALL",
+    "CREATE",
+    "EXTENDED",
+    "UPDATE"
+   ],
+   "group": "common",
+   "javaType": "org.apache.camel.component.salesforce.internal.dto.NotifyForOperationsEnum",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "objectMapper": {
+   "description": "Custom Jackson ObjectMapper to use when serializing/deserializing Salesforce objects.",
+   "displayName": "Object Mapper",
+   "group": "common",
+   "javaType": "com.fasterxml.jackson.databind.ObjectMapper",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "operationName": {
+   "description": "The operation to use",
+   "displayName": "Operation Name",
+   "enum": [
+    "getVersions",
+    "getResources",
+    "getGlobalObjects",
+    "getBasicInfo",
+    "getDescription",
+    "getSObject",
+    "createSObject",
+    "updateSObject",
+    "deleteSObject",
+    "getSObjectWithId",
+    "upsertSObject",
+    "deleteSObjectWithId",
+    "getBlobField",
+    "query",
+    "queryMore",
+    "queryAll",
+    "search",
+    "apexCall",
+    "recent",
+    "getEventSchema",
+    "createJob",
+    "getJob",
+    "closeJob",
+    "abortJob",
+    "createBatch",
+    "getBatch",
+    "getAllBatches",
+    "getRequest",
+    "getResults",
+    "createBatchQuery",
+    "getQueryResultIds",
+    "getQueryResult",
+    "getRecentReports",
+    "getReportDescription",
+    "executeSyncReport",
+    "executeAsyncReport",
+    "getReportInstances",
+    "getReportResults",
+    "limits",
+    "approval",
+    "approvals",
+    "composite-tree",
+    "composite-batch",
+    "composite",
+    "compositeRetrieveSObjectCollections",
+    "compositeCreateSObjectCollections",
+    "compositeUpdateSObjectCollections",
+    "compositeUpsertSObjectCollections",
+    "compositeDeleteSObjectCollections",
+    "bulk2GetAllJobs",
+    "bulk2CreateJob",
+    "bulk2GetJob",
+    "bulk2CreateBatch",
+    "bulk2CloseJob",
+    "bulk2AbortJob",
+    "bulk2DeleteJob",
+    "bulk2GetSuccessfulResults",
+    "bulk2GetFailedResults",
+    "bulk2GetUnprocessedRecords",
+    "bulk2CreateQueryJob",
+    "bulk2GetQueryJob",
+    "bulk2GetAllQueryJobs",
+    "bulk2GetQueryJobResults",
+    "bulk2AbortQueryJob",
+    "bulk2DeleteQueryJob",
+    "raw",
+    "subscribe",
+    "pubSubSubscribe",
+    "pubSubPublish"
+   ],
+   "group": "common",
+   "javaType": "org.apache.camel.component.salesforce.internal.OperationName",
+   "kind": "path",
+   "required": true,
+   "secret": false,
+   "type": "enum"
+  },
+  "pkChunking": {
+   "defaultValue": false,
+   "description": "Use PK Chunking. Only for use in original Bulk API. Bulk 2.0 API performs PK chunking automatically, if necessary.",
+   "displayName": "Pk Chunking",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "pkChunkingChunkSize": {
+   "description": "Chunk size for use with PK Chunking. If unspecified, salesforce default is 100,000. Maximum size is 250,000.",
+   "displayName": "Pk Chunking Chunk Size",
+   "group": "common",
+   "javaType": "java.lang.Integer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "pkChunkingParent": {
+   "description": "Specifies the parent object when you're enabling PK chunking for queries on sharing objects. The chunks are based on the parent object's records rather than the sharing object's records. For example, when querying on AccountShare, specify Account as the parent object. PK chunking is supported for sharing objects as long as the parent object is supported.",
+   "displayName": "Pk Chunking Parent",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "pkChunkingStartRow": {
+   "description": "Specifies the 15-character or 18-character record ID to be used as the lower boundary for the first chunk. Use this parameter to specify a starting ID when restarting a job that failed between batches.",
+   "displayName": "Pk Chunking Start Row",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "pubSubBatchSize": {
+   "defaultValue": 100,
+   "description": "Max number of events to receive in a batch from the Pub/Sub API.",
+   "displayName": "Pub Sub Batch Size",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "pubSubDeserializeType": {
+   "defaultValue": "AVRO",
+   "description": "How to deserialize events consume from the Pub/Sub API. AVRO will try a SpecificRecord subclass if found, otherwise GenericRecord.",
+   "displayName": "Pub Sub Deserialize Type",
+   "enum": [
+    "AVRO",
+    "SPECIFIC_RECORD",
+    "GENERIC_RECORD",
+    "POJO",
+    "JSON"
+   ],
+   "group": "consumer",
+   "javaType": "org.apache.camel.component.salesforce.PubSubDeserializeType",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "pubSubPojoClass": {
+   "description": "Fully qualified class name to deserialize Pub/Sub API event to.",
+   "displayName": "Pub Sub Pojo Class",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "pubSubReplayId": {
+   "description": "The replayId value to use when subscribing to the Pub/Sub API.",
+   "displayName": "Pub Sub Replay Id",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "queryLocator": {
+   "description": "Query Locator provided by salesforce for use when a query results in more records than can be retrieved in a single call. Use this value in a subsequent call to retrieve additional records.",
+   "displayName": "Query Locator",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "rawHttpHeaders": {
+   "description": "Comma separated list of message headers to include as HTTP parameters for Raw operation.",
+   "displayName": "Raw Http Headers",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "rawMethod": {
+   "description": "HTTP method to use for the Raw operation",
+   "displayName": "Raw Method",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "rawPath": {
+   "description": "The portion of the endpoint URL after the domain name. E.g., '/services/data/v52.0/sobjects/Account/'",
+   "displayName": "Raw Path",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "rawPayload": {
+   "defaultValue": false,
+   "description": "Use raw payload String for request and response (either JSON or XML depending on format), instead of DTOs, false by default",
+   "displayName": "Raw Payload",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "rawQueryParameters": {
+   "description": "Comma separated list of message headers to include as query parameters for Raw operation. Do not url-encode values as this will be done automatically.",
+   "displayName": "Raw Query Parameters",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "replayId": {
+   "description": "The replayId value to use when subscribing to the Streaming API.",
+   "displayName": "Replay Id",
+   "group": "consumer",
+   "javaType": "java.lang.Long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "replayPreset": {
+   "defaultValue": "LATEST",
+   "description": "Replay preset for Pub/Sub API.",
+   "displayName": "Replay Preset",
+   "enum": [
+    "LATEST",
+    "EARLIEST",
+    "CUSTOM"
+   ],
+   "group": "consumer",
+   "javaType": "com.salesforce.eventbus.protobuf.ReplayPreset",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "reportId": {
+   "description": "Salesforce1 Analytics report Id",
+   "displayName": "Report Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "reportMetadata": {
+   "description": "Salesforce1 Analytics report metadata for filtering",
+   "displayName": "Report Metadata",
+   "group": "common",
+   "javaType": "org.apache.camel.component.salesforce.api.dto.analytics.reports.ReportMetadata",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "resultId": {
+   "description": "Bulk API Result ID",
+   "displayName": "Result Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "sObjectBlobFieldName": {
+   "description": "SObject blob field name",
+   "displayName": "SObject Blob Field Name",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "sObjectClass": {
+   "description": "Fully qualified SObject class name, usually generated using camel-salesforce-maven-plugin",
+   "displayName": "SObject Class",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "sObjectFields": {
+   "description": "SObject fields to retrieve",
+   "displayName": "SObject Fields",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "sObjectId": {
+   "description": "SObject ID if required by API",
+   "displayName": "SObject Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "sObjectIdName": {
+   "description": "SObject external ID field name",
+   "displayName": "SObject Id Name",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "sObjectIdValue": {
+   "description": "SObject external ID field value",
+   "displayName": "SObject Id Value",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "sObjectName": {
+   "description": "SObject name if required or supported by API",
+   "displayName": "SObject Name",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "sObjectQuery": {
+   "description": "Salesforce SOQL query string",
+   "displayName": "SObject Query",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "sObjectSearch": {
+   "description": "Salesforce SOSL search string",
+   "displayName": "SObject Search",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "streamQueryResult": {
+   "defaultValue": false,
+   "description": "If true, streams SOQL query result and transparently handles subsequent requests if there are multiple pages. Otherwise, results are returned one page at a time.",
+   "displayName": "Stream query result",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "topicName": {
+   "description": "The name of the topic/channel to use",
+   "displayName": "Topic Name",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "updateTopic": {
+   "defaultValue": false,
+   "description": "Whether to update an existing Push Topic when using the Streaming API, defaults to false",
+   "displayName": "Update Topic",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "scheme": "salesforce",
+ "syntax": "salesforce:operationName:topicName",
+ "title": "Salesforce",
+ "version": "4.14.9"
+}

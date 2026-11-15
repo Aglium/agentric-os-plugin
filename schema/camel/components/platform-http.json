@@ -1,0 +1,286 @@
+{
+ "consumerOnly": true,
+ "description": "Expose HTTP endpoints using the HTTP server available in the current platform.",
+ "headers": {},
+ "lenientProperties": false,
+ "name": "platform-http",
+ "producerOnly": false,
+ "properties": {
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "consumes": {
+   "description": "The content type this endpoint accepts as an input, such as application/xml or application/json. null or &#42;/&#42; mean no restriction.",
+   "displayName": "Consumes",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "cookieDomain": {
+   "description": "Sets which server can receive cookies.",
+   "displayName": "Cookie Domain",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "cookieHttpOnly": {
+   "defaultValue": false,
+   "description": "Sets whether to prevent client side scripts from accessing created cookies.",
+   "displayName": "Cookie Http Only",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "cookieMaxAge": {
+   "description": "Sets the maximum cookie age in seconds.",
+   "displayName": "Cookie Max Age",
+   "group": "consumer",
+   "javaType": "java.lang.Long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "cookiePath": {
+   "defaultValue": "/",
+   "description": "Sets the URL path that must exist in the requested URL in order to send the Cookie.",
+   "displayName": "Cookie Path",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "cookieSameSite": {
+   "defaultValue": "Lax",
+   "description": "Sets whether to prevent the browser from sending cookies along with cross-site requests.",
+   "displayName": "Cookie Same Site",
+   "enum": [
+    "STRICT",
+    "LAX",
+    "NONE"
+   ],
+   "group": "consumer",
+   "javaType": "org.apache.camel.component.platform.http.cookie.CookieConfiguration.CookieSameSite",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "cookieSecure": {
+   "defaultValue": false,
+   "description": "Sets whether the cookie is only sent to the server with an encrypted request over HTTPS.",
+   "displayName": "Cookie Secure",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "fileNameExtWhitelist": {
+   "description": "A comma or whitespace separated list of file extensions. Uploads having these extensions will be stored locally. Null value or asterisk () will allow all files.",
+   "displayName": "File Name Ext Whitelist",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "handleWriteResponseError": {
+   "defaultValue": false,
+   "description": "When Camel is complete processing the message, and the HTTP server is writing response. This option controls whether Camel should catch any failure during writing response and store this on the Exchange, which allows onCompletion/UnitOfWork to regard the Exchange as failed and have access to the caused exception from the HTTP server.",
+   "displayName": "Handle Write Response Error",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "headerFilterStrategy": {
+   "description": "To use a custom HeaderFilterStrategy to filter headers to and from Camel message.",
+   "displayName": "Header Filter Strategy",
+   "group": "advanced",
+   "javaType": "org.apache.camel.spi.HeaderFilterStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "httpMethodRestrict": {
+   "description": "A comma separated list of HTTP methods to serve, e.g. GET,POST . If no methods are specified, all methods will be served.",
+   "displayName": "Http Method Restrict",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "matchOnUriPrefix": {
+   "defaultValue": false,
+   "description": "Whether or not the consumer should try to find a target consumer by matching the URI prefix if no exact match is found.",
+   "displayName": "Match On Uri Prefix",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "muteException": {
+   "defaultValue": true,
+   "description": "If enabled and an Exchange failed processing on the consumer side the response's body won't contain the exception's stack trace.",
+   "displayName": "Mute Exception",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "path": {
+   "description": "The path under which this endpoint serves the HTTP requests, for proxy use 'proxy'",
+   "displayName": "Path",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "platformHttpEngine": {
+   "description": "An HTTP Server engine implementation to serve the requests of this endpoint.",
+   "displayName": "Platform Http Engine",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.platform.http.spi.PlatformHttpEngine",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "populateBodyWithForm": {
+   "defaultValue": true,
+   "description": "Whether to populate the message Body with a Map containing application/x-www-form-urlencoded form properties.",
+   "displayName": "Populate Body With Form",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "produces": {
+   "description": "The content type this endpoint produces, such as application/xml or application/json.",
+   "displayName": "Produces",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "requestTimeout": {
+   "description": "The period in milliseconds after which the request should be timed out.",
+   "displayName": "Request Timeout",
+   "group": "consumer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "returnHttpRequestHeaders": {
+   "defaultValue": false,
+   "description": "Whether to include HTTP request headers (Accept, User-Agent, etc.) into HTTP response produced by this endpoint.",
+   "displayName": "Return Http Request Headers",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useBodyHandler": {
+   "defaultValue": true,
+   "description": "Whether to use BodyHandler for the request. If set to false then the request will no be read and parsed.",
+   "displayName": "Use Body Handler",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useCookieHandler": {
+   "defaultValue": false,
+   "description": "Whether to enable the Cookie Handler that allows Cookie addition, expiry, and retrieval (currently only supported by camel-platform-http-vertx)",
+   "displayName": "Use Cookie Handler",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useStreaming": {
+   "defaultValue": false,
+   "description": "Whether to use streaming for large requests and responses (currently only supported by camel-platform-http-vertx)",
+   "displayName": "Use Streaming",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "scheme": "platform-http",
+ "syntax": "platform-http:path",
+ "title": "Platform HTTP",
+ "version": "4.14.9"
+}

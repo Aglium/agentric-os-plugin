@@ -1,0 +1,103 @@
+[
+  {
+    "key": "channel",
+    "label": "A channel",
+    "gives": "messages come in and go out through it",
+    "needs": [
+      "message.send",
+      "message.get",
+      "message.find"
+    ],
+    "may": [],
+    "tells": [
+      "message.received"
+    ],
+    "example": "a mailbox, WhatsApp"
+  },
+  {
+    "key": "knowledge",
+    "label": "A place knowledge is kept",
+    "gives": "what the business knows is searched and read in it",
+    "needs": [
+      "knowledge.search",
+      "knowledge.read",
+      "knowledge.list"
+    ],
+    "may": [
+      "knowledge.save",
+      "knowledge.remove"
+    ],
+    "tells": [],
+    "example": "a repository of documents"
+  },
+  {
+    "key": "meetings",
+    "label": "A calendar",
+    "gives": "free times of a person are found and meetings are put in, moved and cancelled; it tells what became of them",
+    "needs": [
+      "meeting.freeTimes",
+      "meeting.create"
+    ],
+    "may": [
+      "meeting.move",
+      "meeting.cancel",
+      "meeting.recording",
+      "meeting.get"
+    ],
+    "tells": [
+      "meeting.held",
+      "meeting.moved",
+      "meeting.cancelled"
+    ],
+    "example": "Google Calendar, Microsoft 365"
+  },
+  {
+    "key": "booking",
+    "label": "A booking service",
+    "gives": "a person's booking link is given out; it tells when somebody booked, moved or cancelled, naming them by their address",
+    "needs": [
+      "booking.link"
+    ],
+    "may": [
+      "booking.get"
+    ],
+    "tells": [
+      "booking.made",
+      "booking.moved",
+      "booking.cancelled"
+    ],
+    "example": "Calendly"
+  },
+  {
+    "key": "recordings",
+    "label": "A recorder of calls",
+    "gives": "calls are recorded and their transcript or recording is given; it tells when one is ready",
+    "needs": [
+      "recording.get"
+    ],
+    "may": [
+      "recording.join"
+    ],
+    "tells": [
+      "recording.ready"
+    ],
+    "example": "Fireflies, tl;dv, Recall.ai"
+  },
+  {
+    "key": "documents",
+    "label": "A reader of documents",
+    "gives": "files given to a case are read page by page, and agents and steps find what is in them, with the page it is on",
+    "needs": [
+      "documents.add",
+      "documents.search",
+      "documents.page",
+      "documents.list"
+    ],
+    "may": [
+      "documents.file",
+      "documents.forget"
+    ],
+    "tells": [],
+    "example": "the documents connection that comes with the platform"
+  }
+]

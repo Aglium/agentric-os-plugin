@@ -1,0 +1,448 @@
+{
+ "consumerOnly": false,
+ "description": "Expose SOAP WebServices using Apache CXF or connect to external WebServices using CXF WS client.",
+ "headers": {
+  "CamelAuthentication": {
+   "description": "The authentication",
+   "javaType": "javax.security.auth.Subject"
+  },
+  "CamelCxfOperationName": {
+   "description": "The name of the operation.",
+   "javaType": "String"
+  },
+  "CamelCxfOperationNamespace": {
+   "description": "The operation namespace.",
+   "javaType": "String"
+  },
+  "CamelDestinationOverrideUrl": {
+   "description": "The destination override url",
+   "javaType": "String"
+  },
+  "RequestContext": {
+   "description": "The request context",
+   "javaType": "Object"
+  },
+  "ResponseContext": {
+   "description": "The response context",
+   "javaType": "Map<String, Object>"
+  }
+ },
+ "lenientProperties": false,
+ "name": "cxf",
+ "producerOnly": false,
+ "properties": {
+  "address": {
+   "description": "The service publish address.",
+   "displayName": "Address",
+   "group": "service",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "allowStreaming": {
+   "defaultValue": false,
+   "description": "This option controls whether the CXF component, when running in PAYLOAD mode, will DOM parse the incoming messages into DOM Elements or keep the payload as a javax.xml.transform.Source object that would allow streaming in some cases.",
+   "displayName": "Allow Streaming",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "beanId": {
+   "description": "To lookup an existing configured CxfEndpoint. Must used bean: as prefix.",
+   "displayName": "Bean Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "bindingId": {
+   "description": "The bindingId for the service model to use.",
+   "displayName": "Binding Id",
+   "group": "service",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "bus": {
+   "description": "To use a custom configured CXF Bus.",
+   "displayName": "Bus",
+   "group": "advanced",
+   "javaType": "org.apache.cxf.Bus",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "continuationTimeout": {
+   "defaultValue": "30000",
+   "description": "This option is used to set the CXF continuation timeout which could be used in CxfConsumer by default when the CXF server is using Jetty or Servlet transport.",
+   "displayName": "Continuation Timeout",
+   "group": "advanced",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "cookieHandler": {
+   "description": "Configure a cookie handler to maintain a HTTP session",
+   "displayName": "Cookie Handler",
+   "group": "producer",
+   "javaType": "org.apache.camel.http.base.cookie.CookieHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "cxfBinding": {
+   "description": "To use a custom CxfBinding to control the binding between Camel Message and CXF Message.",
+   "displayName": "Cxf Binding",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.cxf.common.CxfBinding",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "cxfConfigurer": {
+   "description": "This option could apply the implementation of org.apache.camel.component.cxf.CxfEndpointConfigurer which supports to configure the CXF endpoint in programmatic way. User can configure the CXF server and client by implementing configure{ServerClient} method of CxfEndpointConfigurer.",
+   "displayName": "Cxf Configurer",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.cxf.jaxws.CxfConfigurer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "dataFormat": {
+   "defaultValue": "POJO",
+   "description": "The data type messages supported by the CXF endpoint.",
+   "displayName": "Data Format",
+   "enum": [
+    "PAYLOAD",
+    "RAW",
+    "MESSAGE",
+    "CXF_MESSAGE",
+    "POJO"
+   ],
+   "group": "common",
+   "javaType": "org.apache.camel.component.cxf.common.DataFormat",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "defaultBus": {
+   "defaultValue": false,
+   "description": "Will set the default bus when CXF endpoint create a bus by itself",
+   "displayName": "Default Bus",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "defaultOperationName": {
+   "description": "This option will set the default operationName that will be used by the CxfProducer which invokes the remote service.",
+   "displayName": "Default Operation Name",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "defaultOperationNamespace": {
+   "description": "This option will set the default operationNamespace that will be used by the CxfProducer which invokes the remote service.",
+   "displayName": "Default Operation Namespace",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "headerFilterStrategy": {
+   "description": "To use a custom HeaderFilterStrategy to filter header to and from Camel message.",
+   "displayName": "Header Filter Strategy",
+   "group": "advanced",
+   "javaType": "org.apache.camel.spi.HeaderFilterStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "hostnameVerifier": {
+   "description": "The hostname verifier to be used. Use the # notation to reference a HostnameVerifier from the registry.",
+   "displayName": "Hostname Verifier",
+   "group": "producer",
+   "javaType": "javax.net.ssl.HostnameVerifier",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "lazyStartProducer": {
+   "defaultValue": false,
+   "description": "Whether the producer should be started lazy (on the first message). By starting lazy you can use this to allow CamelContext and routes to startup in situations where a producer may otherwise fail during starting and cause the route to fail being started. By deferring this startup to be lazy then the startup failure can be handled during routing messages via Camel's routing error handlers. Beware that when the first message is processed then creating and starting the producer may take a little time and prolong the total processing time of the processing.",
+   "displayName": "Lazy Start Producer",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "loggingFeatureEnabled": {
+   "defaultValue": false,
+   "description": "This option enables CXF Logging Feature which writes inbound and outbound SOAP messages to log.",
+   "displayName": "Logging Feature Enabled",
+   "group": "logging",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "loggingSizeLimit": {
+   "defaultValue": 49152,
+   "description": "To limit the total size of number of bytes the logger will output when logging feature has been enabled and -1 for no limit.",
+   "displayName": "Logging Size Limit",
+   "group": "logging",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "mergeProtocolHeaders": {
+   "defaultValue": false,
+   "description": "Whether to merge protocol headers. If enabled then propagating headers between Camel and CXF becomes more consistent and similar. For more details see CAMEL-6393.",
+   "displayName": "Merge Protocol Headers",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "mtomEnabled": {
+   "defaultValue": false,
+   "description": "To enable MTOM (attachments). This requires to use POJO or PAYLOAD data format mode.",
+   "displayName": "Mtom Enabled",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "password": {
+   "description": "This option is used to set the basic authentication information of password for the CXF client.",
+   "displayName": "Password",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  },
+  "portName": {
+   "description": "The endpoint name this service is implementing, it maps to the wsdl:portname. In the format of ns:PORT_NAME where ns is a namespace prefix valid at this scope.",
+   "displayName": "Port Name",
+   "group": "service",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "properties": {
+   "description": "To set additional CXF options using the key/value pairs from the Map. For example to turn on stacktraces in SOAP faults, properties.faultStackTraceEnabled=true. This is a multi-value option with prefix: properties.",
+   "displayName": "Properties",
+   "group": "advanced",
+   "javaType": "java.util.Map<java.lang.String, java.lang.Object>",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "properties.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "publishedEndpointUrl": {
+   "description": "This option can override the endpointUrl that published from the WSDL which can be accessed with service address url plus wsd",
+   "displayName": "Published Endpoint Url",
+   "group": "service",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "schemaValidationEnabled": {
+   "defaultValue": false,
+   "description": "Enable schema validation for request and response. Disabled by default for performance reason",
+   "displayName": "Schema Validation Enabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "serviceClass": {
+   "description": "The class name of the SEI (Service Endpoint Interface) class which could have JSR181 annotation or not.",
+   "displayName": "Service Class",
+   "group": "service",
+   "javaType": "java.lang.Class<java.lang.Object>",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "serviceName": {
+   "description": "The service name this service is implementing, it maps to the wsdl:servicename.",
+   "displayName": "Service Name",
+   "group": "service",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "skipFaultLogging": {
+   "defaultValue": false,
+   "description": "This option controls whether the PhaseInterceptorChain skips logging the Fault that it catches.",
+   "displayName": "Skip Fault Logging",
+   "group": "logging",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "skipPayloadMessagePartCheck": {
+   "defaultValue": false,
+   "description": "Sets whether SOAP message validation should be disabled.",
+   "displayName": "Skip Payload Message Part Check",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "sslContextParameters": {
+   "description": "The Camel SSL setting reference. Use the # notation to reference the SSL Context.",
+   "displayName": "Ssl Context Parameters",
+   "group": "producer",
+   "javaType": "org.apache.camel.support.jsse.SSLContextParameters",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "synchronous": {
+   "defaultValue": false,
+   "description": "Sets whether synchronous processing should be strictly used",
+   "displayName": "Synchronous",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "username": {
+   "description": "This option is used to set the basic authentication information of username for the CXF client.",
+   "displayName": "Username",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  },
+  "wrapped": {
+   "defaultValue": false,
+   "description": "Which kind of operation that CXF endpoint producer will invoke",
+   "displayName": "Wrapped",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "wrappedStyle": {
+   "defaultValue": false,
+   "description": "The WSDL style that describes how parameters are represented in the SOAP body. If the value is false, CXF will chose the document-literal unwrapped style, If the value is true, CXF will chose the document-literal wrapped style",
+   "displayName": "Wrapped Style",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "wsdlURL": {
+   "description": "The location of the WSDL. Can be on the classpath, file system, or be hosted remotely.",
+   "displayName": "Wsdl URL",
+   "group": "service",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  }
+ },
+ "scheme": "cxf",
+ "syntax": "cxf:beanId:address",
+ "title": "CXF",
+ "version": "4.14.9"
+}

@@ -1,0 +1,525 @@
+[
+  {
+    "key": "callConnector",
+    "name": "Call a connector",
+    "description": "Reads from or acts in an external system. A read is called directly; anything else is a command and goes through the policy.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${callConnector}",
+    "async": true,
+    "fields": [
+      {
+        "name": "connector",
+        "label": "Connector",
+        "kind": "connector",
+        "required": true,
+        "description": "Which connector to call"
+      },
+      {
+        "name": "operation",
+        "label": "Operation",
+        "kind": "operation",
+        "required": true,
+        "description": "Which of its operations"
+      },
+      {
+        "name": "arg",
+        "label": "Arguments",
+        "kind": "group",
+        "required": false,
+        "description": "One field per argument of the operation. A name with a dot gives one part of an argument that holds several: fields.stage is the stage among the fields"
+      },
+      {
+        "name": "arguments",
+        "label": "All arguments at once",
+        "kind": "expression",
+        "required": false,
+        "description": "Instead of separate arguments: an expression giving an object, e.g. a command an agent proposed"
+      },
+      {
+        "name": "resultVariable",
+        "label": "Store the result as",
+        "kind": "text",
+        "required": false,
+        "description": "Name of the variable that receives the answer"
+      },
+      {
+        "name": "reason",
+        "label": "Why it is asked for",
+        "kind": "expression",
+        "required": false,
+        "description": "Shown to whoever has to approve it: what it is for and what depends on it"
+      }
+    ],
+    "errors": [
+      "NOT_FOUND",
+      "REJECTED",
+      "APPROVAL_REQUIRED",
+      "DENIED",
+      "NOT_VERIFIED"
+    ]
+  },
+  {
+    "key": "runAgent",
+    "name": "Ask an agent",
+    "description": "Asks an agent what to do. The agent decides and proposes; nothing it proposes is carried out by this step.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${runAgent}",
+    "async": true,
+    "fields": [
+      {
+        "name": "agent",
+        "label": "Agent",
+        "kind": "agent",
+        "required": true,
+        "description": "Which agent profile"
+      },
+      {
+        "name": "input",
+        "label": "What the agent is told",
+        "kind": "group",
+        "required": false,
+        "description": "One field per thing the agent should know"
+      },
+      {
+        "name": "resultVariable",
+        "label": "Store the decision as",
+        "kind": "text",
+        "required": false,
+        "description": "Default: decision"
+      }
+    ],
+    "errors": [
+      "AGENT_SITUATION"
+    ]
+  },
+  {
+    "key": "handleCase",
+    "name": "Agent handles the case",
+    "description": "An agent handles the case towards a goal, move by move: it reads, acts, waits for news, asks an employee, writes back, until the agent that checks confirms the goal against what the connected systems show. When a limit is reached, the case goes to a person with everything the agent did and why.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${handleCase}",
+    "async": true,
+    "fields": [
+      {
+        "name": "agent",
+        "label": "Agent",
+        "kind": "agent",
+        "required": true,
+        "description": "Who handles the case; what it may read and do comes from its profile"
+      },
+      {
+        "name": "goal",
+        "label": "Goal",
+        "kind": "text",
+        "required": true,
+        "description": "What is to be true at the end, with places for values like any text"
+      },
+      {
+        "name": "checker",
+        "label": "Who confirms it is reached",
+        "kind": "agent",
+        "required": true,
+        "description": "The agent that confirms the goal against what the connected systems show; the case closes only then"
+      },
+      {
+        "name": "mayWait",
+        "label": "May wait for news or a time",
+        "kind": "text",
+        "required": false,
+        "description": "true: it may wait, for news about the case or for a time"
+      },
+      {
+        "name": "waitHours",
+        "label": "Longest wait, in hours",
+        "kind": "text",
+        "required": false,
+        "description": "Default: 24"
+      },
+      {
+        "name": "mayAsk",
+        "label": "May ask an employee",
+        "kind": "text",
+        "required": false,
+        "description": "true: it may ask a question; the question goes to the Inbox and the case waits for the answer"
+      },
+      {
+        "name": "askRole",
+        "label": "Whom it asks",
+        "kind": "text",
+        "required": false,
+        "description": "A role of People; empty: anybody"
+      },
+      {
+        "name": "mayWrite",
+        "label": "May write back",
+        "kind": "text",
+        "required": false,
+        "description": "true: it may write to whoever the case is about, through the channel the case came by"
+      },
+      {
+        "name": "mayRemember",
+        "label": "May remember for later cases",
+        "kind": "text",
+        "required": false,
+        "description": "true: it may remember something about the subject for later cases"
+      },
+      {
+        "name": "within",
+        "label": "Finish within",
+        "kind": "text",
+        "required": false,
+        "description": "A duration such as P3D (3 days) or PT12H (12 hours); empty: no time limit"
+      },
+      {
+        "name": "maxMoves",
+        "label": "At most so many moves",
+        "kind": "text",
+        "required": false,
+        "description": "Empty: no limit"
+      },
+      {
+        "name": "spendLimit",
+        "label": "AI spend for one case at most",
+        "kind": "text",
+        "required": false,
+        "description": "Dollars; empty: no limit"
+      },
+      {
+        "name": "blocks",
+        "label": "Blocks to reach the goal with",
+        "kind": "text",
+        "required": false,
+        "description": "The goal as facts and the blocks the workflow is built of, each with what it needs, what it gives, its moves and the questions that say how it ended: the way to the goal is found from the facts, and found again after every block; the agent only answers the questions and fills in the moves"
+      },
+      {
+        "name": "plan",
+        "label": "Plans first",
+        "kind": "text",
+        "required": false,
+        "description": "true: the agent's first move is a plan of numbered steps, which the checker reads; it then follows the plan, makes a new one only when news contradicts it, and the goal is reached only with every step done"
+      },
+      {
+        "name": "order",
+        "label": "The order of moves",
+        "kind": "text",
+        "required": false,
+        "description": "One rule a line, such as “task.create after WRITE and NEWS”: a move that comes earlier is not made. Moves: WRITE, ASK, WAIT, REMEMBER, DONE, ACTION or an action by its operation; after them also NEWS and ANSWER"
+      },
+      {
+        "name": "input",
+        "label": "What else the agent is told",
+        "kind": "group",
+        "required": false,
+        "description": "One field per thing the agent should know besides what opened the case"
+      }
+    ],
+    "errors": [
+      "HANDED_OVER"
+    ]
+  },
+  {
+    "key": "waitForEvent",
+    "name": "Wait for an event",
+    "description": "Waits until an event of a type about a subject arrives. Put a boundary timer on it for a deadline.",
+    "element": "bpmn:ReceiveTask",
+    "attachment": "listener",
+    "expression": "${waitForEvent}",
+    "async": false,
+    "fields": [
+      {
+        "name": "eventType",
+        "label": "Event type",
+        "kind": "text",
+        "required": true,
+        "description": "Type of the awaited event; several with commas between them, or * for anything about the subject"
+      },
+      {
+        "name": "subjectId",
+        "label": "About",
+        "kind": "expression",
+        "required": true,
+        "description": "Id of the subject the event must be about"
+      },
+      {
+        "name": "subjectType",
+        "label": "Subject type",
+        "kind": "text",
+        "required": false,
+        "description": "Leave empty to accept any"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "key": "escalate",
+    "name": "Hand over to a person",
+    "description": "Marks the case escalated; it stays on the operators' list until someone takes it.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${escalate}",
+    "async": false,
+    "fields": [
+      {
+        "name": "reason",
+        "label": "Reason",
+        "kind": "text",
+        "required": false,
+        "description": "Shown to the operator"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "key": "writeText",
+    "name": "Write a text",
+    "description": "Writes a letter, a message or a title from a template and what the case knows. {{name}} puts a value in; {{#name}}...{{/name}} keeps a part only when there is such a value.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${writeText}",
+    "async": false,
+    "fields": [
+      {
+        "name": "template",
+        "label": "One of the texts",
+        "kind": "text",
+        "required": false,
+        "description": "A text kept once and used by every workflow that names it"
+      },
+      {
+        "name": "text",
+        "label": "Or a text of this step alone",
+        "kind": "text",
+        "required": false,
+        "description": "With places for values in double braces"
+      },
+      {
+        "name": "instead",
+        "label": "Use this text instead, when there is one",
+        "kind": "expression",
+        "required": false,
+        "description": "E.g. a text of their own somebody keeps in another system"
+      },
+      {
+        "name": "html",
+        "label": "The text is HTML",
+        "kind": "text",
+        "required": false,
+        "description": "true: the text is an HTML letter or page, and the values put in are written so that they cannot break it"
+      },
+      {
+        "name": "resultVariable",
+        "label": "Store the text as",
+        "kind": "text",
+        "required": true,
+        "description": "Name of the variable that receives it"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "key": "transcribe",
+    "name": "Turn a call into text",
+    "description": "Turns the recording of a call into text, by a transcription of the library (which models, in which order), or takes the text a recorder made as it is.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${transcribe}",
+    "async": true,
+    "fields": [
+      {
+        "name": "transcription",
+        "label": "How it is turned into text",
+        "kind": "transcription",
+        "required": false,
+        "description": "One of the transcriptions kept under Transcription"
+      },
+      {
+        "name": "recording",
+        "label": "The recording",
+        "kind": "expression",
+        "required": false,
+        "description": "What a connection gave for the recording of the call, such as what “Take the recording of a meeting” read"
+      },
+      {
+        "name": "transcript",
+        "label": "Or the text a recorder made",
+        "kind": "expression",
+        "required": false,
+        "description": "When a recorder already gives the text of the call, it is taken as it is"
+      },
+      {
+        "name": "participants",
+        "label": "Who was on the call",
+        "kind": "expression",
+        "required": false,
+        "description": "Their names, so that the text says who speaks"
+      },
+      {
+        "name": "words",
+        "label": "Words to know",
+        "kind": "expression",
+        "required": false,
+        "description": "Names and words the call may contain, to spell them right"
+      },
+      {
+        "name": "resultVariable",
+        "label": "Store the text as",
+        "kind": "text",
+        "required": false,
+        "description": "Default: call"
+      }
+    ],
+    "errors": [
+      "NOT_TRANSCRIBED"
+    ]
+  },
+  {
+    "key": "decide",
+    "name": "Decide by rules",
+    "description": "Asks a table of rules and stores what its first matching rule says. No rule matching gives an empty answer.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${decide}",
+    "async": false,
+    "fields": [
+      {
+        "name": "rules",
+        "label": "Rules",
+        "kind": "text",
+        "required": true,
+        "description": "Which table of rules to ask; several with commas between them are asked in turn until one answers"
+      },
+      {
+        "name": "resultVariable",
+        "label": "Store the answer as",
+        "kind": "text",
+        "required": false,
+        "description": "Default: decision"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "key": "calculate",
+    "name": "Work out by a calculation",
+    "description": "Works numbers out by the formulas of a calculation under Rules, line by line: no AI, nothing paid. Every line is kept with the formula and the values it came from. A person may check the values first, as an action waiting for approval.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${calculate}",
+    "async": false,
+    "fields": [
+      {
+        "name": "calculation",
+        "label": "Calculation",
+        "kind": "calculation",
+        "required": true,
+        "description": "Which calculation to work out; or a value of the case that names one, so that rules choose"
+      },
+      {
+        "name": "in",
+        "label": "What it is given",
+        "kind": "group",
+        "required": false,
+        "description": "One field per line the calculation is given, such as in.revenue; a line with a value per column takes a list of numbers or a number for each column"
+      },
+      {
+        "name": "resultVariable",
+        "label": "Keep the lines as",
+        "kind": "text",
+        "required": false,
+        "description": "Default: calculation. Later steps name a line so: calculation.value, and a column of a line by columns so: calculation.revenue.2026"
+      },
+      {
+        "name": "check",
+        "label": "A person checks the values first",
+        "kind": "text",
+        "required": false,
+        "description": "person: the values go to the Inbox before they are worked out; the person may change any, saying why"
+      },
+      {
+        "name": "reason",
+        "label": "What the person is told",
+        "kind": "expression",
+        "required": false,
+        "description": "Shown with the values to check: what they are for and what to look at"
+      },
+      {
+        "name": "title",
+        "label": "Heading of the Excel file",
+        "kind": "expression",
+        "required": false,
+        "description": "Such as the name of whom it is about; default: the calculation's name"
+      }
+    ],
+    "errors": [
+      "NOT_CALCULATED",
+      "NOT_BALANCED",
+      "DENIED"
+    ]
+  },
+  {
+    "key": "remember",
+    "name": "Remember about the subject",
+    "description": "Keeps something about what the case is about beyond the case itself, so that a later case can tell what was already done. Read back with ${memory.of(execution, 'key')}.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${remember}",
+    "async": false,
+    "fields": [
+      {
+        "name": "key",
+        "label": "Remember as",
+        "kind": "text",
+        "required": true,
+        "description": "The name it is found by later"
+      },
+      {
+        "name": "value",
+        "label": "What to remember",
+        "kind": "expression",
+        "required": false,
+        "description": "A text or a value of the case"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "key": "conclude",
+    "name": "Say how it ended",
+    "description": "Names what the case closes as and why, in the case's history.",
+    "element": "bpmn:ServiceTask",
+    "attachment": "delegate",
+    "expression": "${conclude}",
+    "async": false,
+    "fields": [
+      {
+        "name": "outcome",
+        "label": "It ends as",
+        "kind": "text",
+        "required": true,
+        "description": "E.g. SKIPPED when there was nothing to do"
+      },
+      {
+        "name": "reason",
+        "label": "Why",
+        "kind": "expression",
+        "required": false,
+        "description": "Shown in the case's history"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "key": "approval",
+    "name": "Approval by a person",
+    "description": "Where the process waits while a command needs a person's decision. Completes with variable approved.",
+    "element": "bpmn:UserTask",
+    "attachment": "category",
+    "expression": "approval",
+    "async": false,
+    "fields": [],
+    "errors": []
+  }
+]

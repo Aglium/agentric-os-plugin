@@ -12,7 +12,7 @@ jobs:
     container: python:${{ matrix.python }}-slim
     steps:
       - uses: actions/checkout@v4
-      - run: python3 -m py_compile server/agentric_os_mcp.py server/test_agentric_os_mcp.py ci/release.py
+      - run: python3 -m py_compile server/*.py ci/release.py
       - run: python3 -m unittest discover -s server -v
       - run: python3 ci/release.py check
   plugin:

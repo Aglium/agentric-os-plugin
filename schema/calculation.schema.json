@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aglium.com/agentric-os-schema/calculation.schema.json",
+  "title": "A calculation (calculations/<name>.yaml of a solution)",
+  "description": "Numbers worked out by formulas line by line, as Excel would, with no AI and nothing paid. A line is given by the step that works the calculation out, or worked out by its formula from the lines above it; a formula is written as in Excel with the keys of lines where Excel has cells. With workbook the business's own Excel model works it out instead: each line names its cell, not a formula.",
+  "type": "object",
+  "required": ["lines"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {"type": "string", "description": "What people call it"},
+    "description": {"type": "string"},
+    "workbook": {"type": "string", "pattern": "\\.xlsx$", "description": "The business's own Excel model, next to solution.yaml"},
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key"],
+        "additionalProperties": false,
+        "properties": {
+          "key": {"type": ["string", "integer"], "description": "Such as a year: 2024"},
+          "name": {"type": "string"},
+          "group": {"type": "string", "description": "Such as past or forecast; a line may have a formula per group"}
+        }
+      },
+      "description": "Columns of lines that have a value per column, such as the years of a forecast"
+    },
+    "lines": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["key"],
+        "additionalProperties": false,
+        "properties": {
+          "key": {"type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$", "description": "The name formulas and later steps use: calculation.<key>"},
+          "name": {"type": "string", "description": "What a person reads"},
+          "given": {"type": "boolean", "description": "true: the step gives it (in.<key>); otherwise it is worked out by its formula"},
+          "type": {"enum": ["money", "share", "times", "number"], "description": "For showing it: money, share (0.15 is 15%), times (a multiple), number"},
+          "formula": {"type": "string", "description": "As in Excel, with the keys of the lines above: price * quantity, IF(...), ROUND(...); with columns also prev, at, last, n, range, sum, avg, npv, irr"},
+          "cell": {"type": "string", "description": "With a workbook: the cell it is in, such as Valuation!C7"},
+          "note": {"type": "string", "description": "Where the value comes from, in words"},
+          "example": {"type": ["number", "string", "array", "object"], "description": "A value of a given line to try the calculation with"},
+          "examples": {"type": "object", "description": "With columns: an example per column"},
+          "columns": {"type": "boolean", "description": "true: the line has a value per column"},
+          "groups": {"type": "object", "additionalProperties": {"type": "string"}, "description": "A formula per group of columns"},
+          "check": {"type": "boolean", "description": "true: its formula has to come to zero, such as assets - liabilities - equity"},
+          "tolerance": {"type": "number", "minimum": 0, "description": "How far from zero a check may be; 0.01 unless said"}
+        }
+      }
+    }
+  }
+}

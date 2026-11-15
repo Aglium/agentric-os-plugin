@@ -1,0 +1,53 @@
+{
+  "description": "What the program that runs a connection's routes carries: the Camel version its routes are written for, what it has built in, and what the platform's image carries besides, so that a connection using only these starts without a network. Anything else a route names is fetched once when the connection is first started.",
+  "camelVersion": "4.14.9",
+  "routesFormat": "Camel YAML DSL",
+  "builtIn": [
+    "direct",
+    "bean",
+    "http",
+    "jackson",
+    "jq",
+    "mail",
+    "git",
+    "timer",
+    "platform-http",
+    "yaml-dsl"
+  ],
+  "carried": {
+    "camel": [
+      "sql",
+      "jdbc",
+      "mongodb",
+      "file",
+      "ftp",
+      "sftp",
+      "aws2-s3",
+      "kafka",
+      "spring-rabbitmq",
+      "jms",
+      "activemq",
+      "paho-mqtt5",
+      "aws2-sqs",
+      "csv",
+      "jacksonXml",
+      "xpath",
+      "jsonpath",
+      "groovy",
+      "zipFile",
+      "rest-openapi",
+      "cxf",
+      "imap",
+      "slack",
+      "telegram",
+      "salesforce",
+      "google-sheets",
+      "google-drive"
+    ],
+    "libraries": [
+      "org.postgresql:postgresql:42.7.4",
+      "org.mariadb.jdbc:mariadb-java-client:3.5.1",
+      "com.microsoft.sqlserver:mssql-jdbc:12.8.1.jre11"
+    ]
+  }
+}

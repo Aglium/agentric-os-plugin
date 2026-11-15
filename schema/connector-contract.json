@@ -1,0 +1,93 @@
+{
+  "description": "What the routes of a connection rely on and must keep to, whatever system they connect. A builder of routes follows it; the program that runs the routes and the core enforce it.",
+  "operationRoute": {
+    "from": "direct:{connector}.{operation}",
+    "rule": "Every operation of the description, and every source of events that names an operation, is carried out by exactly one route starting at this address. The program refuses to start when one is missing.",
+    "body": "The arguments, as a map",
+    "answer": "JSON describing the business thing with the details the description promises (normalise the system's answer, usually with jq), or nothing"
+  },
+  "routeStyle": [
+    "Camel YAML DSL only: no Java, no XML, no custom processors, no inline scripts",
+    "Every route and every step has a stable id that says what it does",
+    "Options of an endpoint go under parameters:, not into the address after ?",
+    "Expressions in simple or jq",
+    "Settings are named {{key}}, optional ones {{key:default}}, or {{?key}} for an option of an endpoint; credentials never go into an address, a log line or an error message"
+  ],
+  "failures": {
+    "http": {
+      "404": "NOT_FOUND",
+      "429": "UNAVAILABLE",
+      "5xx": "UNAVAILABLE",
+      "other 4xx": "REJECTED"
+    },
+    "rule": "Let HTTP failures through: the program turns them into these answers. To refuse from inside a route, throw one of the refusals with a message a person can act on: it is shown to whoever asked.",
+    "refusals": {
+      "NOT_FOUND": "com.aglium.agentricos.runner.Refusal$NotFound",
+      "REJECTED": "com.aglium.agentricos.runner.Refusal$Rejected",
+      "UNAVAILABLE": "com.aglium.agentricos.runner.Refusal$Unavailable"
+    }
+  },
+  "statuses": {
+    "OK": "done",
+    "NOT_FOUND": "what was asked for is not there",
+    "REJECTED": "the system refused it; doing it again the same way will not help",
+    "UNAVAILABLE": "the system could not be reached or was too slow; it may be tried again",
+    "MISCONFIGURED": "a setting is missing or wrong"
+  },
+  "commands": {
+    "idempotencyKey": "exchange property idempotencyKey",
+    "rule": "A command called again with the same key has the effect of one: pass the key to the system, or look first"
+  },
+  "events": {
+    "pulled": {
+      "arguments": {
+        "cursor": "where the last poll ended; absent on the first",
+        "limit": "how many at most"
+      },
+      "answer": {
+        "events": [
+          {
+            "eventId": "stable: events are told apart by it",
+            "type": "one of the types the source lists",
+            "tenantId": "or null",
+            "subjectType": "what it is about, in a word",
+            "subjectId": "the id of what it is about",
+            "occurredAt": "ISO-8601 with a zone, or epoch seconds",
+            "payload": "a little more: an event is a hint, the rest is read with readWith"
+          }
+        ],
+        "nextCursor": "where to go on from",
+        "hasMore": "true when there are more right away"
+      },
+      "rule": "Keep no state: the core keeps the cursor"
+    },
+    "pushed": {
+      "to": "direct:agentricos.events.publish",
+      "property": "eventSource: the name of the source, declared without an operation",
+      "webhook": "A webhook is a platform-http: route; check the sender's signature with bean: hmac"
+    }
+  },
+  "usage": {
+    "rule": "An answer a model helped make says so, so the core can price it",
+    "shape": {
+      "usage": {
+        "model": "the model's name",
+        "inputTokens": 0,
+        "outputTokens": 0
+      }
+    }
+  },
+  "helpers": [
+    {
+      "bean": "hmac",
+      "for": "checking the signature of a webhook",
+      "in": "body as text; exchange properties hmacSecret and hmacSignature (hex, an optional sha256= prefix is ignored)",
+      "out": "exchange property hmacValid"
+    }
+  ],
+  "platformHelpers": "The program also carries helpers of the connections the platform comes with (mailbox, notes, records, documents, calendly, googleCalendar). They belong to those connections and may change with them: a new connection does not build on them.",
+  "authentication": {
+    "rule": "Send what a system signs in with as a header the route sets itself, from a setting: setHeader Authorization with simple \"Bearer {{<connection>.api-key}}\" (or the header the system asks for). The http component's own sign-in options (authMethod, authBearerToken, authUsername, authPassword) send nothing until the system asks for it the HTTP way (a 401 with WWW-Authenticate); many systems with an API key never ask, and the requests then go out signed in as nobody.",
+    "never": "A key in the address, in a log line or in an error message"
+  }
+}

@@ -108,11 +108,25 @@ went away.
 It can make a new workflow from a description in plain words, as one draft built only from what your connections already
 offer, try it on recent events without sending anything, and say how long it took to launch.
 
+It builds configurations without the platform's code: connections (their description and their routes on Apache
+Camel), workflows made of the platform's blocks, tables of rules, and whole solutions. Each is checked before anything is written or
+proposed, against the schema the installation runs on (what a configuration may say, with Camel's own catalog for
+connections), or against the copy the plugin carries when no installation is reached: every block, field, way and
+value of a workflow, every address, option and setting of a route, every file and name of a solution. Files are
+written into a folder of your computer only once nothing stops them; a draft goes to the installation, which checks
+once more.
+
 For a case an agent handles towards a goal, it reads how the agent is handling it (each move, why, what came of it
 and what it cost), sees the questions such agents ask employees, and answers one on your word.
 
 What the agent may do is decided by the installation, from the rights of the access. Sign-in details of connections
 are never available to it. A revoked or expired token stops working at once.
+
+## Building without the installation
+
+`schema/` holds the schema the plugin builds with when no installation is reached (`ci/sync-schema.sh` copies it from
+`agentric-os-schema`). Its files are Aglium's, apart from `schema/camel/`, which is Apache Camel's catalog under the
+Apache License 2.0 (`schema/NOTICE`).
 
 ## Checking a change to the plugin
 

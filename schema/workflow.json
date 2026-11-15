@@ -1,0 +1,80 @@
+{
+  "description": "What a workflow (a BPMN file of a solution) may contain. A workflow is plain BPMN plus the blocks of blocks.json, and nothing else can be attached to it. The core refuses to publish a workflow that breaks a rule marked refused, and warns about one marked warned.",
+  "document": {
+    "namespaces": {
+      "bpmn": "http://www.omg.org/spec/BPMN/20100524/MODEL",
+      "flowable": "http://flowable.org/bpmn",
+      "agentric": "http://aglium.com/agentric-os"
+    },
+    "targetNamespace": "aglium.agentricos.<solution>",
+    "rules": [
+      "Exactly one process in the file, its id the case type's processKey, isExecutable=\"true\"",
+      "Every step but the start, a boundary event and an event sub-process has something leading to it"
+    ]
+  },
+  "elements": {
+    "allowed": ["startEvent", "endEvent", "sequenceFlow", "exclusiveGateway", "parallelGateway", "inclusiveGateway", "eventBasedGateway",
+      "serviceTask", "receiveTask", "userTask", "scriptTask", "manualTask", "task", "businessRuleTask", "boundaryEvent", "intermediateCatchEvent",
+      "intermediateThrowEvent", "subProcess", "multiInstanceLoopCharacteristics", "timerEventDefinition", "errorEventDefinition",
+      "terminateEventDefinition", "conditionExpression", "error", "documentation"],
+    "serviceTask": "Only a block: flowable:delegateExpression set to a block's expression (blocks.json), with the block's fields as flowable:field. No flowable:class, no other delegate expression, no flowable:type.",
+    "receiveTask": "Only with the waitForEvent block, as an execution listener on start and on end",
+    "userTask": "Only an approval: flowable:category=\"approval\"; other user tasks are never shown to anybody (warned). No task listeners.",
+    "scriptTask": "Only an expression: scriptFormat=\"juel\", such as setting a variable",
+    "refused": ["callActivity", "sendTask", "task listeners", "execution listeners other than waitForEvent", "scripts other than juel", "service tasks that are not a block", "a block without its required fields", "an agent that does not exist"],
+    "warned": ["an operation no connection offers", "a step that calls a connection or an agent without flowable:async=\"true\"", "a user task operators will never be shown"]
+  },
+  "fieldValues": {
+    "string": "<flowable:field name=\"x\"><flowable:string><![CDATA[a value as written]]></flowable:string></flowable:field>",
+    "expression": "<flowable:field name=\"x\"><flowable:expression><![CDATA[${a value worked out}]]></flowable:expression></flowable:field>",
+    "rule": "A field of kind expression, or any value with ${...}, is written as an expression; everything else as a string. A group field (arg, input, in) is one field per part, named <group>.<part>."
+  },
+  "variables": {
+    "atStart": {
+      "caseId": "the case",
+      "caseType": "the workflow's key",
+      "tenantId": "the tenant, or null",
+      "subjectType": "what the case is about, in a word",
+      "subjectId": "the id of what it is about",
+      "eventType": "the type of the event that opened it",
+      "event": "what the event carried"
+    },
+    "setByTheWorkflow": {
+      "outcome": "how the case ended; otherwise it closes as RESOLVED",
+      "revenue": "money the case brought in, an amount"
+    },
+    "rule": "A block that keeps a result keeps it under resultVariable (its default is in its description). A value is only there after the step that keeps it has run: a later step names it, an earlier one cannot."
+  },
+  "valueNames": {
+    "description": "In texts, goals and the places of a text a value is named by where it comes from",
+    "names": {
+      "connector.<connection>.<entity>.<detail>": "what a read of a connection gave",
+      "settings.<key>": "a value of the installation",
+      "options.<key>": "the way chosen for the workflow",
+      "workflow.<name>": "what a step worked out (a variable of the case)"
+    }
+  },
+  "expressionHelpers": [
+    {"call": "${time.utcNow()}", "gives": "now"},
+    {"call": "${time.utcAfter('PT2H')}", "gives": "a moment after now"},
+    {"call": "${history.recent(execution, 5)}", "gives": "earlier cases about the same subject: what opened them and what an agent decided"},
+    {"call": "${memory.of(execution, 'key')}", "gives": "what remember kept about the subject"},
+    {"call": "${memory.get(tenantId, subjectType, subjectId, 'key')}", "gives": "the same, also in startWhen"},
+    {"call": "${files.left(caseId)}, ${files.given(caseId)}, ${files.read(caseId)}, ${files.notRead(caseId)}", "gives": "how far the files of the case were read"},
+    {"call": "${settings.get(tenantId, 'key')}", "gives": "a value of the installation"},
+    {"call": "${dates.daysUntil(d, zone)}", "gives": "days until a date"},
+    {"call": "${dates.moment(from, plus, at, zone)}", "gives": "a moment, such as for a timer"},
+    {"call": "${dates.format(d, pattern)}, ${dates.number(n, pattern)}", "gives": "a date or a number written out"},
+    {"call": "${values.none(x)}", "gives": "whether there is no value"}
+  ],
+  "worth": {
+    "namespace": "http://aglium.com/agentric-os",
+    "attributes": {
+      "byHandMinutes": "on a step or the process: how long a person takes to do this by hand",
+      "byHandRole": "whose work it is, a key of the price list's roles",
+      "brings": "on a step: the money it brings in, an amount or an expression giving one"
+    },
+    "rule": "Set byHandMinutes and byHandRole on every step that does a person's work, so that what the workflow saves is counted"
+  },
+  "commands": "A step that calls a command goes through the workflow's policy: it may go out, wait for a person, or be refused. A new workflow starts in Test run (shadow), which records what it would do and sends nothing."
+}

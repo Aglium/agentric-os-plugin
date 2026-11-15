@@ -1,0 +1,1091 @@
+{
+ "consumerOnly": false,
+ "description": "Store and retrieve objects from AWS S3 Storage Service.",
+ "headers": {
+  "CamelAwsS3Acl": {
+   "description": "A well constructed Amazon S3 Access Control List object.",
+   "javaType": "software.amazon.awssdk.services.s3.model.BucketCannedACL"
+  },
+  "CamelAwsS3BucketDestinationName": {
+   "description": "The bucket Destination Name which will be used for the current operation",
+   "javaType": "String"
+  },
+  "CamelAwsS3BucketExists": {
+   "description": "Whether the bucket exists when using the headBucket operation",
+   "javaType": "boolean"
+  },
+  "CamelAwsS3BucketName": {
+   "description": "The bucket Name (can be dynamic using the simple language in the producer) which this object will be stored or which will be used for the current operation or in which this object is contained.",
+   "javaType": "String"
+  },
+  "CamelAwsS3CannedAcl": {
+   "description": "The canned acl that will be applied to the object. see software.amazon.awssdk.services.s3.model.ObjectCannedACL for allowed values.",
+   "javaType": "String"
+  },
+  "CamelAwsS3ContentControl": {
+   "description": "The optional Cache-Control HTTP header which allows the user to specify caching behavior along the HTTP request/reply chain.",
+   "javaType": "String"
+  },
+  "CamelAwsS3ContentDisposition": {
+   "description": "The optional Content-Disposition HTTP header, which specifies presentational information such as the recommended filename for the object to be saved as.",
+   "javaType": "String"
+  },
+  "CamelAwsS3ContentEncoding": {
+   "description": "The optional Content-Encoding HTTP header specifying what content encodings have been applied to the object and what decoding mechanisms must be applied in order to obtain the media-type referenced by the Content-Type field.",
+   "javaType": "String"
+  },
+  "CamelAwsS3ContentLength": {
+   "description": "The Content-Length HTTP header indicating the size of the associated object in bytes.",
+   "javaType": "Long"
+  },
+  "CamelAwsS3ContentMD5": {
+   "description": "The base64 encoded 128-bit MD5 digest of the associated object (content - not including headers) according to RFC 1864. This data is used as a message integrity check to verify that the data received by Amazon S3 is the same data that the caller sent.",
+   "javaType": "String"
+  },
+  "CamelAwsS3ContentType": {
+   "description": "The Content-Type HTTP header, which indicates the type of content stored in the associated object. The value of this header is a standard MIME type.",
+   "javaType": "String"
+  },
+  "CamelAwsS3Delimiter": {
+   "description": "The delimiter which is used in the com.amazonaws.services.s3.model.ListObjectsRequest to only list objects we are interested in",
+   "javaType": "String"
+  },
+  "CamelAwsS3DestinationKey": {
+   "description": "The Destination key which will be used for the current operation",
+   "javaType": "String"
+  },
+  "CamelAwsS3DowloadLinkExpirationTime": {
+   "description": "The expiration time of the download link in milliseconds",
+   "javaType": "Long"
+  },
+  "CamelAwsS3DownloadLinkBrowserCompatible": {
+   "description": "Whether the download link is browser compatible",
+   "javaType": "boolean"
+  },
+  "CamelAwsS3DownloadLinkHttpRequestHeaders": {
+   "description": "The headers that are needed by the service (not needed when BrowserCompatible is true)",
+   "javaType": "Map<String, List<String>>"
+  },
+  "CamelAwsS3DownloadLinkSignedPayload": {
+   "description": "The request payload that is needed by the service (not needed when BrowserCompatible is true)",
+   "javaType": "String"
+  },
+  "CamelAwsS3ETag": {
+   "description": "(producer) The ETag value for the newly uploaded object. (consumer) The hex encoded 128-bit MD5 digest of the associated object according to RFC 1864. This data is used as an integrity check to verify that the data received by the caller is the same data that was sent by Amazon S3.",
+   "javaType": "String"
+  },
+  "CamelAwsS3ExpirationTime": {
+   "description": "If the object expiration is configured (see PUT Bucket lifecycle), the response includes this header.",
+   "javaType": "String"
+  },
+  "CamelAwsS3IfMatchCondition": {
+   "description": "Return/copy the object only if its entity tag (ETag) is the same as the one specified in this header.",
+   "javaType": "String"
+  },
+  "CamelAwsS3IfModifiedSinceCondition": {
+   "description": "Return/copy the object only if it has been modified since the specified time; otherwise, return a 304 Not Modified error.",
+   "javaType": "String"
+  },
+  "CamelAwsS3IfNoneMatchCondition": {
+   "description": "Return/copy the object only if its entity tag (ETag) is different from the one specified in this header.",
+   "javaType": "String"
+  },
+  "CamelAwsS3IfUnmodifiedSinceCondition": {
+   "description": "Return/copy the object only if it has not been modified since the specified time.",
+   "javaType": "String"
+  },
+  "CamelAwsS3Key": {
+   "description": "The key (can be dynamic using the simple language in the producer) under which this object is stored or will be stored or which will be used for the current operation",
+   "javaType": "String"
+  },
+  "CamelAwsS3LastModified": {
+   "description": "The value of the Last-Modified header, indicating the date and time at which Amazon S3 last recorded a modification to the associated object.",
+   "javaType": "Date"
+  },
+  "CamelAwsS3Metadata": {
+   "description": "A map of metadata to be stored or stored with the object in S3. More details about metadata https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMetadata.htmlhere.",
+   "javaType": "Map<String, String>"
+  },
+  "CamelAwsS3Operation": {
+   "description": "The operation to perform. Permitted values are copyObject, deleteObject, listBuckets, deleteBucket, listObjects",
+   "javaType": "String"
+  },
+  "CamelAwsS3OverrideBucketName": {
+   "description": "The bucket Name to override (can be dynamic using the simple language in the producer) which this object will be stored or which will be used for the current operation or in which this object is contained.",
+   "javaType": "String"
+  },
+  "CamelAwsS3Prefix": {
+   "description": "The prefix which is used in the com.amazonaws.services.s3.model.ListObjectsRequest to only list objects we are interested in",
+   "javaType": ""
+  },
+  "CamelAwsS3ProducedBucketName": {
+   "description": "The computed bucket name that was used by the producer such as to get or put an s3 object",
+   "javaType": "String"
+  },
+  "CamelAwsS3ProducedKey": {
+   "description": "The computed key that was used for retrieving this object",
+   "javaType": "String"
+  },
+  "CamelAwsS3RangeEnd": {
+   "description": "The position of the last byte to get",
+   "javaType": "String"
+  },
+  "CamelAwsS3RangeStart": {
+   "description": "The position of the first byte to get",
+   "javaType": "String"
+  },
+  "CamelAwsS3ReplicationStatus": {
+   "description": "Amazon S3 can return this if your request involves a bucket that is either a source or destination in a replication rule.",
+   "javaType": "software.amazon.awssdk.services.s3.model.ReplicationStatus"
+  },
+  "CamelAwsS3ServerSideEncryption": {
+   "description": "Sets the server-side encryption algorithm when encrypting the object using AWS-managed keys. For example use AES256.",
+   "javaType": "String"
+  },
+  "CamelAwsS3StorageClass": {
+   "description": "The storage class of this object.",
+   "javaType": "String"
+  },
+  "CamelAwsS3VersionId": {
+   "description": "(producer) The optional version ID of the newly uploaded object. (consumer) The version ID of the associated Amazon S3 object if available. Version IDs are only assigned to objects when an object is uploaded to an Amazon S3 bucket that has object versioning enabled.",
+   "javaType": "String"
+  },
+  "CamelMessageTimestamp": {
+   "description": "The timestamp of the message",
+   "javaType": "long"
+  }
+ },
+ "lenientProperties": false,
+ "name": "aws2-s3",
+ "producerOnly": false,
+ "properties": {
+  "accessKey": {
+   "description": "Amazon AWS Access Key",
+   "displayName": "Access Key",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  },
+  "amazonS3Client": {
+   "description": "Reference to a com.amazonaws.services.s3.AmazonS3 in the registry.",
+   "displayName": "Amazon S3 Client",
+   "group": "advanced",
+   "javaType": "software.amazon.awssdk.services.s3.S3Client",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "amazonS3Presigner": {
+   "description": "An S3 Presigner for Request, used mainly in createDownloadLink operation",
+   "displayName": "Amazon S3 Presigner",
+   "group": "advanced",
+   "javaType": "software.amazon.awssdk.services.s3.presigner.S3Presigner",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "autoCreateBucket": {
+   "defaultValue": false,
+   "description": "Setting the autocreation of the S3 bucket bucketName. This will apply also in case of moveAfterRead option enabled, and it will create the destinationBucket if it doesn't exist already.",
+   "displayName": "Auto Create Bucket",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "autocloseBody": {
+   "defaultValue": true,
+   "description": "If this option is true and includeBody is false, then the S3Object.close() method will be called on exchange completion. This option is strongly related to includeBody option. In case of setting includeBody to false and autocloseBody to false, it will be up to the caller to close the S3Object stream. Setting autocloseBody to true, will close the S3Object stream automatically.",
+   "displayName": "Autoclose Body",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "awsKMSKeyId": {
+   "description": "Define the id of KMS key to use in case KMS is enabled",
+   "displayName": "Aws KMSKey Id",
+   "group": "producer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "backoffErrorThreshold": {
+   "description": "The number of subsequent error polls (failed due some error) that should happen before the backoffMultipler should kick-in.",
+   "displayName": "Backoff Error Threshold",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "backoffIdleThreshold": {
+   "description": "The number of subsequent idle polls that should happen before the backoffMultipler should kick-in.",
+   "displayName": "Backoff Idle Threshold",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "backoffMultiplier": {
+   "description": "To let the scheduled polling consumer backoff if there has been a number of subsequent idles/errors in a row. The multiplier is then the number of polls that will be skipped before the next actual attempt is happening again. When this option is in use then backoffIdleThreshold and/or backoffErrorThreshold must also be configured.",
+   "displayName": "Backoff Multiplier",
+   "group": "scheduler",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "batchMessageNumber": {
+   "defaultValue": 10,
+   "description": "The number of messages composing a batch in streaming upload mode",
+   "displayName": "Batch Message Number",
+   "group": "producer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "batchSize": {
+   "defaultValue": 1000000,
+   "description": "The batch size (in bytes) in streaming upload mode",
+   "displayName": "Batch Size",
+   "group": "producer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "bucketNameOrArn": {
+   "description": "Bucket name or ARN",
+   "displayName": "Bucket Name Or Arn",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "bufferSize": {
+   "defaultValue": 1000000,
+   "description": "The buffer size (in bytes) in streaming upload mode",
+   "displayName": "Buffer Size",
+   "group": "producer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "conditionalWritesEnabled": {
+   "defaultValue": false,
+   "description": "Uploads the object only if the object key name does not already exist in the bucket specified.",
+   "displayName": "Conditional Writes Enabled",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "customerAlgorithm": {
+   "description": "Define the customer algorithm to use in case CustomerKey is enabled",
+   "displayName": "Customer Algorithm",
+   "group": "common (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "customerKeyId": {
+   "description": "Define the id of the Customer key to use in case CustomerKey is enabled",
+   "displayName": "Customer Key Id",
+   "group": "common (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "customerKeyMD5": {
+   "description": "Define the MD5 of Customer key to use in case CustomerKey is enabled",
+   "displayName": "Customer Key MD5",
+   "group": "common (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "delay": {
+   "defaultValue": 500,
+   "description": "Milliseconds before the next poll.",
+   "displayName": "Delay",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "deleteAfterRead": {
+   "defaultValue": true,
+   "description": "Delete objects from S3 after they have been retrieved. The deleting is only performed if the Exchange is committed. If a rollback occurs, the object is not deleted. If this option is false, then the same objects will be retrieved over and over again in the polls. Therefore, you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the AWS2S3Constants#BUCKET_NAME and AWS2S3Constants#KEY headers, or only the AWS2S3Constants#KEY header.",
+   "displayName": "Delete After Read",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "deleteAfterWrite": {
+   "defaultValue": false,
+   "description": "Delete file object after the S3 file has been uploaded",
+   "displayName": "Delete After Write",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "delimiter": {
+   "description": "The delimiter which is used in the com.amazonaws.services.s3.model.ListObjectsRequest to only consume objects we are interested in.",
+   "displayName": "Delimiter",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "destinationBucket": {
+   "description": "Define the destination bucket where an object must be moved when moveAfterRead is set to true.",
+   "displayName": "Destination Bucket",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "destinationBucketPrefix": {
+   "description": "Define the destination bucket prefix to use when an object must be moved, and moveAfterRead is set to true.",
+   "displayName": "Destination Bucket Prefix",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "destinationBucketSuffix": {
+   "description": "Define the destination bucket suffix to use when an object must be moved, and moveAfterRead is set to true.",
+   "displayName": "Destination Bucket Suffix",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "doneFileName": {
+   "description": "If provided, Camel will only consume files if a done file exists.",
+   "displayName": "Done File Name",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "fileName": {
+   "description": "To get the object from the bucket with the given file name",
+   "displayName": "File Name",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "forcePathStyle": {
+   "defaultValue": false,
+   "description": "Set whether the S3 client should use path-style URL instead of virtual-hosted-style",
+   "displayName": "Force Path Style",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "greedy": {
+   "defaultValue": false,
+   "description": "If greedy is enabled, then the ScheduledPollConsumer will run immediately again, if the previous run polled 1 or more messages.",
+   "displayName": "Greedy",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "ignoreBody": {
+   "defaultValue": false,
+   "description": "If it is true, the S3 Object Body will be ignored completely if it is set to false, the S3 Object will be put in the body. Setting this to true will override any behavior defined by includeBody option.",
+   "displayName": "Ignore Body",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "inProgressRepository": {
+   "description": "A pluggable in-progress repository org.apache.camel.spi.IdempotentRepository. The in-progress repository is used to account the current in progress files being consumed. By default a memory based repository is used.",
+   "displayName": "In Progress Repository",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.IdempotentRepository",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "includeBody": {
+   "defaultValue": true,
+   "description": "If it is true, the S3Object exchange will be consumed and put into the body and closed. If false, the S3Object stream will be put raw into the body and the headers will be set with the S3 object metadata. This option is strongly related to the autocloseBody option. In case of setting includeBody to true because the S3Object stream will be consumed then it will also be closed, while in case of includeBody false then it will be up to the caller to close the S3Object stream. However, setting autocloseBody to true when includeBody is false it will schedule to close the S3Object stream automatically on exchange completion.",
+   "displayName": "Include Body",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "includeFolders": {
+   "defaultValue": true,
+   "description": "If it is true, the folders/directories will be consumed. If it is false, they will be ignored, and Exchanges will not be created for those",
+   "displayName": "Include Folders",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "initialDelay": {
+   "defaultValue": 1000,
+   "description": "Milliseconds before the first poll starts.",
+   "displayName": "Initial Delay",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "keyName": {
+   "description": "Setting the key name for an element in the bucket through endpoint parameter",
+   "displayName": "Key Name",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "lazyStartProducer": {
+   "defaultValue": false,
+   "description": "Whether the producer should be started lazy (on the first message). By starting lazy you can use this to allow CamelContext and routes to startup in situations where a producer may otherwise fail during starting and cause the route to fail being started. By deferring this startup to be lazy then the startup failure can be handled during routing messages via Camel's routing error handlers. Beware that when the first message is processed then creating and starting the producer may take a little time and prolong the total processing time of the processing.",
+   "displayName": "Lazy Start Producer",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "maxConnections": {
+   "defaultValue": 60,
+   "description": "Set the maxConnections parameter in the S3 client configuration",
+   "displayName": "Max Connections",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "maxMessagesPerPoll": {
+   "defaultValue": 10,
+   "description": "Gets the maximum number of messages as a limit to poll at each polling. Gets the maximum number of messages as a limit to poll at each polling. The default value is 10. Use 0 or a negative number to set it as unlimited.",
+   "displayName": "Max Messages Per Poll",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "moveAfterRead": {
+   "defaultValue": false,
+   "description": "Move objects from S3 bucket to a different bucket after they have been retrieved. To accomplish the operation, the destinationBucket option must be set. The copy bucket operation is only performed if the Exchange is committed. If a rollback occurs, the object is not moved.",
+   "displayName": "Move After Read",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "multiPartUpload": {
+   "defaultValue": false,
+   "description": "If it is true, camel will upload the file with multipart format. The part size is decided by the partSize option. Camel will only do multipart uploads for files that are larger than the part-size thresholds. Files that are smaller will be uploaded in a single operation.",
+   "displayName": "Multi Part Upload",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "namingStrategy": {
+   "defaultValue": "progressive",
+   "description": "The naming strategy to use in streaming upload mode",
+   "displayName": "Naming Strategy",
+   "enum": [
+    "progressive",
+    "random"
+   ],
+   "group": "producer",
+   "javaType": "org.apache.camel.component.aws2.s3.stream.AWSS3NamingStrategyEnum",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "operation": {
+   "description": "The operation to do in case the user don't want to do only an upload",
+   "displayName": "Operation",
+   "enum": [
+    "copyObject",
+    "listObjects",
+    "deleteObject",
+    "deleteBucket",
+    "listBuckets",
+    "getObject",
+    "getObjectRange",
+    "createDownloadLink",
+    "headBucket",
+    "headObject"
+   ],
+   "group": "producer",
+   "javaType": "org.apache.camel.component.aws2.s3.AWS2S3Operations",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "overrideEndpoint": {
+   "defaultValue": false,
+   "description": "Set the need for overriding the endpoint. This option needs to be used in combination with the uriEndpointOverride option",
+   "displayName": "Override Endpoint",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "partSize": {
+   "defaultValue": 26214400,
+   "description": "Set up the partSize which is used in multipart upload, the default size is 25 MB. The minimum size in AWS is 5 MB. Camel will only do multipart uploads for files that are larger than the part-size thresholds. Files that are smaller will be uploaded in a single operation.",
+   "displayName": "Part Size",
+   "group": "producer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "pojoRequest": {
+   "defaultValue": false,
+   "description": "If we want to use a POJO request as body or not",
+   "displayName": "Pojo Request",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "policy": {
+   "description": "The policy for this queue to set in the com.amazonaws.services.s3.AmazonS3#setBucketPolicy() method.",
+   "displayName": "Policy",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "pollStrategy": {
+   "description": "A pluggable org.apache.camel.PollingConsumerPollingStrategy allowing you to provide your custom implementation to control error handling usually occurred during the poll operation before an Exchange have been created and being routed in Camel.",
+   "displayName": "Poll Strategy",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.PollingConsumerPollStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "prefix": {
+   "description": "The prefix which is used in the com.amazonaws.services.s3.model.ListObjectsRequest to only consume objects we are interested in.",
+   "displayName": "Prefix",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "profileCredentialsName": {
+   "description": "If using a profile credentials provider, this parameter will set the profile name",
+   "displayName": "Profile Credentials Name",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "proxyHost": {
+   "description": "To define a proxy host when instantiating the SQS client",
+   "displayName": "Proxy Host",
+   "group": "proxy",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "proxyPort": {
+   "description": "Specify a proxy port to be used inside the client definition.",
+   "displayName": "Proxy Port",
+   "group": "proxy",
+   "javaType": "java.lang.Integer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "proxyProtocol": {
+   "defaultValue": "HTTPS",
+   "description": "To define a proxy protocol when instantiating the S3 client",
+   "displayName": "Proxy Protocol",
+   "enum": [
+    "HTTP",
+    "HTTPS"
+   ],
+   "group": "proxy",
+   "javaType": "software.amazon.awssdk.core.Protocol",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "region": {
+   "description": "The region in which the S3 client needs to work. When using this parameter, the configuration will expect the lowercase name of the region (for example, ap-east-1) You'll need to use the name Region.EU_WEST_1.id()",
+   "displayName": "Region",
+   "enum": [
+    "ap-south-2",
+    "ap-south-1",
+    "eu-south-1",
+    "eu-south-2",
+    "us-gov-east-1",
+    "me-central-1",
+    "il-central-1",
+    "ca-central-1",
+    "eu-central-1",
+    "us-iso-west-1",
+    "eu-central-2",
+    "eu-isoe-west-1",
+    "us-west-1",
+    "us-west-2",
+    "af-south-1",
+    "eu-north-1",
+    "eu-west-3",
+    "eu-west-2",
+    "eu-west-1",
+    "ap-northeast-3",
+    "ap-northeast-2",
+    "ap-northeast-1",
+    "me-south-1",
+    "sa-east-1",
+    "ap-east-1",
+    "cn-north-1",
+    "ca-west-1",
+    "us-gov-west-1",
+    "ap-southeast-1",
+    "ap-southeast-2",
+    "us-iso-east-1",
+    "ap-southeast-3",
+    "ap-southeast-4",
+    "us-east-1",
+    "us-east-2",
+    "cn-northwest-1",
+    "us-isob-east-1",
+    "aws-global",
+    "aws-cn-global",
+    "aws-us-gov-global",
+    "aws-iso-global",
+    "aws-iso-b-global"
+   ],
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "removePrefixOnMove": {
+   "defaultValue": false,
+   "description": "Remove the contents of the prefix configuration string from the new S3Object key before copying. For example, if prefix is set to 'demo/notify' and the destinationBucketPrefix is set to 'demo/archive', an S3Object with a key of 'demo/notify/example.txt' will be copied to 'demo/archive/example.txt', rather than the default behavior where the new key is 'demo/archive/demo/notify/example.txt'. Only applicable when moveAfterRead is true.",
+   "displayName": "Remove Prefix On Move",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "repeatCount": {
+   "defaultValue": 0,
+   "description": "Specifies a maximum limit of number of fires. So if you set it to 1, the scheduler will only fire once. If you set it to 5, it will only fire five times. A value of zero or negative means fire forever.",
+   "displayName": "Repeat Count",
+   "group": "scheduler",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "restartingPolicy": {
+   "defaultValue": "override",
+   "description": "The restarting policy to use in streaming upload mode",
+   "displayName": "Restarting Policy",
+   "enum": [
+    "override",
+    "lastPart"
+   ],
+   "group": "producer",
+   "javaType": "org.apache.camel.component.aws2.s3.stream.AWSS3RestartingPolicyEnum",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "runLoggingLevel": {
+   "defaultValue": "TRACE",
+   "description": "The consumer logs a start/complete log line when it polls. This option allows you to configure the logging level for that.",
+   "displayName": "Run Logging Level",
+   "enum": [
+    "TRACE",
+    "DEBUG",
+    "INFO",
+    "WARN",
+    "ERROR",
+    "OFF"
+   ],
+   "group": "scheduler",
+   "javaType": "org.apache.camel.LoggingLevel",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "scheduledExecutorService": {
+   "description": "Allows for configuring a custom/shared thread pool to use for the consumer. By default each consumer has its own single threaded thread pool.",
+   "displayName": "Scheduled Executor Service",
+   "group": "scheduler",
+   "javaType": "java.util.concurrent.ScheduledExecutorService",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "scheduler": {
+   "defaultValue": "none",
+   "description": "To use a cron scheduler from either camel-spring or camel-quartz component. Use value spring or quartz for built in scheduler",
+   "displayName": "Scheduler",
+   "group": "scheduler",
+   "javaType": "java.lang.Object",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "schedulerProperties": {
+   "description": "To configure additional properties when using a custom scheduler or any of the Quartz, Spring based scheduler. This is a multi-value option with prefix: scheduler.",
+   "displayName": "Scheduler Properties",
+   "group": "scheduler",
+   "javaType": "java.util.Map<java.lang.String, java.lang.Object>",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "scheduler.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "secretKey": {
+   "description": "Amazon AWS Secret Key",
+   "displayName": "Secret Key",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  },
+  "sendEmptyMessageWhenIdle": {
+   "defaultValue": false,
+   "description": "If the polling consumer did not poll any files, you can enable this option to send an empty message (no body) instead.",
+   "displayName": "Send Empty Message When Idle",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "sessionToken": {
+   "description": "Amazon AWS Session Token used when the user needs to assume an IAM role",
+   "displayName": "Session Token",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  },
+  "startScheduler": {
+   "defaultValue": true,
+   "description": "Whether the scheduler should be auto started.",
+   "displayName": "Start Scheduler",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "storageClass": {
+   "description": "The storage class to set in the com.amazonaws.services.s3.model.PutObjectRequest request.",
+   "displayName": "Storage Class",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "streamingUploadMode": {
+   "defaultValue": false,
+   "description": "When stream mode is true, the upload to bucket will be done in streaming",
+   "displayName": "Streaming Upload Mode",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "streamingUploadTimeout": {
+   "description": "While streaming upload mode is true, this option set the timeout to complete upload",
+   "displayName": "Streaming Upload Timeout",
+   "group": "producer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "timeUnit": {
+   "defaultValue": "MILLISECONDS",
+   "description": "Time unit for initialDelay and delay options.",
+   "displayName": "Time Unit",
+   "enum": [
+    "NANOSECONDS",
+    "MICROSECONDS",
+    "MILLISECONDS",
+    "SECONDS",
+    "MINUTES",
+    "HOURS",
+    "DAYS"
+   ],
+   "group": "scheduler",
+   "javaType": "java.util.concurrent.TimeUnit",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "trustAllCertificates": {
+   "defaultValue": false,
+   "description": "If we want to trust all certificates in case of overriding the endpoint",
+   "displayName": "Trust All Certificates",
+   "group": "security",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "uriEndpointOverride": {
+   "description": "Set the overriding uri endpoint. This option needs to be used in combination with overrideEndpoint option",
+   "displayName": "Uri Endpoint Override",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "useAwsKMS": {
+   "defaultValue": false,
+   "description": "Define if KMS must be used or not",
+   "displayName": "Use Aws KMS",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useCustomerKey": {
+   "defaultValue": false,
+   "description": "Define if Customer Key must be used or not",
+   "displayName": "Use Customer Key",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useDefaultCredentialsProvider": {
+   "defaultValue": false,
+   "description": "Set whether the S3 client should expect to load credentials through a default credentials provider.",
+   "displayName": "Use Default Credentials Provider",
+   "group": "security",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useFixedDelay": {
+   "defaultValue": true,
+   "description": "Controls if fixed delay or fixed rate is used. See ScheduledExecutorService in JDK for details.",
+   "displayName": "Use Fixed Delay",
+   "group": "scheduler",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useProfileCredentialsProvider": {
+   "defaultValue": false,
+   "description": "Set whether the S3 client should expect to load credentials through a profile credentials provider.",
+   "displayName": "Use Profile Credentials Provider",
+   "group": "security",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useSSES3": {
+   "defaultValue": false,
+   "description": "Define if SSE S3 must be used or not",
+   "displayName": "Use SSES3",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useSessionCredentials": {
+   "defaultValue": false,
+   "description": "Set whether the S3 client should expect to use Session Credentials. This is useful in a situation in which the user needs to assume an IAM role for doing operations in S3.",
+   "displayName": "Use Session Credentials",
+   "group": "security",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "scheme": "aws2-s3",
+ "syntax": "aws2-s3://bucketNameOrArn",
+ "title": "AWS S3 Storage Service",
+ "version": "4.14.9"
+}

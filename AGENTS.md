@@ -17,7 +17,10 @@ installation decides what a token may do; the plugin only passes things on.
 | Where | What |
 |---|---|
 | `server/agentric_os_mcp.py` | The MCP server: tools over the installation's API |
-| `server/test_agentric_os_mcp.py` | Its checks (standard library `unittest`) |
+| `server/build_connection.py`, `build_workflow.py`, `build_rules.py`, `build_solution.py` | Building connections, workflows, tables of rules and solutions from the schema, and checking them |
+| `server/schema_files.py`, `schema_check.py`, `yaml_out.py` | The schema (the installation's, else `schema/`), checking against JSON Schema, writing YAML |
+| `schema/` | The schema the plugin carries, copied from `agentric-os-schema` by `ci/sync-schema.sh`; not edited here |
+| `server/test_agentric_os_mcp.py`, `server/test_building.py` | Its checks (standard library `unittest`) |
 | `skills/agentric-os/SKILL.md` | How an agent should work with an installation |
 | `commands/` | `/agentric-status`, `/agentric-change` |
 | `.claude-plugin/`, `.mcp.json` | Plugin and marketplace descriptions |
@@ -32,7 +35,7 @@ business.
 ## Checks
 
 ```bash
-python3 -m py_compile server/agentric_os_mcp.py
+python3 -m py_compile server/*.py
 python3 -m unittest discover -s server -v
 claude plugin validate .
 ```
@@ -80,7 +83,7 @@ is being committed. Not after the commit, not "CI will tell":
 4. The `CHANGELOG.md` line goes into the same commit (see "Changelog").
 
 ```bash
-python3 -m py_compile server/agentric_os_mcp.py server/test_agentric_os_mcp.py ci/release.py
+python3 -m py_compile server/*.py ci/release.py
 python3 -m unittest discover -s server -v
 python3 ci/release.py check
 claude plugin validate .

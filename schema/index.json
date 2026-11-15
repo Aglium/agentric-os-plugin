@@ -1,0 +1,17 @@
+{
+  "name": "agentric-os-schema",
+  "version": "0.1.0",
+  "description": "What an Agentric OS installation is configured with, described once for the core, the plugin and anybody building a configuration: the blocks workflows are made of, the format of a solution, a calculation and a connection's description, the contract a connection's routes keep, and what the connections' program carries.",
+  "files": {
+    "blocks.json": "The blocks a workflow is built from: the BPMN element each lives on, its fields, how it can end",
+    "workflow.json": "What a workflow may contain: elements, how fields are written, variables, value names, expression helpers, what the work is worth",
+    "solution.schema.json": "JSON Schema of solution.yaml",
+    "calculation.schema.json": "JSON Schema of a calculation file",
+    "rules.json": "A table of rules (DMN): how it is read, which cells the engine reads, and a policy that judges commands",
+    "connector.schema.json": "JSON Schema of a connection's description, connector.yaml",
+    "connection-kinds.json": "Kinds of connection (provides:) and what every connection of a kind offers and tells",
+    "connector-contract.json": "What a connection's routes rely on and keep to",
+    "runner.json": "The Camel version of the connections' program, what it has built in and what the image carries",
+    "camel/index.json": "Apache Camel's own catalog for those components, EIPs, languages and data formats, and camel/yaml-dsl.schema.json, the JSON Schema of its YAML DSL (NOTICE)"
+  }
+}

@@ -1,0 +1,130 @@
+{
+ "description": "Evaluates a JSONPath expression against a JSON message body.",
+ "name": "jsonpath",
+ "properties": {
+  "allowEasyPredicate": {
+   "defaultValue": true,
+   "description": "Whether to allow using the easy predicate parser to pre-parse predicates.",
+   "displayName": "Allow Easy Predicate",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "allowSimple": {
+   "defaultValue": true,
+   "description": "Whether to allow in inlined Simple exceptions in the JSONPath expression",
+   "displayName": "Allow Simple",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "expression": {
+   "description": "The expression value in your chosen language syntax",
+   "displayName": "Expression",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "value",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "option": {
+   "description": "To configure additional options on JSONPath. Multiple values can be separated by comma.",
+   "displayName": "Option",
+   "enum": [
+    "DEFAULT_PATH_LEAF_TO_NULL",
+    "ALWAYS_RETURN_LIST",
+    "AS_PATH_LIST",
+    "SUPPRESS_EXCEPTIONS",
+    "REQUIRE_PROPERTIES"
+   ],
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "resultType": {
+   "description": "Sets the class of the result type (type from output)",
+   "displayName": "Result Type",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "source": {
+   "description": "Source to use, instead of message body. You can prefix with variable:, header:, or property: to specify kind of source. Otherwise, the source is assumed to be a variable. Use empty or null to use default source, which is the message body.",
+   "displayName": "Source",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "suppressExceptions": {
+   "defaultValue": false,
+   "description": "Whether to suppress exceptions such as PathNotFoundException.",
+   "displayName": "Suppress Exceptions",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "trim": {
+   "defaultValue": true,
+   "description": "Whether to trim the value to remove leading and trailing whitespaces and line breaks",
+   "displayName": "Trim",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "unpackArray": {
+   "defaultValue": false,
+   "description": "Whether to unpack a single element json-array into an object.",
+   "displayName": "Unpack Array",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "writeAsString": {
+   "defaultValue": false,
+   "description": "Whether to write the output of each row/element as a JSON String value instead of a Map/POJO value.",
+   "displayName": "Write As String",
+   "group": "common",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "title": "JSONPath"
+}

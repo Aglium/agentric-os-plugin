@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aglium.com/agentric-os-schema/connector.schema.json",
+  "title": "The description of a connection (connector.yaml)",
+  "description": "What a connection offers: the actions it can do in its system, the events it tells about, and what it needs to reach the system. Every action and every source of events with an operation is carried out by a route of the connection's routes file that starts at direct:<connector>.<operation>. The words (label, description, labels, about) are shown to people as they are.",
+  "type": "object",
+  "required": ["connector"],
+  "additionalProperties": false,
+  "properties": {
+    "connector": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,62}$",
+      "description": "The connection's key: small letters, digits and dashes, starting with a letter. The name of its folder, and the first part of every route's address (direct:<connector>.<operation>)."
+    },
+    "label": {
+      "type": "string",
+      "description": "What people call the connection unless they name it themselves, such as “Booking system”. Screens and messages name it by this, never by its key."
+    },
+    "description": {
+      "type": "string",
+      "description": "What the connection is, in a sentence a person reads."
+    },
+    "provides": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "The kinds of connection it is (connection-kinds.json): a connection of a kind offers the actions and tells the events every connection of that kind does, under the same names, so that a workflow written for the kind works with it."
+    },
+    "tenant": {
+      "type": "string",
+      "description": "Where in its system the tenant of a record is found, or “none; …” saying why there is none. Read by people; the core decides nothing by it."
+    },
+    "configuration": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/settingKey"},
+      "description": "Settings the connection needs before it works, such as its address and key. They are entered by an administrator in the Control Center, never written into this file or the routes, and named in routes as {{key}}."
+    },
+    "optionalConfiguration": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/settingKey"},
+      "description": "Settings it can do without, named in routes with a default {{key:default}}, or {{?key}} for an option of an address."
+    },
+    "configurationWords": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "label": {"type": "string", "description": "What the setting is called where it is entered"},
+          "hint": {"type": "string", "description": "An example or a hint shown with it"}
+        }
+      },
+      "description": "What each setting is called where an administrator enters it, by its key."
+    },
+    "check": {
+      "type": "object",
+      "required": ["operation"],
+      "additionalProperties": false,
+      "properties": {
+        "operation": {"type": "string", "description": "A read of the connection that shows it can reach its system with the settings entered"},
+        "arguments": {"type": "object", "description": "What that read is given"}
+      },
+      "description": "How the connection is tried when its settings are entered."
+    },
+    "libraries": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[^:\\s]+:[^:\\s]+:[^:\\s]+$"},
+      "description": "Libraries no route names but the routes need, such as a database driver, as group:artifact:version. Prefer what the platform carries (runner.json); anything else is fetched once when the connection is first started."
+    },
+    "components": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Camel components whose address is only put together when a route runs (toD with a value), so they cannot be read from the routes."
+    },
+    "setup": {
+      "type": "object",
+      "description": "Said by the connection's program when it runs, not written by hand: which settings are still missing (missing)."
+    },
+    "operations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/operation"},
+      "description": "The actions the connection can do in its system. Each has a route that starts at direct:<connector>.<name>, gets the arguments as a map and answers with JSON."
+    },
+    "eventSources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/eventSource"},
+      "description": "Where its events come from: pulled by an operation the core calls again and again, or pushed by the connection itself."
+    },
+    "events": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/event"},
+      "description": "The events it tells about, described for people choosing what a workflow starts on or waits for."
+    }
+  },
+  "$defs": {
+    "settingKey": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]*$",
+      "description": "A setting's key, such as orders.base-url. A model's key named <what>.api-key may be taken from an account the installation already has."
+    },
+    "words": {
+      "type": "object",
+      "additionalProperties": {"type": ["string", "null"]},
+      "description": "Names, each with a few words on what it is; the words may be left out ({id, status})"
+    },
+    "detailKinds": {
+      "type": "object",
+      "additionalProperties": {"enum": ["number", "yesno", "date", "id"]},
+      "description": "What kind of value a detail is: number, yesno, date, or id (it names one thing for a later step to pass on, not for people to read)."
+    },
+    "detailValues": {
+      "type": "object",
+      "additionalProperties": {"type": "array", "items": {"type": ["string", "number", "boolean"]}},
+      "description": "The values a detail can have, so that rules and conditions offer choices. Keep them true to what the route answers."
+    },
+    "operation": {
+      "type": "object",
+      "required": ["name", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9]*(\\.[a-zA-Z][a-zA-Z0-9]*)*$", "description": "What it does, as words joined by dots, such as order.get or order.cancel. Its route starts at direct:<connector>.<name>."},
+        "kind": {"enum": ["read", "command"], "description": "read: it only looks something up and changes nothing. command: anything else; it is recorded, judged by the workflow's policy, may wait for a person, and is not sent in a test run. Never mark something that changes a thing as read."},
+        "label": {"type": "string", "description": "What people pick it by, such as “Read an order”"},
+        "description": {"type": "string", "description": "What it does and gives, in a sentence"},
+        "entity": {"type": "string", "description": "The one word values it gives are named by: connector.<connector>.<entity>.<detail>. Renaming it breaks every text and workflow that names it. Unsaid: the name without a closing .get, as one word."},
+        "arguments": {"$ref": "#/$defs/words", "description": "What it is given, each with a few words on what it is. caseId as an argument means it works within one case: the core puts the case in itself. tenantId is put in the same way."},
+        "argumentLabels": {"$ref": "#/$defs/words", "description": "What each argument is called where a person fills it in"},
+        "result": {
+          "type": ["object", "array", "string"],
+          "description": "The details its answer has: the business thing as a person thinks of it, not the system's own fields."
+        },
+        "labels": {"$ref": "#/$defs/words", "description": "What each detail of the answer is called, as a person would say it"},
+        "kinds": {"$ref": "#/$defs/detailKinds"},
+        "values": {"$ref": "#/$defs/detailValues"},
+        "price": {"type": ["number", "string"], "description": "What one call costs in dollars, as the connection suggests; an administrator may set another. 0 when it costs nothing."},
+        "takes": {"type": ["string", "number"], "pattern": "^[0-9]+(s|m|h)?$", "description": "How long its work may take when it is more than the usual 15 seconds: 90s, 10m, 1h or seconds; at most 30 minutes."},
+        "rememberMinutes": {"type": "integer", "minimum": 1, "description": "Only for a read of something that changes seldom: the same read with the same arguments is answered from memory for so many minutes."},
+        "redo": {
+          "oneOf": [
+            {"enum": ["sets", "creates", "sends"]},
+            {
+              "type": "object",
+              "required": ["kind"],
+              "additionalProperties": false,
+              "properties": {
+                "kind": {"enum": ["sets", "creates", "sends"]},
+                "undo": {
+                  "type": "object",
+                  "required": ["operation"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "operation": {"type": "string", "description": "The command that cancels what this one made"},
+                    "arguments": {"type": "object"}
+                  }
+                }
+              }
+            }
+          ],
+          "description": "Only for a command: what doing it again means when a case is done again from a step. sets: it sets values of the same record. creates: it makes something new (with undo when another command cancels it). sends: what it sends cannot be taken back. A command that says nothing is not done again."
+        },
+        "verify": {
+          "type": "object",
+          "required": ["operation"],
+          "additionalProperties": false,
+          "properties": {
+            "operation": {"type": "string", "description": "A read that shows whether the command took effect"},
+            "arguments": {"type": "object", "description": "What that read is given; ${result.x} is a detail of the command's answer"},
+            "expect": {"type": "string", "description": "What must hold of what was read, such as ${verified.status == 'CANCELLED'}"}
+          },
+          "description": "Only for a command whose effect can be read back. Without it the core takes the system's word that it was done."
+        }
+      }
+    },
+    "eventSource": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "description": "The source's name; a pushed event is sent with exchange property eventSource set to it"},
+        "operation": {"type": "string", "description": "For events that are pulled: the operation the core calls with {cursor, limit}, answering {events, nextCursor, hasMore}. Left out for events the connection pushes to direct:agentricos.events.publish."},
+        "events": {"type": "array", "items": {"type": "string"}, "minItems": 1, "description": "The types of event it tells"}
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {"type": "string", "description": "The type the event arrives under, such as order.paid; listed by a source under eventSources"},
+        "label": {"type": "string", "description": "What people pick it by, such as “An order was paid”"},
+        "description": {"type": "string"},
+        "about": {"type": "string", "description": "What its subject is, in a word or two"},
+        "readWith": {"type": "string", "description": "The read operation that gives the rest of what the event is about: an event is a hint, not a whole record"},
+        "fields": {"$ref": "#/$defs/words", "description": "What the event carries besides its subject"},
+        "labels": {"$ref": "#/$defs/words", "description": "What each detail is called, as a person would say it on its own"},
+        "kinds": {"$ref": "#/$defs/detailKinds"},
+        "values": {"$ref": "#/$defs/detailValues"},
+        "title": {"type": "array", "items": {"type": "string"}, "description": "The details that together say what one such event is about, such as [subject, fromName]"},
+        "message": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "from": {"type": "array", "items": {"type": "string"}},
+            "address": {"type": "array", "items": {"type": "string"}},
+            "subject": {"type": "array", "items": {"type": "string"}},
+            "text": {"type": "array", "items": {"type": "string"}},
+            "id": {"type": "array", "items": {"type": "string"}}
+          },
+          "description": "For an event that carries a message: which details hold who wrote (from, address), the subject, the text and the message's id; in each list the first detail that is there counts."
+        },
+        "needsAnswer": {"type": "boolean", "description": "true: somebody ought to answer such an event; one no case takes is shown as waiting for an answer"}
+      }
+    }
+  }
+}

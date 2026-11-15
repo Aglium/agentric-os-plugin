@@ -1,0 +1,572 @@
+{
+ "consumerOnly": false,
+ "description": "Send and receive messages from RabbitMQ using the Spring RabbitMQ client.",
+ "headers": {
+  "CamelSpringRabbitmqAppId": {
+   "description": "The application name.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqClusterId": {
+   "description": "The cluster id.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqContentEncoding": {
+   "description": "Content encoding used by applications.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqContentLength": {
+   "description": "The message content length.",
+   "javaType": "long"
+  },
+  "CamelSpringRabbitmqContentType": {
+   "description": "The message content type.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqCorrelationId": {
+   "description": "Identifier to correlate RPC responses with requests.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqDeliveryMode": {
+   "description": "The message delivery mode.",
+   "javaType": "MessageDeliveryMode"
+  },
+  "CamelSpringRabbitmqDeliveryTag": {
+   "description": "Delivery tag for manual acknowledge mode.",
+   "javaType": "long"
+  },
+  "CamelSpringRabbitmqExchangeName": {
+   "description": "The exchange name that was used when publishing the message.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqExchangeOverrideName": {
+   "description": "To override the endpoint configuration's exchange name.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqExpiration": {
+   "description": "Per-message TTL.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqMessageId": {
+   "description": "Arbitrary message id.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqPriority": {
+   "description": "The message priority.",
+   "javaType": "Integer"
+  },
+  "CamelSpringRabbitmqRedelivered": {
+   "description": "Whether the message was previously delivered and requeued.",
+   "javaType": "Boolean"
+  },
+  "CamelSpringRabbitmqReplyTo": {
+   "description": "Commonly used to name a callback queue.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqRoutingKey": {
+   "description": "The routing key that was used when publishing the message.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqRoutingOverrideKey": {
+   "description": "To override the endpoint configuration's routing key.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqTimestamp": {
+   "description": "Application-provided timestamp.",
+   "javaType": "Date"
+  },
+  "CamelSpringRabbitmqType": {
+   "description": "Application-specific message type.",
+   "javaType": "String"
+  },
+  "CamelSpringRabbitmqUserId": {
+   "description": "Validated user id.",
+   "javaType": "String"
+  }
+ },
+ "lenientProperties": false,
+ "name": "spring-rabbitmq",
+ "producerOnly": false,
+ "properties": {
+  "acknowledgeMode": {
+   "description": "Flag controlling the behaviour of the container with respect to message acknowledgement. The most common usage is to let the container handle the acknowledgements (so the listener doesn't need to know about the channel or the message). Set to AcknowledgeMode.MANUAL if the listener will send the acknowledgements itself using Channel.basicAck(long, boolean). Manual acks are consistent with either a transactional or non-transactional channel, but if you are doing no other work on the channel at the same other than receiving a single message then the transaction is probably unnecessary. Set to AcknowledgeMode.NONE to tell the broker not to expect any acknowledgements, and it will assume all messages are acknowledged as soon as they are sent (this is autoack in native Rabbit broker terms). If AcknowledgeMode.NONE then the channel cannot be transactional (so the container will fail on start up if that flag is accidentally set).",
+   "displayName": "Acknowledge Mode",
+   "enum": [
+    "NONE",
+    "MANUAL",
+    "AUTO"
+   ],
+   "group": "consumer",
+   "javaType": "org.springframework.amqp.core.AcknowledgeMode",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "allowNullBody": {
+   "defaultValue": false,
+   "description": "Whether to allow sending messages with no body. If this option is false and the message body is null, then an MessageConversionException is thrown.",
+   "displayName": "Allow Null Body",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "args": {
+   "description": "Specify arguments for configuring the different RabbitMQ concepts, a different prefix is required for each element: arg.consumer. arg.exchange. arg.queue. arg.binding. arg.dlq.exchange. arg.dlq.queue. arg.dlq.binding. For example to declare a queue with message ttl argument: args=arg.queue.x-message-ttl=60000. This is a multi-value option with prefix: arg.",
+   "displayName": "Args",
+   "group": "advanced",
+   "javaType": "java.util.Map<java.lang.String, java.lang.Object>",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "arg.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "asyncConsumer": {
+   "defaultValue": false,
+   "description": "Whether the consumer processes the Exchange asynchronously. If enabled then the consumer may pickup the next message from the queue, while the previous message is being processed asynchronously (by the Asynchronous Routing Engine). This means that messages may be processed not 100% strictly in order. If disabled (as default) then the Exchange is fully processed before the consumer will pickup the next message from the queue.",
+   "displayName": "Async Consumer",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "autoDeclare": {
+   "defaultValue": true,
+   "description": "Specifies whether the consumer should auto declare binding between exchange, queue and routing key when starting.",
+   "displayName": "Auto Declare",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "autoDeclareProducer": {
+   "defaultValue": false,
+   "description": "Specifies whether the producer should auto declare binding between exchange, queue and routing key when starting.",
+   "displayName": "Auto Declare Producer",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "autoStartup": {
+   "defaultValue": true,
+   "description": "Specifies whether the consumer container should auto-startup.",
+   "displayName": "Auto Startup",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "bridgeErrorHandler": {
+   "defaultValue": false,
+   "description": "Allows for bridging the consumer to the Camel routing Error Handler, which mean any exceptions (if possible) occurred while the Camel consumer is trying to pickup incoming messages, or the likes, will now be processed as a message and handled by the routing Error Handler. Important: This is only possible if the 3rd party component allows Camel to be alerted if an exception was thrown. Some components handle this internally only, and therefore bridgeErrorHandler is not possible. In other situations we may improve the Camel component to hook into the 3rd party component and make this possible for future releases. By default the consumer will use the org.apache.camel.spi.ExceptionHandler to deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Bridge Error Handler",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "concurrentConsumers": {
+   "description": "The number of consumers",
+   "displayName": "Concurrent Consumers",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.Integer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "confirm": {
+   "defaultValue": "auto",
+   "description": "Controls whether to wait for confirms. The connection factory must be configured for publisher confirms and this method. auto = Camel detects if the connection factory uses confirms or not. disabled = Confirms is disabled. enabled = Confirms is enabled.",
+   "displayName": "Confirm",
+   "enum": [
+    "auto",
+    "enabled",
+    "disabled"
+   ],
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "confirmTimeout": {
+   "defaultValue": "5000",
+   "description": "Specify the timeout in milliseconds to be used when waiting for a message sent to be confirmed by RabbitMQ when doing send only messaging (InOnly). The default value is 5 seconds. A negative value indicates an indefinite timeout.",
+   "displayName": "Confirm Timeout",
+   "group": "producer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "connectionFactory": {
+   "description": "The connection factory to be use. A connection factory must be configured either on the component or endpoint.",
+   "displayName": "Connection Factory",
+   "group": "common",
+   "javaType": "org.springframework.amqp.rabbit.connection.ConnectionFactory",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "deadLetterExchange": {
+   "description": "The name of the dead letter exchange",
+   "displayName": "Dead Letter Exchange",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "deadLetterExchangeType": {
+   "defaultValue": "direct",
+   "description": "The type of the dead letter exchange",
+   "displayName": "Dead Letter Exchange Type",
+   "enum": [
+    "direct",
+    "fanout",
+    "headers",
+    "topic"
+   ],
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "deadLetterQueue": {
+   "description": "The name of the dead letter queue",
+   "displayName": "Dead Letter Queue",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "deadLetterRoutingKey": {
+   "description": "The routing key for the dead letter exchange",
+   "displayName": "Dead Letter Routing Key",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "disableReplyTo": {
+   "defaultValue": false,
+   "description": "Specifies whether Camel ignores the ReplyTo header in messages. If true, Camel does not send a reply back to the destination specified in the ReplyTo header. You can use this option if you want Camel to consume from a route and you do not want Camel to automatically send back a reply message because another component in your code handles the reply message. You can also use this option if you want to use Camel as a proxy between different message brokers and you want to route message from one system to another.",
+   "displayName": "Disable Reply To",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangeName": {
+   "description": "The exchange name determines the exchange to which the produced messages will be sent to. In the case of consumers, the exchange name determines the exchange the queue will be bound to. Note: to use default exchange then do not use empty name, but use default instead.",
+   "displayName": "Exchange Name",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "exchangeType": {
+   "defaultValue": "direct",
+   "description": "The type of the exchange",
+   "displayName": "Exchange Type",
+   "enum": [
+    "direct",
+    "fanout",
+    "headers",
+    "topic"
+   ],
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "exclusive": {
+   "defaultValue": false,
+   "description": "Set to true for an exclusive consumer",
+   "displayName": "Exclusive",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "lazyStartProducer": {
+   "defaultValue": false,
+   "description": "Whether the producer should be started lazy (on the first message). By starting lazy you can use this to allow CamelContext and routes to startup in situations where a producer may otherwise fail during starting and cause the route to fail being started. By deferring this startup to be lazy then the startup failure can be handled during routing messages via Camel's routing error handlers. Beware that when the first message is processed then creating and starting the producer may take a little time and prolong the total processing time of the processing.",
+   "displayName": "Lazy Start Producer",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "maxConcurrentConsumers": {
+   "description": "The maximum number of consumers (available only with SMLC)",
+   "displayName": "Max Concurrent Consumers",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.Integer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "maximumRetryAttempts": {
+   "defaultValue": 5,
+   "description": "How many times a Rabbitmq consumer will try the same message if Camel failed to process the message (The number of attempts includes the initial try)",
+   "displayName": "Maximum Retry Attempts",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "messageConverter": {
+   "description": "To use a custom MessageConverter so you can be in control how to map to/from a org.springframework.amqp.core.Message.",
+   "displayName": "Message Converter",
+   "group": "advanced",
+   "javaType": "org.springframework.amqp.support.converter.MessageConverter",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "messageListenerContainerType": {
+   "defaultValue": "DMLC",
+   "description": "The type of the MessageListenerContainer",
+   "displayName": "Message Listener Container Type",
+   "enum": [
+    "DMLC",
+    "SMLC"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "messagePropertiesConverter": {
+   "description": "To use a custom MessagePropertiesConverter so you can be in control how to map to/from a org.springframework.amqp.core.MessageProperties.",
+   "displayName": "Message Properties Converter",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.springrabbit.MessagePropertiesConverter",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "noLocal": {
+   "defaultValue": false,
+   "description": "Set to true for an no-local consumer",
+   "displayName": "No Local",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "prefetchCount": {
+   "description": "Tell the broker how many messages to send in a single request. Often this can be set quite high to improve throughput.",
+   "displayName": "Prefetch Count",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.Integer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "queues": {
+   "description": "The queue(s) to use for consuming or producing messages. Multiple queue names can be separated by comma. If none has been configured then Camel will generate an unique id as the queue name.",
+   "displayName": "Queues",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "rejectAndDontRequeue": {
+   "defaultValue": true,
+   "description": "Whether a Rabbitmq consumer should reject the message without requeuing. This enables failed messages to be sent to a Dead Letter Exchange/Queue, if the broker is so configured.",
+   "displayName": "Reject And Dont Requeue",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "replyTimeout": {
+   "defaultValue": "30000",
+   "description": "Specify the timeout in milliseconds to be used when waiting for a reply message when doing request/reply (InOut) messaging. The default value is 30 seconds. A negative value indicates an indefinite timeout (Beware that this will cause a memory leak if a reply is not received).",
+   "displayName": "Reply Timeout",
+   "group": "producer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "retry": {
+   "description": "Custom retry configuration to use. If this is configured then the other settings such as maximumRetryAttempts for retry are not in use.",
+   "displayName": "Retry",
+   "group": "consumer (advanced)",
+   "javaType": "org.springframework.retry.interceptor.RetryOperationsInterceptor",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "retryDelay": {
+   "defaultValue": 1000,
+   "description": "Delay in millis a Rabbitmq consumer will wait before redelivering a message that Camel failed to process",
+   "displayName": "Retry Delay",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "routingKey": {
+   "description": "The value of a routing key to use. Default is empty which is not helpful when using the default (or any direct) exchange, but fine if the exchange is a headers exchange for instance.",
+   "displayName": "Routing Key",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "skipBindQueue": {
+   "defaultValue": false,
+   "description": "If true the queue will not be bound to the exchange after declaring it.",
+   "displayName": "Skip Bind Queue",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "skipDeclareExchange": {
+   "defaultValue": false,
+   "description": "This can be used if we need to declare the queue but not the exchange.",
+   "displayName": "Skip Declare Exchange",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "skipDeclareQueue": {
+   "defaultValue": false,
+   "description": "If true the producer will not declare and bind a queue. This can be used for directing messages via an existing routing key.",
+   "displayName": "Skip Declare Queue",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "synchronous": {
+   "defaultValue": false,
+   "description": "Sets whether synchronous processing should be strictly used",
+   "displayName": "Synchronous",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "testConnectionOnStartup": {
+   "defaultValue": false,
+   "description": "Specifies whether to test the connection on startup. This ensures that when Camel starts that all the JMS consumers have a valid connection to the JMS broker. If a connection cannot be granted then Camel throws an exception on startup. This ensures that Camel is not started with failed connections. The JMS producers is tested as well.",
+   "displayName": "Test Connection On Startup",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "usePublisherConnection": {
+   "defaultValue": false,
+   "description": "Use a separate connection for publishers and consumers",
+   "displayName": "Use Publisher Connection",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "scheme": "spring-rabbitmq",
+ "syntax": "spring-rabbitmq:exchangeName",
+ "title": "Spring RabbitMQ",
+ "version": "4.14.9"
+}

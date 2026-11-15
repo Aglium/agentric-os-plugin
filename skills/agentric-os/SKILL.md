@@ -108,6 +108,32 @@ is made of the same few general parts, and you change them through the `agentric
 11. **Keep it general.** Express the business through these parts. Do not invent special fields or hard-code one
    customer's data in a process: put values in settings, wording in texts, decisions in rules.
 
+## Building a connection, a workflow or a solution
+
+Configurations are built as data and checked against the schema (what a configuration may say), never written by
+hand. The answers say which schema they were built on: the installation's, or the copy the plugin carries when no
+installation is reached (then the installation checks again when a draft is proposed).
+
+- **A connection**: `connection_kinds` (is it of a known kind? then it offers what every one of the kind does),
+  `connection_contract` (what routes rely on), `camel_components` and `camel_doc` (a component's address and options,
+  an EIP, a language), then the description as an object shaped like connector.yaml and the routes as a list shaped
+  like Camel's YAML DSL. `check_connection` until `ready`, then `write_connection` into a folder, or
+  `propose_connection` as a draft. Settings are named `{{key}}` and listed under configuration, never written in.
+  After it is applied, a person enters its settings and starts its program on the connection's page.
+- **A workflow**: `workflow_parts` (the blocks, their fields and how they end; what else a workflow may contain), then a
+  plan: steps that are blocks, choices, values worked out, approvals and ends, with `next`, `onError` and timers.
+  `check_workflow_plan` until `ready` (give the solution and connections being built, so their agents, texts, rules and
+  operations count), then `write_workflow` into the solution's folder or `propose_workflow` as a draft in Test run.
+  Say on the steps that do a person's work how long it takes (`byHandMinutes`, `byHandRole`).
+- **A table of rules**: a plan of inputs (what each column looks at), outputs and rows; `check_rules` until `ready`,
+  then `write_rules` into the solution's folder or `propose_rules`. A workflow's policy is such a table (`policy:
+  true`) answering `verdict` (AUTO, NEEDS_APPROVAL or DENY) with a row for every command the workflow can send.
+- **A solution**: its folder holds solution.yaml, workflows/, rules/ (DMN), texts/. Write the workflows with
+  `write_workflow`, its rules with `write_rules`, then `check_solution` and `write_solution`, and `propose_solution` to send
+  it all as drafts, in the order they are to be applied. New workflows start in Test run (`shadow: true`).
+
+Fix every problem a check gives; do not work around one. A problem names where it is and what to do.
+
 ## Things the tools refuse on purpose
 
 - Sign-in details of connections (passwords, keys) are never readable or changeable with an access token. A person

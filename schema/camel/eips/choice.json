@@ -1,0 +1,69 @@
+{
+ "description": "Route messages based on a series of predicates",
+ "name": "choice",
+ "properties": {
+  "description": {
+   "description": "Sets the description of this node",
+   "displayName": "Description",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "disabled": {
+   "defaultValue": false,
+   "description": "Disables this EIP from the route.",
+   "displayName": "Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "otherwise": {
+   "description": "Sets the otherwise node",
+   "displayName": "Otherwise",
+   "group": "common",
+   "javaType": "org.apache.camel.model.OtherwiseDefinition",
+   "kind": "element",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "precondition": {
+   "defaultValue": false,
+   "description": "Indicates whether this Choice EIP is in precondition mode or not. If so its branches (when/otherwise) are evaluated during startup to keep at runtime only the branch that matched.",
+   "displayName": "Precondition",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "when": {
+   "description": "Sets the when nodes",
+   "displayName": "When",
+   "group": "common",
+   "javaType": "java.util.List<org.apache.camel.model.WhenDefinition>",
+   "kind": "element",
+   "required": false,
+   "secret": false,
+   "type": "array"
+  }
+ },
+ "title": "Choice"
+}

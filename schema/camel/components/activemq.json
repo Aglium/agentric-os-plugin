@@ -1,0 +1,1299 @@
+{
+ "consumerOnly": false,
+ "description": "Send messages to (or consume from) Apache ActiveMQ 5.x. This component extends the Camel JMS component.",
+ "headers": {
+  "CamelJMSDestinationProduced": {
+   "description": "The name of the queue or topic the message was sent to.",
+   "javaType": "String"
+  },
+  "CamelJmsDestination": {
+   "description": "The destination.",
+   "javaType": "jakarta.jms.Destination"
+  },
+  "CamelJmsDestinationName": {
+   "description": "The name of the queue or topic to use as destination.",
+   "javaType": "String"
+  },
+  "CamelJmsMessageType": {
+   "description": "The message type.",
+   "javaType": "org.apache.camel.component.jms.JmsMessageType"
+  },
+  "CamelJmsRequestTimeout": {
+   "description": "The timeout for waiting for a reply when using the InOut Exchange Pattern (in milliseconds).",
+   "javaType": "long"
+  },
+  "JMSCorrelationID": {
+   "description": "The JMS correlation ID.",
+   "javaType": "String"
+  },
+  "JMSCorrelationIDAsBytes": {
+   "description": "The JMS correlation ID as bytes.",
+   "javaType": "byte[]"
+  },
+  "JMSDeliveryMode": {
+   "description": "The JMS delivery mode.",
+   "javaType": "int"
+  },
+  "JMSDestination": {
+   "description": "The JMS destination.",
+   "javaType": "jakarta.jms.Destination"
+  },
+  "JMSExpiration": {
+   "description": "The JMS expiration.",
+   "javaType": "long"
+  },
+  "JMSMessageID": {
+   "description": "The JMS unique message ID.",
+   "javaType": "String"
+  },
+  "JMSPriority": {
+   "description": "The JMS priority (with 0 as the lowest priority and 9 as the highest).",
+   "javaType": "int"
+  },
+  "JMSRedelivered": {
+   "description": "Is the JMS message redelivered.",
+   "javaType": "boolean"
+  },
+  "JMSReplyTo": {
+   "description": "The JMS reply-to destination.",
+   "javaType": "jakarta.jms.Destination"
+  },
+  "JMSTimestamp": {
+   "description": "The JMS timestamp.",
+   "javaType": "long"
+  },
+  "JMSType": {
+   "description": "The JMS type.",
+   "javaType": "String"
+  },
+  "JMSXGroupID": {
+   "description": "The JMS group ID.",
+   "javaType": "String"
+  },
+  "JMSXUserID": {
+   "description": "The XUser id.",
+   "javaType": "String"
+  }
+ },
+ "lenientProperties": false,
+ "name": "activemq",
+ "producerOnly": false,
+ "properties": {
+  "acceptMessagesWhileStopping": {
+   "defaultValue": false,
+   "description": "Specifies whether the consumer accept messages while it is stopping. You may consider enabling this option, if you start and stop JMS routes at runtime, while there are still messages enqueued on the queue. If this option is false, and you stop the JMS route, then messages may be rejected, and the JMS broker would have to attempt redeliveries, which yet again may be rejected, and eventually the message may be moved at a dead letter queue on the JMS broker. To avoid this its recommended to enable this option.",
+   "displayName": "Accept Messages While Stopping",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "acknowledgementModeName": {
+   "defaultValue": "AUTO_ACKNOWLEDGE",
+   "description": "The JMS acknowledgement name, which is one of: SESSION_TRANSACTED, CLIENT_ACKNOWLEDGE, AUTO_ACKNOWLEDGE, DUPS_OK_ACKNOWLEDGE",
+   "displayName": "Acknowledgement Mode Name",
+   "enum": [
+    "SESSION_TRANSACTED",
+    "CLIENT_ACKNOWLEDGE",
+    "AUTO_ACKNOWLEDGE",
+    "DUPS_OK_ACKNOWLEDGE"
+   ],
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "allowAdditionalHeaders": {
+   "description": "This option is used to allow additional headers which may have values that are invalid according to JMS specification. For example, some message systems, such as WMQ, do this with header names using prefix JMS_IBM_MQMD_ containing values with byte array or other invalid types. You can specify multiple header names separated by comma, and use as suffix for wildcard matching.",
+   "displayName": "Allow Additional Headers",
+   "group": "producer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "allowNullBody": {
+   "defaultValue": true,
+   "description": "Whether to allow sending messages with no body. If this option is false and the message body is null, then an JMSException is thrown.",
+   "displayName": "Allow Null Body",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "allowReplyManagerQuickStop": {
+   "defaultValue": false,
+   "description": "Whether the DefaultMessageListenerContainer used in the reply managers for request-reply messaging allow the DefaultMessageListenerContainer.runningAllowed flag to quick stop in case JmsConfiguration#isAcceptMessagesWhileStopping is enabled, and org.apache.camel.CamelContext is currently being stopped. This quick stop ability is enabled by default in the regular JMS consumers but to enable for reply managers you must enable this flag.",
+   "displayName": "Allow Reply Manager Quick Stop",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "allowSerializedHeaders": {
+   "defaultValue": false,
+   "description": "Controls whether or not to include serialized headers. Applies only when transferExchange is true. This requires that the objects are serializable. Camel will exclude any non-serializable objects and log it at WARN level.",
+   "displayName": "Allow Serialized Headers",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "alwaysCopyMessage": {
+   "defaultValue": false,
+   "description": "If true, Camel will always make a JMS message copy of the message when it is passed to the producer for sending. Copying the message is needed in some situations, such as when a replyToDestinationSelectorName is set (incidentally, Camel will set the alwaysCopyMessage option to true, if a replyToDestinationSelectorName is set)",
+   "displayName": "Always Copy Message",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "artemisConsumerPriority": {
+   "description": "Consumer priorities allow you to ensure that high priority consumers receive messages while they are active. Normally, active consumers connected to a queue receive messages from it in a round-robin fashion. When consumer priorities are in use, messages are delivered round-robin if multiple active consumers exist with the same high priority. Messages will only going to lower priority consumers when the high priority consumers do not have credit available to consume the message, or those high priority consumers have declined to accept the message (for instance because it does not meet the criteria of any selectors associated with the consumer).",
+   "displayName": "Artemis Consumer Priority",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "artemisStreamingEnabled": {
+   "defaultValue": false,
+   "description": "Whether optimizing for Apache Artemis streaming mode. This can reduce memory overhead when using Artemis with JMS StreamMessage types. This option must only be enabled if Apache Artemis is being used.",
+   "displayName": "Artemis Streaming Enabled",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "asyncConsumer": {
+   "defaultValue": false,
+   "description": "Whether the JmsConsumer processes the Exchange asynchronously. If enabled then the JmsConsumer may pickup the next message from the JMS queue, while the previous message is being processed asynchronously (by the Asynchronous Routing Engine). This means that messages may be processed not 100% strictly in order. If disabled (as default) then the Exchange is fully processed before the JmsConsumer will pickup the next message from the JMS queue. Note if transacted has been enabled, then asyncConsumer=true does not run asynchronously, as transaction must be executed synchronously.",
+   "displayName": "Async Consumer",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "asyncStartListener": {
+   "defaultValue": false,
+   "description": "Whether to startup the JmsConsumer message listener asynchronously, when starting a route. For example if a JmsConsumer cannot get a connection to a remote JMS broker, then it may block while retrying and/or fail-over. This will cause Camel to block while starting routes. By setting this option to true, you will let routes startup, while the JmsConsumer connects to the JMS broker using a dedicated thread in asynchronous mode. If this option is used, then beware that if the connection could not be established, then an exception is logged at WARN level, and the consumer will not be able to receive messages; You can then restart the route to retry.",
+   "displayName": "Async Start Listener",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "asyncStopListener": {
+   "defaultValue": false,
+   "description": "Whether to stop the JmsConsumer message listener asynchronously, when stopping a route.",
+   "displayName": "Async Stop Listener",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "autoStartup": {
+   "defaultValue": true,
+   "description": "Specifies whether the consumer container should auto-startup.",
+   "displayName": "Auto Startup",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "browseLimit": {
+   "defaultValue": 100,
+   "description": "Maximum number of messages to keep in memory available for browsing. Use 0 for unlimited.",
+   "displayName": "Browse Limit",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "cacheLevel": {
+   "description": "Sets the cache level by ID for the underlying JMS resources. See cacheLevelName option for more details.",
+   "displayName": "Cache Level",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "cacheLevelName": {
+   "defaultValue": "CACHE_AUTO",
+   "description": "Sets the cache level by name for the underlying JMS resources. Possible values are: CACHE_AUTO, CACHE_CONNECTION, CACHE_CONSUMER, CACHE_NONE, and CACHE_SESSION. The default setting is CACHE_AUTO. See the Spring documentation and Transactions Cache Levels for more information.",
+   "displayName": "Cache Level Name",
+   "enum": [
+    "CACHE_AUTO",
+    "CACHE_CONNECTION",
+    "CACHE_CONSUMER",
+    "CACHE_NONE",
+    "CACHE_SESSION"
+   ],
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "clientId": {
+   "description": "Sets the JMS client ID to use. Note that this value, if specified, must be unique and can only be used by a single JMS connection instance. It is typically only required for durable topic subscriptions with JMS 1.1.",
+   "displayName": "Client Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "concurrentConsumers": {
+   "defaultValue": 1,
+   "description": "Specifies the default number of concurrent consumers when consuming from JMS (not for request/reply over JMS). See also the maxMessagesPerTask option to control dynamic scaling up/down of threads. When doing request/reply over JMS then the option replyToConcurrentConsumers is used to control number of concurrent consumers on the reply message listener.",
+   "displayName": "Concurrent Consumers",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "connectionFactory": {
+   "description": "The connection factory to be use. A connection factory must be configured either on the component or endpoint.",
+   "displayName": "Connection Factory",
+   "group": "common",
+   "javaType": "jakarta.jms.ConnectionFactory",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "consumerType": {
+   "defaultValue": "Default",
+   "description": "The consumer type to use, which can be one of: Simple, Default, or Custom. The consumer type determines which Spring JMS listener to use. Default will use org.springframework.jms.listener.DefaultMessageListenerContainer, Simple will use org.springframework.jms.listener.SimpleMessageListenerContainer. When Custom is specified, the MessageListenerContainerFactory defined by the messageListenerContainerFactory option will determine what org.springframework.jms.listener.AbstractMessageListenerContainer to use.",
+   "displayName": "Consumer Type",
+   "enum": [
+    "Simple",
+    "Default",
+    "Custom"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.component.jms.ConsumerType",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "correlationProperty": {
+   "description": "When using InOut exchange pattern use this JMS property instead of JMSCorrelationID JMS property to correlate messages. If set messages will be correlated solely on the value of this property JMSCorrelationID property will be ignored and not set by Camel.",
+   "displayName": "Correlation Property",
+   "group": "producer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "defaultTaskExecutorType": {
+   "description": "Specifies what default TaskExecutor type to use in the DefaultMessageListenerContainer, for both consumer endpoints and the ReplyTo consumer of producer endpoints. Possible values: SimpleAsync (uses Spring's SimpleAsyncTaskExecutor) or ThreadPool (uses Spring's ThreadPoolTaskExecutor with optimal values - cached thread-pool-like). If not set, it defaults to the previous behaviour, which uses a cached thread pool for consumer endpoints and SimpleAsync for reply consumers. The use of ThreadPool is recommended to reduce thread trash in elastic configurations with dynamically increasing and decreasing concurrent consumers.",
+   "displayName": "Default Task Executor Type",
+   "enum": [
+    "ThreadPool",
+    "SimpleAsync"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.component.jms.DefaultTaskExecutorType",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "deliveryDelay": {
+   "defaultValue": -1,
+   "description": "Sets delivery delay to use for send calls for JMS. This option requires JMS 2.0 compliant broker.",
+   "displayName": "Delivery Delay",
+   "group": "producer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "deliveryMode": {
+   "description": "Specifies the delivery mode to be used. Possible values are those defined by jakarta.jms.DeliveryMode. NON_PERSISTENT = 1 and PERSISTENT = 2.",
+   "displayName": "Delivery Mode",
+   "enum": [
+    "1",
+    "2"
+   ],
+   "group": "producer",
+   "javaType": "java.lang.Integer",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "deliveryPersistent": {
+   "defaultValue": true,
+   "description": "Specifies whether persistent delivery is used by default.",
+   "displayName": "Delivery Persistent",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "deserializationFilter": {
+   "description": "Sets an ObjectInputFilter pattern (jdk.serialFilter syntax) applied as a defense-in-depth check on the class of the body returned by jakarta.jms.ObjectMessage.getObject(). The pattern is evaluated after the JMS provider has deserialized the payload, so this option alone does not prevent gadget-chain execution that happens inside the provider's ObjectInputStream; to block such attacks, also configure the JMS provider's own deserialization filter and/or the JVM-wide -Djdk.serialFilter. When this option is not set and no JVM-wide filter is configured, a conservative default filter denying java.net. and otherwise allowing java., javax. and org.apache.camel. is applied.",
+   "displayName": "Deserialization Filter",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "destinationName": {
+   "description": "Name of the queue or topic to use as destination",
+   "displayName": "Destination Name",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": true,
+   "secret": false,
+   "type": "string"
+  },
+  "destinationOptions": {
+   "description": "Destination Options are a way to provide extended configuration options to a JMS consumer without having to extend the JMS API. The options are encoded using URL query syntax in the destination name that the consumer is created on. See more details at https://activemq.apache.org/destination-options. This is a multi-value option with prefix: destination.",
+   "displayName": "Destination Options",
+   "group": "consumer (advanced)",
+   "javaType": "java.util.Map<java.lang.String, java.lang.String>",
+   "kind": "parameter",
+   "multiValue": true,
+   "prefix": "destination.",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "destinationResolver": {
+   "description": "A pluggable org.springframework.jms.support.destination.DestinationResolver that allows you to use your own resolver (for example, to lookup the real destination in a JNDI registry).",
+   "displayName": "Destination Resolver",
+   "group": "advanced",
+   "javaType": "org.springframework.jms.support.destination.DestinationResolver",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "destinationType": {
+   "defaultValue": "queue",
+   "description": "The kind of destination to use",
+   "displayName": "Destination Type",
+   "enum": [
+    "queue",
+    "topic",
+    "temp-queue",
+    "temp-topic"
+   ],
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "path",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "disableReplyTo": {
+   "defaultValue": false,
+   "description": "Specifies whether Camel ignores the JMSReplyTo header in messages. If true, Camel does not send a reply back to the destination specified in the JMSReplyTo header. You can use this option if you want Camel to consume from a route and you do not want Camel to automatically send back a reply message because another component in your code handles the reply message. You can also use this option if you want to use Camel as a proxy between different message brokers and you want to route message from one system to another.",
+   "displayName": "Disable Reply To",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "disableTimeToLive": {
+   "defaultValue": false,
+   "description": "Use this option to force disabling time to live. For example when you do request/reply over JMS, then Camel will by default use the requestTimeout value as time to live on the message being sent. The problem is that the sender and receiver systems have to have their clocks synchronized, so they are in sync. This is not always so easy to archive. So you can use disableTimeToLive=true to not set a time to live value on the sent message. Then the message will not expire on the receiver system. See below in section About time to live for more details.",
+   "displayName": "Disable Time To Live",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "durableSubscriptionName": {
+   "description": "The durable subscriber name for specifying durable topic subscriptions. The clientId option must be configured as well.",
+   "displayName": "Durable Subscription Name",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "eagerLoadingOfProperties": {
+   "defaultValue": false,
+   "description": "Enables eager loading of JMS properties and payload as soon as a message is loaded which generally is inefficient as the JMS properties may not be required but sometimes can catch early any issues with the underlying JMS provider and the use of JMS properties. See also the option eagerPoisonBody.",
+   "displayName": "Eager Loading Of Properties",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "eagerPoisonBody": {
+   "defaultValue": "Poison JMS message due to ${exception.message}",
+   "description": "If eagerLoadingOfProperties is enabled and the JMS message payload (JMS body or JMS properties) is poison (cannot be read/mapped), then set this text as the message body instead so the message can be processed (the cause of the poison are already stored as exception on the Exchange). This can be turned off by setting eagerPoisonBody=false. See also the option eagerLoadingOfProperties.",
+   "displayName": "Eager Poison Body",
+   "group": "consumer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "errorHandler": {
+   "description": "Specifies a org.springframework.util.ErrorHandler to be invoked in case of any uncaught exceptions thrown while processing a Message. By default these exceptions will be logged at the WARN level, if no errorHandler has been configured. You can configure logging level and whether stack traces should be logged using errorHandlerLoggingLevel and errorHandlerLogStackTrace options. This makes it much easier to configure, than having to code a custom errorHandler.",
+   "displayName": "Error Handler",
+   "group": "advanced",
+   "javaType": "org.springframework.util.ErrorHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "errorHandlerLogStackTrace": {
+   "defaultValue": true,
+   "description": "Allows to control whether stack-traces should be logged or not, by the default errorHandler.",
+   "displayName": "Error Handler Log Stack Trace",
+   "group": "logging",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "errorHandlerLoggingLevel": {
+   "defaultValue": "WARN",
+   "description": "Allows to configure the default errorHandler logging level for logging uncaught exceptions.",
+   "displayName": "Error Handler Logging Level",
+   "enum": [
+    "TRACE",
+    "DEBUG",
+    "INFO",
+    "WARN",
+    "ERROR",
+    "OFF"
+   ],
+   "group": "logging",
+   "javaType": "org.apache.camel.LoggingLevel",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "exceptionHandler": {
+   "description": "To let the consumer use a custom ExceptionHandler. Notice if the option bridgeErrorHandler is enabled then this option is not in use. By default the consumer will deal with exceptions, that will be logged at WARN or ERROR level and ignored.",
+   "displayName": "Exception Handler",
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.spi.ExceptionHandler",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exceptionListener": {
+   "description": "Specifies the JMS Exception Listener that is to be notified of any underlying JMS exceptions.",
+   "displayName": "Exception Listener",
+   "group": "advanced",
+   "javaType": "jakarta.jms.ExceptionListener",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "exchangePattern": {
+   "description": "Sets the exchange pattern when the consumer creates an exchange.",
+   "displayName": "Exchange Pattern",
+   "enum": [
+    "InOnly",
+    "InOut"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.ExchangePattern",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "explicitQosEnabled": {
+   "defaultValue": false,
+   "description": "Set if the deliveryMode, priority or timeToLive qualities of service should be used when sending messages. This option is based on Spring's JmsTemplate. The deliveryMode, priority and timeToLive options are applied to the current endpoint. This contrasts with the preserveMessageQos option, which operates at message granularity, reading QoS properties exclusively from the Camel In message headers.",
+   "displayName": "Explicit Qos Enabled",
+   "group": "producer",
+   "javaType": "java.lang.Boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "exposeListenerSession": {
+   "defaultValue": true,
+   "description": "Specifies whether the listener session should be exposed when consuming messages.",
+   "displayName": "Expose Listener Session",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "forceSendOriginalMessage": {
+   "defaultValue": false,
+   "description": "When using mapJmsMessage=false Camel will create a new JMS message to send to a new JMS destination if you touch the headers (get or set) during the route. Set this option to true to force Camel to send the original JMS message that was received.",
+   "displayName": "Force Send Original Message",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "formatDateHeadersToIso8601": {
+   "defaultValue": false,
+   "description": "Sets whether JMS date properties should be formatted according to the ISO 8601 standard.",
+   "displayName": "Format Date Headers To Iso8601",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "headerFilterStrategy": {
+   "description": "To use a custom HeaderFilterStrategy to filter header to and from Camel message.",
+   "displayName": "Header Filter Strategy",
+   "group": "advanced",
+   "javaType": "org.apache.camel.spi.HeaderFilterStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "idleConsumerLimit": {
+   "defaultValue": 1,
+   "description": "Specify the limit for the number of consumers that are allowed to be idle at any given time.",
+   "displayName": "Idle Consumer Limit",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "idleReceivesPerTaskLimit": {
+   "description": "Marks the consumer as idle after the specified number of idle receives have been reached. An idle receive is counted from the moment a null message is returned by the receiver after the potential setReceiveTimeout elapsed. This gives the opportunity to check if the idle task count exceeds setIdleTaskExecutionLimit and based on that decide if the task needs to be re-scheduled or not, saving resources that would otherwise be held. This setting differs from setMaxMessagesPerTask where the task is released and re-scheduled after this limit is reached, no matter if the received messages were null or non-null messages. This setting alone can be inflexible if one desires to have a large enough batch for each task but requires a quick(er) release from the moment there are no more messages to process. This setting differs from setIdleTaskExecutionLimit where this limit decides after how many iterations of being marked as idle, a task is released. For example: If setMaxMessagesPerTask is set to '500' and #setIdleReceivesPerTaskLimit is set to '60' and setReceiveTimeout is set to '1000' and setIdleTaskExecutionLimit is set to '1', then 500 messages per task would be processed unless there is a subsequent number of 60 idle messages received, the task would be marked as idle and released. This also means that after the last message was processed, the task would be released after 60 seconds as long as no new messages appear.",
+   "displayName": "Idle Receives Per Task Limit",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "idleTaskExecutionLimit": {
+   "defaultValue": 1,
+   "description": "Specifies the limit for idle executions of a receive task, not having received any message within its execution. If this limit is reached, the task will shut down and leave receiving to other executing tasks (in the case of dynamic scheduling; see the maxConcurrentConsumers setting). There is additional doc available from Spring.",
+   "displayName": "Idle Task Execution Limit",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "includeAllJMSXProperties": {
+   "defaultValue": false,
+   "description": "Whether to include all JMSX prefixed properties when mapping from JMS to Camel Message. Setting this to true will include properties such as JMSXAppID, and JMSXUserID etc. Note: If you are using a custom headerFilterStrategy then this option does not apply.",
+   "displayName": "Include All JMSXProperties",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "includeSentJMSMessageID": {
+   "defaultValue": false,
+   "description": "Only applicable when sending to JMS destination using InOnly (eg fire and forget). Enabling this option will enrich the Camel Exchange with the actual JMSMessageID that was used by the JMS client when the message was sent to the JMS destination.",
+   "displayName": "Include Sent JMSMessage ID",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "jmsKeyFormatStrategy": {
+   "description": "Pluggable strategy for encoding and decoding JMS keys so they can be compliant with the JMS specification. Camel provides two implementations out of the box: default and passthrough. The default strategy will safely marshal dots and hyphens (. and -). The passthrough strategy leaves the key as is. Can be used for JMS brokers which do not care whether JMS header keys contain illegal characters. You can provide your own implementation of the org.apache.camel.component.jms.JmsKeyFormatStrategy and refer to it using the # notation.",
+   "displayName": "Jms Key Format Strategy",
+   "enum": [
+    "default",
+    "passthrough"
+   ],
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.jms.JmsKeyFormatStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "jmsMessageType": {
+   "description": "Allows you to force the use of a specific jakarta.jms.Message implementation for sending JMS messages. Possible values are: Bytes, Map, Object, Stream, Text. By default, Camel would determine which JMS message type to use from the In body type. This option allows you to specify it.",
+   "displayName": "Jms Message Type",
+   "enum": [
+    "Bytes",
+    "Map",
+    "Object",
+    "Stream",
+    "Text"
+   ],
+   "group": "common",
+   "javaType": "org.apache.camel.component.jms.JmsMessageType",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "lazyCreateTransactionManager": {
+   "defaultValue": true,
+   "description": "If true, Camel will create a JmsTransactionManager, if there is no transactionManager injected when option transacted=true.",
+   "displayName": "Lazy Create Transaction Manager",
+   "group": "transaction (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "lazyStartProducer": {
+   "defaultValue": false,
+   "description": "Whether the producer should be started lazy (on the first message). By starting lazy you can use this to allow CamelContext and routes to startup in situations where a producer may otherwise fail during starting and cause the route to fail being started. By deferring this startup to be lazy then the startup failure can be handled during routing messages via Camel's routing error handlers. Beware that when the first message is processed then creating and starting the producer may take a little time and prolong the total processing time of the processing.",
+   "displayName": "Lazy Start Producer",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "mapJmsMessage": {
+   "defaultValue": true,
+   "description": "Specifies whether Camel should auto map the received JMS message to a suited payload type, such as jakarta.jms.TextMessage to a String etc.",
+   "displayName": "Map Jms Message",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "maxConcurrentConsumers": {
+   "description": "Specifies the maximum number of concurrent consumers when consuming from JMS (not for request/reply over JMS). See also the maxMessagesPerTask option to control dynamic scaling up/down of threads. When doing request/reply over JMS then the option replyToMaxConcurrentConsumers is used to control number of concurrent consumers on the reply message listener.",
+   "displayName": "Max Concurrent Consumers",
+   "group": "consumer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "maxMessagesPerTask": {
+   "defaultValue": -1,
+   "description": "The number of messages per task. -1 is unlimited. If you use a range for concurrent consumers (eg min max), then this option can be used to set a value to eg 100 to control how fast the consumers will shrink when less work is required.",
+   "displayName": "Max Messages Per Task",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "messageConverter": {
+   "description": "To use a custom Spring org.springframework.jms.support.converter.MessageConverter so you can be in control how to map to/from a jakarta.jms.Message.",
+   "displayName": "Message Converter",
+   "group": "advanced",
+   "javaType": "org.springframework.jms.support.converter.MessageConverter",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "messageCreatedStrategy": {
+   "description": "To use the given MessageCreatedStrategy which are invoked when Camel creates new instances of jakarta.jms.Message objects when Camel is sending a JMS message.",
+   "displayName": "Message Created Strategy",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.jms.MessageCreatedStrategy",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "messageIdEnabled": {
+   "defaultValue": true,
+   "description": "When sending, specifies whether message IDs should be added. This is just an hint to the JMS broker. If the JMS provider accepts this hint, these messages must have the message ID set to null; if the provider ignores the hint, the message ID must be set to its normal unique value.",
+   "displayName": "Message Id Enabled",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "messageListenerContainerFactory": {
+   "description": "Registry ID of the MessageListenerContainerFactory used to determine what org.springframework.jms.listener.AbstractMessageListenerContainer to use to consume messages. Setting this will automatically set consumerType to Custom.",
+   "displayName": "Message Listener Container Factory",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.jms.MessageListenerContainerFactory",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "messageTimestampEnabled": {
+   "defaultValue": true,
+   "description": "Specifies whether timestamps should be enabled by default on sending messages. This is just an hint to the JMS broker. If the JMS provider accepts this hint, these messages must have the timestamp set to zero; if the provider ignores the hint the timestamp must be set to its normal value.",
+   "displayName": "Message Timestamp Enabled",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "objectMessageEnabled": {
+   "defaultValue": false,
+   "description": "Whether to enable sending and receiving JMS ObjectMessage. By default this is disabled because Java object serialization is a known source of security vulnerabilities. Enable this option only if you trust the source of the messages and need to send or receive Java serialized objects via JMS. When disabled, Camel will refuse to create or read JMS ObjectMessage instances. Options that rely on ObjectMessage internally (such as transferExchange and transferException) require this option to be enabled.",
+   "displayName": "Object Message Enabled",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "password": {
+   "description": "Password to use with the ConnectionFactory. You can also configure username/password directly on the ConnectionFactory.",
+   "displayName": "Password",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  },
+  "preserveMessageQos": {
+   "defaultValue": false,
+   "description": "Set to true, if you want to send message using the QoS settings specified on the message, instead of the QoS settings on the JMS endpoint. The following three headers are considered JMSPriority, JMSDeliveryMode, and JMSExpiration. You can provide all or only some of them. If not provided, Camel will fall back to use the values from the endpoint instead. So, when using this option, the headers override the values from the endpoint. The explicitQosEnabled option, by contrast, will only use options set on the endpoint, and not values from the message header.",
+   "displayName": "Preserve Message Qos",
+   "group": "producer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "priority": {
+   "defaultValue": 4,
+   "description": "Values greater than 1 specify the message priority when sending (where 1 is the lowest priority and 9 is the highest). The explicitQosEnabled option must also be enabled in order for this option to have any effect.",
+   "displayName": "Priority",
+   "enum": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+   ],
+   "group": "producer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "pubSubNoLocal": {
+   "defaultValue": false,
+   "description": "Specifies whether to inhibit the delivery of messages published by its own connection.",
+   "displayName": "Pub Sub No Local",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "receiveTimeout": {
+   "defaultValue": "1000",
+   "description": "The timeout for receiving messages (in milliseconds).",
+   "displayName": "Receive Timeout",
+   "group": "advanced",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "recoveryInterval": {
+   "defaultValue": "5000",
+   "description": "Specifies the interval between recovery attempts, i.e. when a connection is being refreshed, in milliseconds. The default is 5000 ms, that is, 5 seconds.",
+   "displayName": "Recovery Interval",
+   "group": "advanced",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "replyTo": {
+   "description": "Provides an explicit ReplyTo destination (overrides any incoming value of Message.getJMSReplyTo() in consumer).",
+   "displayName": "Reply To",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "replyToCacheLevelName": {
+   "description": "Sets the cache level by name for the reply consumer when doing request/reply over JMS. This option only applies when using fixed reply queues (not temporary). Camel will by default use: CACHE_CONSUMER for exclusive or shared w/ replyToSelectorName. And CACHE_SESSION for shared without replyToSelectorName. Some JMS brokers such as IBM WebSphere may require to set the replyToCacheLevelName=CACHE_NONE to work. Note: If using temporary queues then CACHE_NONE is not allowed, and you must use a higher value such as CACHE_CONSUMER or CACHE_SESSION.",
+   "displayName": "Reply To Cache Level Name",
+   "enum": [
+    "CACHE_AUTO",
+    "CACHE_CONNECTION",
+    "CACHE_CONSUMER",
+    "CACHE_NONE",
+    "CACHE_SESSION"
+   ],
+   "group": "producer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "replyToConcurrentConsumers": {
+   "defaultValue": 1,
+   "description": "Specifies the default number of concurrent consumers when doing request/reply over JMS. See also the maxMessagesPerTask option to control dynamic scaling up/down of threads.",
+   "displayName": "Reply To Concurrent Consumers",
+   "group": "producer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "replyToConsumerType": {
+   "defaultValue": "Default",
+   "description": "The consumer type of the reply consumer (when doing request/reply), which can be one of: Simple, Default, or Custom. The consumer type determines which Spring JMS listener to use. Default will use org.springframework.jms.listener.DefaultMessageListenerContainer, Simple will use org.springframework.jms.listener.SimpleMessageListenerContainer. When Custom is specified, the MessageListenerContainerFactory defined by the messageListenerContainerFactory option will determine what org.springframework.jms.listener.AbstractMessageListenerContainer to use.",
+   "displayName": "Reply To Consumer Type",
+   "enum": [
+    "Simple",
+    "Default",
+    "Custom"
+   ],
+   "group": "consumer (advanced)",
+   "javaType": "org.apache.camel.component.jms.ConsumerType",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "replyToDeliveryPersistent": {
+   "defaultValue": true,
+   "description": "Specifies whether to use persistent delivery by default for replies.",
+   "displayName": "Reply To Delivery Persistent",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "replyToDestinationSelectorName": {
+   "description": "Sets the JMS Selector using the fixed name to be used so you can filter out your own replies from the others when using a shared queue (that is, if you are not using a temporary reply queue).",
+   "displayName": "Reply To Destination Selector Name",
+   "group": "producer (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "replyToMaxConcurrentConsumers": {
+   "description": "Specifies the maximum number of concurrent consumers when using request/reply over JMS. See also the maxMessagesPerTask option to control dynamic scaling up/down of threads.",
+   "displayName": "Reply To Max Concurrent Consumers",
+   "group": "producer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "replyToOnTimeoutMaxConcurrentConsumers": {
+   "defaultValue": 1,
+   "description": "Specifies the maximum number of concurrent consumers for continue routing when timeout occurred when using request/reply over JMS.",
+   "displayName": "Reply To On Timeout Max Concurrent Consumers",
+   "group": "producer",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "replyToOverride": {
+   "description": "Provides an explicit ReplyTo destination in the JMS message, which overrides the setting of replyTo. It is useful if you want to forward the message to a remote Queue and receive the reply message from the ReplyTo destination.",
+   "displayName": "Reply To Override",
+   "group": "producer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "replyToSameDestinationAllowed": {
+   "defaultValue": false,
+   "description": "Whether a JMS consumer is allowed to send a reply message to the same destination that the consumer is using to consume from. This prevents an endless loop by consuming and sending back the same message to itself.",
+   "displayName": "Reply To Same Destination Allowed",
+   "group": "consumer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "replyToType": {
+   "description": "Allows for explicitly specifying which kind of strategy to use for replyTo queues when doing request/reply over JMS. Possible values are: Temporary, Shared, or Exclusive. By default Camel will use temporary queues. However if replyTo has been configured, then Shared is used by default. This option allows you to use exclusive queues instead of shared ones. See Camel JMS documentation for more details, and especially the notes about the implications if running in a clustered environment, and the fact that Shared reply queues has lower performance than its alternatives Temporary and Exclusive.",
+   "displayName": "Reply To Type",
+   "enum": [
+    "Temporary",
+    "Shared",
+    "Exclusive"
+   ],
+   "group": "producer",
+   "javaType": "org.apache.camel.component.jms.ReplyToType",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "enum"
+  },
+  "requestTimeout": {
+   "defaultValue": "20000",
+   "description": "The timeout for waiting for a reply when using the InOut Exchange Pattern (in milliseconds). The default is 20 seconds. You can include the header CamelJmsRequestTimeout to override this endpoint configured timeout value, and thus have per message individual timeout values. See also the requestTimeoutCheckerInterval option.",
+   "displayName": "Request Timeout",
+   "group": "producer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "requestTimeoutCheckerInterval": {
+   "defaultValue": "1000",
+   "description": "Configures how often Camel should check for timed out Exchanges when doing request/reply over JMS. By default Camel checks once per second. But if you must react faster when a timeout occurs, then you can lower this interval, to check more frequently. The timeout is determined by the option requestTimeout.",
+   "displayName": "Request Timeout Checker Interval",
+   "group": "advanced",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "selector": {
+   "description": "Sets the JMS selector to use",
+   "displayName": "Selector",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "streamMessageTypeEnabled": {
+   "defaultValue": false,
+   "description": "Sets whether StreamMessage type is enabled or not. Message payloads of streaming kind such as files, InputStream, etc will either by sent as BytesMessage or StreamMessage. This option controls which kind will be used. By default BytesMessage is used which enforces the entire message payload to be read into memory. By enabling this option the message payload is read into memory in chunks and each chunk is then written to the StreamMessage until no more data.",
+   "displayName": "Stream Message Type Enabled",
+   "group": "producer (advanced)",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "subscriptionDurable": {
+   "defaultValue": false,
+   "description": "Set whether to make the subscription durable. The durable subscription name to be used can be specified through the subscriptionName property. Default is false. Set this to true to register a durable subscription, typically in combination with a subscriptionName value (unless your message listener class name is good enough as subscription name). Only makes sense when listening to a topic (pub-sub domain), therefore this method switches the pubSubDomain flag as well.",
+   "displayName": "Subscription Durable",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "subscriptionName": {
+   "description": "Set the name of a subscription to create. To be applied in case of a topic (pub-sub domain) with a shared or durable subscription. The subscription name needs to be unique within this client's JMS client id. Default is the class name of the specified message listener. Note: Only 1 concurrent consumer (which is the default of this message listener container) is allowed for each subscription, except for a shared subscription (which requires JMS 2.0).",
+   "displayName": "Subscription Name",
+   "group": "consumer",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "subscriptionShared": {
+   "defaultValue": false,
+   "description": "Set whether to make the subscription shared. The shared subscription name to be used can be specified through the subscriptionName property. Default is false. Set this to true to register a shared subscription, typically in combination with a subscriptionName value (unless your message listener class name is good enough as subscription name). Note that shared subscriptions may also be durable, so this flag can (and often will) be combined with subscriptionDurable as well. Only makes sense when listening to a topic (pub-sub domain), therefore this method switches the pubSubDomain flag as well. Requires a JMS 2.0 compatible message broker.",
+   "displayName": "Subscription Shared",
+   "group": "consumer",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "synchronous": {
+   "defaultValue": false,
+   "description": "Sets whether synchronous processing should be strictly used",
+   "displayName": "Synchronous",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "taskExecutor": {
+   "description": "Allows you to specify a custom task executor for consuming messages.",
+   "displayName": "Task Executor",
+   "group": "consumer (advanced)",
+   "javaType": "org.springframework.core.task.TaskExecutor",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "temporaryQueueResolver": {
+   "description": "A pluggable TemporaryQueueResolver that allows you to use your own resolver for creating temporary queues (some messaging systems has special requirements for creating temporary queues).",
+   "displayName": "Temporary Queue Resolver",
+   "group": "advanced",
+   "javaType": "org.apache.camel.component.jms.TemporaryQueueResolver",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "testConnectionOnStartup": {
+   "defaultValue": false,
+   "description": "Specifies whether to test the connection on startup. This ensures that when Camel starts that all the JMS consumers have a valid connection to the JMS broker. If a connection cannot be granted then Camel throws an exception on startup. This ensures that Camel is not started with failed connections. The JMS producers is tested as well.",
+   "displayName": "Test Connection On Startup",
+   "group": "common",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "timeToLive": {
+   "defaultValue": -1,
+   "description": "When sending messages, specifies the time-to-live of the message (in milliseconds).",
+   "displayName": "Time To Live",
+   "group": "producer",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "transacted": {
+   "defaultValue": false,
+   "description": "Specifies whether to use transacted mode",
+   "displayName": "Transacted",
+   "group": "transaction",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "transactedInOut": {
+   "defaultValue": false,
+   "description": "Specifies whether InOut operations (request reply) default to using transacted mode If this flag is set to true, then Spring JmsTemplate will have sessionTransacted set to true, and the acknowledgeMode as transacted on the JmsTemplate used for InOut operations. Note from Spring JMS: that within a JTA transaction, the parameters passed to createQueue, createTopic methods are not taken into account. Depending on the Java EE transaction context, the container makes its own decisions on these values. Analogously, these parameters are not taken into account within a locally managed transaction either, since Spring JMS operates on an existing JMS Session in this case. Setting this flag to true will use a short local JMS transaction when running outside of a managed transaction, and a synchronized local JMS transaction in case of a managed transaction (other than an XA transaction) being present. This has the effect of a local JMS transaction being managed alongside the main transaction (which might be a native JDBC transaction), with the JMS transaction committing right after the main transaction.",
+   "displayName": "Transacted In Out",
+   "group": "transaction",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "transactionManager": {
+   "description": "The Spring transaction manager to use.",
+   "displayName": "Transaction Manager",
+   "group": "transaction (advanced)",
+   "javaType": "org.springframework.transaction.PlatformTransactionManager",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "object"
+  },
+  "transactionName": {
+   "description": "The name of the transaction to use.",
+   "displayName": "Transaction Name",
+   "group": "transaction (advanced)",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "transactionTimeout": {
+   "defaultValue": -1,
+   "description": "The timeout value of the transaction (in seconds), if using transacted mode.",
+   "displayName": "Transaction Timeout",
+   "group": "transaction (advanced)",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "transferException": {
+   "defaultValue": false,
+   "description": "If enabled and you are using Request Reply messaging (InOut) and an Exchange failed on the consumer side, then the caused Exception will be send back in response as a jakarta.jms.ObjectMessage. If the client is Camel, the returned Exception is rethrown. This allows you to use Camel JMS as a bridge in your routing - for example, using persistent queues to enable robust routing. Notice that if you also have transferExchange enabled, this option takes precedence. The caught exception is required to be serializable. The original Exception on the consumer side can be wrapped in an outer exception such as org.apache.camel.RuntimeCamelException when returned to the producer. Use this with caution as the data is using Java Object serialization and requires the received to be able to deserialize the data at Class level, which forces a strong coupling between the producers and consumer!",
+   "displayName": "Transfer Exception",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "transferExchange": {
+   "defaultValue": false,
+   "description": "You can transfer the exchange over the wire instead of just the body and headers. The following fields are transferred: In body, Out body, Fault body, In headers, Out headers, Fault headers, exchange properties, exchange exception. This requires that the objects are serializable. Camel will exclude any non-serializable objects and log it at WARN level. You must enable this option on both the producer and consumer side, so Camel knows the payloads is an Exchange and not a regular payload. Use this with caution as the data is using Java Object serialization and requires the receiver to be able to deserialize the data at Class level, which forces a strong coupling between the producers and consumers having to use compatible Camel versions!",
+   "displayName": "Transfer Exchange",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "useMessageIDAsCorrelationID": {
+   "defaultValue": false,
+   "description": "Specifies whether JMSMessageID should always be used as JMSCorrelationID for InOut messages.",
+   "displayName": "Use Message IDAs Correlation ID",
+   "group": "advanced",
+   "javaType": "boolean",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "username": {
+   "description": "Username to use with the ConnectionFactory. You can also configure username/password directly on the ConnectionFactory.",
+   "displayName": "Username",
+   "group": "security",
+   "javaType": "java.lang.String",
+   "kind": "parameter",
+   "required": false,
+   "secret": true,
+   "type": "string"
+  },
+  "waitForProvisionCorrelationToBeUpdatedCounter": {
+   "defaultValue": 50,
+   "description": "Number of times to wait for provisional correlation id to be updated to the actual correlation id when doing request/reply over JMS and when the option useMessageIDAsCorrelationID is enabled.",
+   "displayName": "Wait For Provision Correlation To Be Updated Counter",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "waitForProvisionCorrelationToBeUpdatedThreadSleepingTime": {
+   "defaultValue": "100",
+   "description": "Interval in millis to sleep each time while waiting for provisional correlation id to be updated.",
+   "displayName": "Wait For Provision Correlation To Be Updated Thread Sleeping Time",
+   "group": "advanced",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  },
+  "waitForTemporaryReplyToToBeUpdatedCounter": {
+   "defaultValue": 200,
+   "description": "Number of times to wait for temporary replyTo queue to be created and ready when doing request/reply over JMS.",
+   "displayName": "Wait For Temporary Reply To To Be Updated Counter",
+   "group": "advanced",
+   "javaType": "int",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "waitForTemporaryReplyToToBeUpdatedThreadSleepingTime": {
+   "defaultValue": "100",
+   "description": "Interval in millis to sleep each time while waiting for temporary replyTo queue to be ready.",
+   "displayName": "Wait For Temporary Reply To To Be Updated Thread Sleeping Time",
+   "group": "advanced",
+   "javaType": "long",
+   "kind": "parameter",
+   "required": false,
+   "secret": false,
+   "type": "duration"
+  }
+ },
+ "scheme": "activemq",
+ "syntax": "activemq:destinationType:destinationName",
+ "title": "ActiveMQ 5.x",
+ "version": "4.14.9"
+}

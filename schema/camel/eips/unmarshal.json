@@ -1,0 +1,79 @@
+{
+ "description": "Converts the message data received from the wire into a format that Apache Camel processors can consume",
+ "name": "unmarshal",
+ "properties": {
+  "allowNullBody": {
+   "defaultValue": false,
+   "description": "Indicates whether null is allowed as value of a body to unmarshall.",
+   "displayName": "Allow Null Body",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "dataFormatType": {
+   "description": "The data format to be used",
+   "displayName": "Data Format Type",
+   "group": "common",
+   "javaType": "org.apache.camel.model.DataFormatDefinition",
+   "kind": "element",
+   "required": true,
+   "secret": false,
+   "type": "object"
+  },
+  "description": {
+   "description": "Sets the description of this node",
+   "displayName": "Description",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "disabled": {
+   "defaultValue": false,
+   "description": "Disables this EIP from the route.",
+   "displayName": "Disabled",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  },
+  "id": {
+   "description": "Sets the id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "variableReceive": {
+   "description": "To use a variable to store the received message body (only body, not headers). This makes it handy to use variables for user data and to easily control what data to use for sending and receiving. Important: When using receive variable then the received body is stored only in this variable and not on the current message.",
+   "displayName": "Variable Receive",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "variableSend": {
+   "description": "To use a variable as the source for the message body to send. This makes it handy to use variables for user data and to easily control what data to use for sending and receiving. Important: When using send variable then the message body is taken from this variable instead of the current message, however the headers from the message will still be used as well. In other words, the variable is used instead of the message body, but everything else is as usual.",
+   "displayName": "Variable Send",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  }
+ },
+ "title": "Unmarshal"
+}

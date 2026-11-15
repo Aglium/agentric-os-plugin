@@ -1,0 +1,49 @@
+{
+ "description": "Encode and decode data using Base64.",
+ "name": "base64",
+ "properties": {
+  "id": {
+   "description": "The id of this node",
+   "displayName": "Id",
+   "group": "common",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "lineLength": {
+   "defaultValue": 76,
+   "description": "To specific a maximum line length for the encoded data. By default 76 is used.",
+   "displayName": "Line Length",
+   "group": "common",
+   "javaType": "java.lang.Integer",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "integer"
+  },
+  "lineSeparator": {
+   "description": "The line separators to use. Uses new line characters (CRLF) by default.",
+   "displayName": "Line Separator",
+   "group": "advanced",
+   "javaType": "java.lang.String",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "string"
+  },
+  "urlSafe": {
+   "defaultValue": false,
+   "description": "Instead of emitting '' and '/' we emit '-' and '_' respectively. urlSafe is only applied to encode operations. Decoding seamlessly handles both modes. Is by default false.",
+   "displayName": "Url Safe",
+   "group": "advanced",
+   "javaType": "java.lang.Boolean",
+   "kind": "attribute",
+   "required": false,
+   "secret": false,
+   "type": "boolean"
+  }
+ },
+ "title": "Base64"
+}
