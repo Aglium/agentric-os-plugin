@@ -17,9 +17,10 @@
         "required": ["key"],
         "additionalProperties": false,
         "properties": {
-          "key": {"type": ["string", "integer"], "description": "Such as a year: 2024"},
+          "key": {"type": ["string", "integer"], "description": "Such as a year: 2024; or a place, such as a1 or f1, when the periods come from the case"},
           "name": {"type": "string"},
-          "group": {"type": "string", "description": "Such as past or forecast; a line may have a formula per group"}
+          "group": {"type": "string", "description": "Such as past or forecast; a line may have a formula per group"},
+          "cell": {"type": "string", "description": "With a workbook: the header cell that holds this column's period, such as Model!C12. The columns are then places, not periods: each case's numbered periods (such as years) are laid in by its last one, the headers written with them, and the results named by them"}
         }
       },
       "description": "Columns of lines that have a value per column, such as the years of a forecast"
