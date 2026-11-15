@@ -45,6 +45,7 @@
           "columns": {"type": "boolean", "description": "true: the line has a value per column"},
           "groups": {"type": "object", "additionalProperties": {"type": "string"}, "description": "A formula per group of columns"},
           "check": {"type": "boolean", "description": "true: its formula has to come to zero, such as assets - liabilities - equity"},
+          "assumption": {"type": "boolean", "description": "With a workbook: true, a number the business keeps in the model for every case (a tax rate, a discount rate), not looked for in a case's documents; a case may change it, with a reason"},
           "tolerance": {"type": "number", "minimum": 0, "description": "How far from zero a check may be; 0.01 unless said"}
         }
       }
