@@ -83,6 +83,13 @@
         "description": "One field per thing the agent should know"
       },
       {
+        "name": "table",
+        "label": "Fill in the calculation",
+        "kind": "calculation",
+        "required": false,
+        "description": "A calculation whose given lines the agent finds in what it reads, one value for each line and each year the case reports, each with the words and page it is on; the values come back by line and year in decision.claimed, ready for that calculation"
+      },
+      {
         "name": "resultVariable",
         "label": "Store the decision as",
         "kind": "text",
