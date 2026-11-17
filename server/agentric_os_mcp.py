@@ -1362,7 +1362,7 @@ def propose_solution(a):
             propose("rules", key, {"dmnXml": read(name)}, "the rules %s" % key)
     for text in solution.get("texts") or []:
         propose("text", text["key"], {"name": text.get("name") or text["key"], "text": read(text["file"])}, "the text %s" % text["key"])
-    for agent in solution.get("agents") or []:
+    for agent in build_solution.agents_in_order(solution.get("agents")):
         payload = {k: v for k, v in agent.items() if k not in ("key", "tools", "commands")}
         payload["tools"] = [ref(t) for t in agent.get("tools") or []]
         payload["commands"] = [ref(t) for t in agent.get("commands") or []]

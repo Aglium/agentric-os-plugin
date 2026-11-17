@@ -142,5 +142,33 @@ def check(schema, folder, solution, known=None):
     return report
 
 
+def agents_in_order(agents):
+    """The solution's agents, each after the agents it names (its helpers, its checker, its senior), so that every
+    draft applied in this order finds the agents it names already there. A circle is kept in the order given."""
+    agents = [a for a in agents or [] if isinstance(a, dict) and a.get("key")]
+    keys = {a["key"] for a in agents}
+
+    def named(agent):
+        names = [h.get("agent") if isinstance(h, dict) else h for h in agent.get("helpers") or []]
+        names += [agent.get("checker"), (agent.get("whenStuck") or {}).get("senior")]
+        return [n for n in names if n in keys and n != agent["key"]]
+
+    ordered, placed, visiting = [], set(), set()
+
+    def place(agent):
+        if agent["key"] in placed or agent["key"] in visiting:
+            return
+        visiting.add(agent["key"])
+        for n in named(agent):
+            place(next(a for a in agents if a["key"] == n))
+        visiting.discard(agent["key"])
+        placed.add(agent["key"])
+        ordered.append(agent)
+
+    for agent in agents:
+        place(agent)
+    return ordered
+
+
 def solution_yaml(solution):
     return "# What this solution consists of. Built with the agentric-os plugin.\n" + yaml_out.dump(solution)

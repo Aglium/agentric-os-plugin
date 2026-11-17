@@ -207,6 +207,21 @@ class Rules(unittest.TestCase):
         self.assertIn("1 cells under when, for 2 columns", self.problems(plan))
 
 
+class AgentOrder(unittest.TestCase):
+    def test_an_agent_comes_after_the_agents_it_names(self):
+        agents = [{"key": "lead", "helpers": [{"agent": "reader"}, "finder"], "whenStuck": {"senior": "senior"}},
+                  {"key": "checker", "helpers": [{"agent": "reader"}]},
+                  {"key": "reader"}, {"key": "finder"}, {"key": "senior", "checker": "checker"}]
+        order = [a["key"] for a in build_solution.agents_in_order(agents)]
+        for before, after in (("reader", "lead"), ("finder", "lead"), ("senior", "lead"), ("reader", "checker"), ("checker", "senior")):
+            self.assertLess(order.index(before), order.index(after), order)
+        self.assertEqual(sorted(order), sorted(a["key"] for a in agents))
+
+    def test_a_circle_keeps_every_agent_once(self):
+        agents = [{"key": "a", "helpers": ["b"]}, {"key": "b", "helpers": ["a"]}]
+        self.assertEqual(["b", "a"], [a["key"] for a in build_solution.agents_in_order(agents)])
+
+
 class Solution(unittest.TestCase):
     def test_a_solution_and_its_files(self):
         with tempfile.TemporaryDirectory() as folder:
