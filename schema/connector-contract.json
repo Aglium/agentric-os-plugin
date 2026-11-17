@@ -83,6 +83,14 @@
       "for": "checking the signature of a webhook",
       "in": "body as text; exchange properties hmacSecret and hmacSignature (hex, an optional sha256= prefix is ignored)",
       "out": "exchange property hmacValid"
+    },
+    {
+      "bean": "googleSignIn",
+      "method": "idToken",
+      "for": "signing in to a system that sits behind a Google sign-in (an identity-aware proxy, oauth2-proxy, Cloud Run) as a Google service account",
+      "in": "exchange properties googleKey (the whole key file Google gave for the service account, from a setting) and googleAudience (whom the token is for, such as the proxy's OAuth client id)",
+      "out": "header Authorization: Bearer <Google ID token>; a token is kept until a minute before it runs out, and googleKey leaves the exchange",
+      "refuses": "REJECTED when the key or the audience is missing or Google refuses the account; UNAVAILABLE when Google cannot be reached"
     }
   ],
   "platformHelpers": "The program also carries helpers of the connections the platform comes with (mailbox, notes, records, documents, calendly, googleCalendar). They belong to those connections and may change with them: a new connection does not build on them.",
