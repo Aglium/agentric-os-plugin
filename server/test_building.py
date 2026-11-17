@@ -162,6 +162,13 @@ class Workflow(unittest.TestCase):
         plan["steps"].append({"id": "lost", "name": "Lost", "block": "escalate", "next": "done"})
         self.assertIn("Nothing leads to this step", self.problems(plan))
 
+    def test_an_expression_the_engine_cannot_read(self):
+        plan = copy.deepcopy(PLAN)
+        plan["steps"][0]["fields"]["reason"] = "${'order ' += subjectId}"
+        self.assertIn("texts are not joined with +=", self.problems(plan))
+        plan["steps"][0]["fields"]["reason"] = "${subjectId == 'a' && subjectId != 'b'}"
+        self.assertNotIn("cannot be read by the engine", self.problems(plan))
+
     def test_names_the_installation_does_not_have(self):
         known = {"connections": {"orders": {"order.get": "read"}}, "agents": set(), "texts": {"order-thanks"}}
         self.assertIn("There is no agent “order-reader”", self.problems(PLAN, known))

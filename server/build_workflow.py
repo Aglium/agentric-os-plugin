@@ -310,6 +310,13 @@ def _check_values(plan, by_id, blocks, workflow, report):
         used = set()
         for value in values:
             used |= _used(value)
+            # the engine's expression language joins no texts with += (nor any other assignment): it refuses the
+            # whole workflow when it is published, so it is said here, at the step
+            for expression in EXPRESSION.findall(value) if isinstance(value, str) else []:
+                bare = STRINGS.sub("''", expression)
+                if re.search(r"(?<![=!<>])=(?!=)|\+=", bare):
+                    report.problem("steps[%s]" % step_id, "“%s” cannot be read by the engine: texts are not joined with += and nothing is assigned with =; "
+                                   "write the text with places for values in a text step, or use concat" % expression)
         for name in sorted(used - JUEL_WORDS - HELPERS):
             if name in surely[step_id]:
                 continue
