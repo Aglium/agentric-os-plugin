@@ -318,18 +318,18 @@ def try_calculation(a):
 
 @tool("read_calculation_workbook",
       "Read a business's own Excel model (an .xlsx on this computer) into the lines of a calculation worked out by it, "
-      "instead of writing its formulas again: the installation's reader of models proposes which cells a case gives, "
-      "which it reads back and which have to come to zero, checked against the model and worked out with its numbers. "
-      "Answers {name, description, columns, lines (each with its cell), problems, warnings, cost, byAi, note}. Asking the "
-      "reader costs money (cost); nothing is kept. To keep it, propose_change kind calculation with the lines as payload and "
-      "workbookPath, the same file. Needs the right to propose changes.",
-      {"path": dict(S, description="the model's path on this computer"),
-       "calculation": dict(S, description="the calculation it is for, when it is kept already: the lines its workflows "
-                                          "give keep their keys")}, ["path"], read_only=False)
+      "instead of writing its formulas again: the installation proposes lines from the model's labels and formulas (each "
+      "number formulas use is given, each formula nothing uses is a result), checked against the model and worked out with "
+      "its numbers. No AI is asked there and nothing is paid. Answers {name, description, columns, lines (each with its "
+      "cell), problems, warnings, note}; nothing is kept. Read the model yourself to give the lines the names the business "
+      "uses, mark assumptions and checks, set columns for a model by periods, and keep the keys a calculation's workflows "
+      "already give; then propose_change kind calculation with the lines as payload and workbookPath, the same file. "
+      "Needs the right to propose changes.",
+      {"path": dict(S, description="the model's path on this computer")}, ["path"], read_only=False)
 def read_calculation_workbook(a):
     name, content = local_file(a["path"])
     return send("POST", "/api/calculation-sheets/read-workbook", content, "application/octet-stream",
-                {"name": name, "calculation": a.get("calculation")})
+                {"name": name})
 
 
 @tool("try_calculation_on_past_cases", "Works the latest cases a calculation worked out (20 unless `limit` says) out "
