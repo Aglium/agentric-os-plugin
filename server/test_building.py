@@ -139,6 +139,13 @@ class Workflow(unittest.TestCase):
         self.assertIn('flowable:async="true"', xml)
         self.assertIn('default="f', xml)
 
+    def test_a_step_says_what_a_person_does_when_its_case_goes_to_people(self):
+        plan = copy.deepcopy(PLAN)
+        plan["steps"][2]["forPeople"] = "Ask the customer what to add & write it into the order"
+        xml = build_workflow.bpmn(SCHEMA, plan, "orders-care")
+        self.assertIn('agentric:forPeople="Ask the customer what to add &amp; write it into the order"', xml)
+        ElementTree.fromstring(xml)
+
     def problems(self, plan, known=None):
         return " / ".join(p["what"] for p in build_workflow.check(SCHEMA, plan, known).problems)
 

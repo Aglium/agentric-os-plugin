@@ -8,7 +8,8 @@ A plan is data: the workflow's key and name, the step it starts at, and its step
     {"id", "name", "set": {"variable": "${expression}"}, "next"}
     {"id", "name", "approval": true, "next", "timer": ...}         a person decides; the case gets `approved`
     {"id", "name", "end": true}
-and may say what it is worth: "byHandMinutes", "byHandRole", "brings". A timer is {"after": "PT24H" | "at": "${...}",
+and may say what it is worth: "byHandMinutes", "byHandRole", "brings"; a step that may hand its case to people may say
+what a person does then: "forPeople", one sentence that starts with a verb. A timer is {"after": "PT24H" | "at": "${...}",
 "to": step}: the step is left that way once the time comes. The BPMN is written from the plan, never by hand.
 """
 import re
@@ -23,7 +24,7 @@ JUEL_WORDS = {"true", "false", "null", "empty", "not", "and", "or", "eq", "ne", 
               "instanceof", "execution"}
 HELPERS = {"time", "history", "memory", "files", "settings", "dates", "values", "connections", "options", "connector"}
 DEFAULT = re.compile(r"Default:\s*([A-Za-z_][A-Za-z0-9_]*)")
-ESTIMATE = ("byHandMinutes", "byHandRole", "brings")
+ESTIMATE = ("byHandMinutes", "byHandRole", "brings", "forPeople")
 
 
 class Report:

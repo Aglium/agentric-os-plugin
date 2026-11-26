@@ -76,5 +76,12 @@
     },
     "rule": "Set byHandMinutes and byHandRole on every step that does a person's work, so that what the workflow saves is counted"
   },
+  "people": {
+    "namespace": "http://aglium.com/agentric-os",
+    "attributes": {
+      "forPeople": "on a step that may hand its case to people (handleCase): what a person does then, one sentence that starts with a verb and says where to look or what to check, in the business's words; the Inbox shows it as what to do, before what the agent asked"
+    },
+    "rule": "Set forPeople on a handleCase step whose cases a person finishes by hand, so that every such case says the same clear thing to do"
+  },
   "commands": "A step that calls a command goes through the workflow's policy: it may go out, wait for a person, or be refused. A new workflow starts in Test run (shadow), which records what it would do and sends nothing."
 }

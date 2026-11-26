@@ -124,7 +124,8 @@ installation is reached (then the installation checks again when a draft is prop
   plan: steps that are blocks, choices, values worked out, approvals and ends, with `next`, `onError` and timers.
   `check_workflow_plan` until `ready` (give the solution and connections being built, so their agents, texts, rules and
   operations count), then `write_workflow` into the solution's folder or `propose_workflow` as a draft in Test run.
-  Say on the steps that do a person's work how long it takes (`byHandMinutes`, `byHandRole`).
+  Say on the steps that do a person's work how long it takes (`byHandMinutes`, `byHandRole`). On a `handleCase` step whose cases a person finishes by hand, say what that person does
+  (`forPeople`, one sentence that starts with a verb): the Inbox shows it as what to do.
 - **A table of rules**: a plan of inputs (what each column looks at), outputs and rows; `check_rules` until `ready`,
   then `write_rules` into the solution's folder or `propose_rules`. A workflow's policy is such a table (`policy:
   true`) answering `verdict` (AUTO, NEEDS_APPROVAL or DENY) with a row for every command the workflow can send.

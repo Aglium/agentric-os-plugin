@@ -5,6 +5,7 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- A workflow's step may say what a person does when its case goes to people (`forPeople`, one sentence that starts with a verb): the builder writes it into the workflow and the skill asks for it on a `handleCase` step whose cases a person finishes by hand. The schema's copy is synced. **Needs:** the schema's `people` section (`agentric-os-schema`) and a core that reads it (`agentric-os`).
 - `read_calculation_workbook` gets lines from the model's labels and formulas, with no AI asked on the installation; the agent using the plugin names them, sets columns and keeps the keys a calculation's workflows give before proposing it. It no longer takes `calculation`. **Needs:** the core without `calculation-reader`.
 - The guide says the schema comes from `agentric-os-schema` and is never edited here: when the platform changes what a configuration may say, the schema changes there first and the copy is synced.
 - The schema the plugin carries lets an “Ask an agent” step name a calculation to fill in (`table`), so that a workflow built here can have an agent find a calculation's lines by year in the files of a case. **Needs:** `agentric-os-schema` and a core that fills in a table (`agentric-os`).
