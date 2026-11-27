@@ -30,7 +30,7 @@ import urllib.parse
 import urllib.request
 import uuid
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"]
 TIMEOUT = float(os.environ.get("AGENTRIC_OS_TIMEOUT", "60"))
 
