@@ -834,10 +834,42 @@ def get_change(a):
       "Refused while the draft has problems or when what is live changed since the draft was made. For a change of an "
       "agent, `askAgain` puts the cases it handed to people, still waiting, to it again once applied (it only decides; "
       "a person does what it says on each case); read how many and what it costs first with `GET "
-      "/api/changes/{id}/ask-again` (read_api).",
+      "/api/changes/{id}/ask-again` (read_api). For a change of a connection's files, a program of it that was "
+      "running is started again on the new files by itself; `program` in the answer says what became of it and what, "
+      "if anything, a person has to do.",
       {"id": S, "askAgain": B}, ["id"], read_only=False, destructive=True)
 def apply_change(a):
-    return change(call("POST", "/api/changes/%s/apply" % quote(a["id"]), {"askAgain": bool(a.get("askAgain"))}))
+    applied = change(call("POST", "/api/changes/%s/apply" % quote(a["id"]), {"askAgain": bool(a.get("askAgain"))}))
+    if isinstance(applied, dict) and applied.get("kind") == "connection" and applied.get("status") == "APPLIED" \
+            and not applied.get("removes"):
+        try:
+            applied["program"] = program_after_change(call("GET", "/api/connectors/%s/program" % quote(applied["target"])))
+        except Refused as refused:
+            applied["program"] = "What became of the connection's program could not be read: %s" % refused
+    return applied
+
+
+def program_after_change(p):
+    """What became of a connection's program once a change of its files was applied, in the words a person reads."""
+    if not isinstance(p, dict) or not p.get("ours"):
+        return "Its program is not started by the installation: whoever runs it starts it again with the new files."
+    if p.get("unavailable"):
+        return "Programs are not started from this installation: whoever looks after it starts this one again with " \
+               "the new files. " + p["unavailable"]
+    state = p.get("state")
+    if state == "failed":
+        return "The program did not come up on the new files, so steps that use the connection fail; the change is " \
+               "made. A person sees why on the connection's Program tab in the Control Center; put the change back " \
+               "(revert_change) if the files are wrong."
+    if state in ("stopped", "none"):
+        return "The program is %s, so the new files take effect once a person starts it on the connection's Program " \
+               "tab in the Control Center." % ("not started yet" if state == "none" else "stopped")
+    if p.get("changed"):
+        return "The program still runs on the earlier files: a person starts it again on the connection's Program tab " \
+               "in the Control Center."
+    if state == "starting":
+        return "The program is starting again on the new files; it is running within a minute."
+    return "The program runs on the new files: what the change adds works now."
 
 
 @tool("discard_change", "Drop a draft that is not applied. `note` says why; it is kept with the draft, and whoever drafts "

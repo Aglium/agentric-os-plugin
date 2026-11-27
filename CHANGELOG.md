@@ -5,6 +5,7 @@ does adds a line under Unreleased in the same commit (see AGENTS.md).
 
 ## Unreleased
 
+- `apply_change` of a connection's change says what became of its program (`program`): the core now starts a program that was running again on the new files by itself, so nothing is left for a person in the Control Center unless the program was stopped, never started, or did not come up, which the answer says in words. Follows the core (`agentric-os`).
 - A workflow's step may say what a person does when its case goes to people (`forPeople`, one sentence that starts with a verb): the builder writes it into the workflow and the skill asks for it on a `handleCase` step whose cases a person finishes by hand. The schema's copy is synced. **Needs:** the schema's `people` section (`agentric-os-schema`) and a core that reads it (`agentric-os`).
 - `read_calculation_workbook` gets lines from the model's labels and formulas, with no AI asked on the installation; the agent using the plugin names them, sets columns and keeps the keys a calculation's workflows give before proposing it. It no longer takes `calculation`. **Needs:** the core without `calculation-reader`.
 - The guide says the schema comes from `agentric-os-schema` and is never edited here: when the platform changes what a configuration may say, the schema changes there first and the copy is synced.

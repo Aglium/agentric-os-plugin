@@ -119,7 +119,8 @@ installation is reached (then the installation checks again when a draft is prop
   an EIP, a language), then the description as an object shaped like connector.yaml and the routes as a list shaped
   like Camel's YAML DSL. `check_connection` until `ready`, then `write_connection` into a folder, or
   `propose_connection` as a draft. Settings are named `{{key}}` and listed under configuration, never written in.
-  After it is applied, a person enters its settings and starts its program on the connection's page.
+  After it is applied, a person enters its settings and starts its program on the connection's page the first
+  time; later changes of its files start a running program again by themselves (`program` in apply_change's answer).
 - **A workflow**: `workflow_parts` (the blocks, their fields and how they end; what else a workflow may contain), then a
   plan: steps that are blocks, choices, values worked out, approvals and ends, with `next`, `onError` and timers.
   `check_workflow_plan` until `ready` (give the solution and connections being built, so their agents, texts, rules and

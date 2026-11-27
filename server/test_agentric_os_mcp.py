@@ -137,6 +137,34 @@ class Exams(unittest.TestCase):
         self.assertNotIn("Traceback", text)
 
 
+class ConnectionPrograms(unittest.TestCase):
+    """Applying a change of a connection says what became of its program, so nobody has to go and look."""
+
+    def answers(self, program):
+        def call(method, path, body=None, query=None):
+            if path.endswith("/apply"):
+                return {"id": "c1", "kind": "connection", "target": "ops", "status": "APPLIED"}
+            self.assertEqual(path, "/api/connectors/ops/program")
+            return program
+        with mock.patch.object(server, "call", side_effect=call):
+            return server.apply_change({"id": "c1"})
+
+    def test_a_program_started_again_says_the_change_works_now(self):
+        self.assertIn("works now", self.answers({"ours": True, "state": "running", "changed": False})["program"])
+
+    def test_a_stopped_program_says_a_person_starts_it(self):
+        self.assertIn("a person starts it", self.answers({"ours": True, "state": "stopped", "changed": True})["program"])
+
+    def test_a_program_that_did_not_come_up_says_the_change_is_made(self):
+        said = self.answers({"ours": True, "state": "failed", "changed": False})["program"]
+        self.assertIn("did not come up", said)
+        self.assertIn("revert_change", said)
+
+    def test_a_change_of_something_else_is_answered_as_before(self):
+        with mock.patch.object(server, "call", return_value={"id": "c2", "kind": "text", "target": "t", "status": "APPLIED"}):
+            self.assertNotIn("program", server.apply_change({"id": "c2"}))
+
+
 class Problems(unittest.TestCase):
     """A draft names the problem it is about, and the problems, situations and Test run can be read."""
 
